@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 498 479" width="498" height="479" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <defs/>
+    <g transform="translate(-546.50,-187.50)">
+        <g id="shape1" transform="translate(672.15,189.00)">
+            <path stroke-width="3" d="M235.7,64.5L235.7,7.0C235.7,3.1,232.6,.0,228.7,.0L7.0,.0C3.1,.0,.0,3.1,.0,7.0L.0,64.5C.0,68.4,3.1,71.5,7.0,71.5L228.7,71.5C232.6,71.5,235.7,68.4,235.7,64.5z" fill-rule="nonzero" fill="#ffffff" stroke="#2a3159"/>
+            <text style="fill:#191919;font-family:Times New Roman;font-size:16.00pt" xml:space="preserve">
+                <tspan x="54.9" y="31.8">启动类加载器</tspan>
+                <tspan x="20.4" y="55.8">Bootstrap Class Loader</tspan>
+            </text>
+        </g>
+        <g id="shape2" transform="translate(672.15,311.00)">
+            <path stroke-width="3" d="M235.7,67.4L235.7,7.0C235.7,3.1,232.6,.0,228.7,.0L7.0,.0C3.1,.0,.0,3.1,.0,7.0L.0,67.4C.0,71.3,3.1,74.4,7.0,74.4L228.7,74.4C232.6,74.4,235.7,71.3,235.7,67.4z" fill-rule="nonzero" fill="#ffffff" stroke="#2a3159"/>
+            <text style="fill:#191919;font-family:Times New Roman;font-size:16.00pt" xml:space="preserve">
+                <tspan x="54.9" y="33.5">平台类加载器</tspan>
+                <tspan x="24.4" y="57.5">Platform Class Loader</tspan>
+            </text>
+        </g>
+        <g id="shape3" transform="translate(672.15,417.25)">
+            <path stroke-width="3" d="M235.7,67.4L235.7,7.0C235.7,3.1,232.6,.0,228.7,.0L7.0,.0C3.1,.0,.0,3.1,.0,7.0L.0,67.4C.0,71.3,3.1,74.4,7.0,74.4L228.7,74.4C232.6,74.4,235.7,71.3,235.7,67.4z" fill-rule="nonzero" fill="#ffffff" stroke="#2a3159"/>
+            <text style="fill:#191919;font-family:Times New Roman;font-size:16.00pt" xml:space="preserve">
+                <tspan x="33.9" y="33.5">应用程序类加载器</tspan>
+                <tspan x="12.9" y="57.5">Application Class Loader</tspan>
+            </text>
+        </g>
+        <g id="shape4" transform="translate(548.00,602.75)">
+            <path stroke-width="3" d="M166.0,55.5L166.0,7.0C166.0,3.1,162.9,.0,159.0,.0L7.0,.0C3.1,.0,.0,3.1,.0,7.0L.0,55.5C.0,59.4,3.1,62.5,7.0,62.5L159.0,62.5C162.9,62.5,166.0,59.4,166.0,55.5z" fill-rule="nonzero" fill="#ffffff" stroke="#2a3159"/>
+            <text style="fill:#191919;font-family:Times New Roman;font-size:16.00pt" xml:space="preserve">
+                <tspan x="9.5" y="27.5">自定义类加载器</tspan>
+                <tspan x="7.0" y="51.5">User Class Loader</tspan>
+            </text>
+        </g>
+        <g id="shape5" transform="translate(877.00,602.75)">
+            <path stroke-width="3" d="M166.0,55.5L166.0,7.0C166.0,3.1,162.9,.0,159.0,.0L7.0,.0C3.1,.0,.0,3.1,.0,7.0L.0,55.5C.0,59.4,3.1,62.5,7.0,62.5L159.0,62.5C162.9,62.5,166.0,59.4,166.0,55.5z" fill-rule="nonzero" fill="#ffffff" stroke="#2a3159"/>
+            <text style="fill:#191919;font-family:Times New Roman;font-size:16.00pt" xml:space="preserve">
+                <tspan x="9.5" y="27.5">自定义类加载器</tspan>
+                <tspan x="7.0" y="51.5">User Class Loader</tspan>
+            </text>
+        </g>
+        <g id="shape6" transform="translate(631.00,602.75)">
+            <path stroke-width="3" d="M.0,.0L.0,-79.1L159.0,-79.1L159.0,-100.7" fill="none" stroke="#303030"/>
+            <path stroke-width="1" d="M153.8,-100.7L159.0,-111.1L164.2,-100.7L153.8,-100.7" stroke-linecap="round" fill="#303030" stroke="#303030"/>
+        </g>
+        <g id="shape7" transform="translate(960.00,602.75)">
+            <path stroke-width="3" d="M.0,.0L.0,-79.1L-170.0,-79.1L-170.0,-100.7" fill="none" stroke="#303030"/>
+            <path stroke-width="1" d="M-175.2,-100.7L-170.0,-111.1L-164.8,-100.7L-175.2,-100.7" stroke-linecap="round" fill="#303030" stroke="#303030"/>
+        </g>
+        <g id="shape8" transform="translate(831.90,417.25)">
+            <path stroke-width="3" d="M.0,.0L.0,-21.5" fill="none" stroke="#303030"/>
+            <path stroke-width="1" d="M-5.2,-21.5L.0,-31.9L5.2,-21.5L-5.2,-21.5" stroke-linecap="round" fill="#303030" stroke="#303030"/>
+        </g>
+        <g id="shape9" transform="translate(790.00,311.00)">
+            <path stroke-width="3" d="M.0,.0L.0,-40.1" fill="none" stroke="#303030"/>
+            <path stroke-width="1" d="M-5.2,-40.1L.0,-50.5L5.2,-40.1L-5.2,-40.1" stroke-linecap="round" fill="#303030" stroke="#303030"/>
+        </g>
+        <g id="shape10" transform="translate(752.31,385.39)">
+            <path stroke-width="3" d="M.0,.0L.0,21.5" fill="none" stroke="#303030"/>
+            <path stroke-width="1" d="M5.2,21.5L.0,31.9L-5.2,21.5L5.2,21.5" stroke-linecap="round" fill="#303030" stroke="#303030"/>
+        </g>
+        <g id="shape11" transform="translate(907.85,454.45)">
+            <path stroke-width="3" d="M.0,.0L32.0,.0L32.0,-229.7L10.4,-229.7" fill="none" stroke="#303030"/>
+            <path stroke-width="1" d="M10.4,-224.5L.0,-229.7L10.4,-234.9L10.4,-224.5" stroke-linecap="round" fill="#303030" stroke="#303030"/>
+        </g>
+    </g>
+</svg>

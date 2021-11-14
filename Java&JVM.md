@@ -2,676 +2,38 @@
 
 所有涉及Linux源码的，均基于Linux kernel v5.15
 
-#  数据结构
-
-##  排序
-
-###  插入排序
-
-- 直接插入排序
-
-线性（挨个）比较，找到待插入位置后，移动元素，插入待插入元素
-
-```java
-void InsertSort(ElemType[] A, int n) {
-	for(int i = 2; i <= n; i++) { //依次将A[2]-A[n]插入前面已排序序列
-		if(A[i] < A[i - 1]) {	//若A[i]小于A[i - 1],将A[i]插入有序表
-			A[0] = A[i];		//复制为哨兵
-			for(int j = i - 1; A[0] < A[j]; --j) { //从后往前查找待插入位置
-				A[j + 1] = A[j];
-			}
-			A[j + 1] = A[0];
-		}
-	}
-}
-```
-
-- 折半插入排序
-
-二分比较过程，先确定待插入位置，然后移动元素，将待插入元素复制到待插入位置
-
-```java
-void InsertSort(ElemType[] A, int n) {
-	for(int i = 2; i <= n; i++) {
-		A[0] = A[i];
-		int low = 1, high = i - 1, mid;
-        //二分待插入位置
-		while(low <= high) {
-			mid = (low + high) >> 1;
-			if(A[mid] > A[0]) {
-				high = mid - 1;
-			} else {
-				low = mid + 1;
-			}
-		}
-		
-        //元素后移，空出待插入位置
-		for(int j = i - 1; j >= high + 1; j--) {
-			A[j + 1] = A[j];
-		}
-		
-		A[high + 1] = A[0];
-	}
-}
-```
-
-- 希尔排序
-
-```java
-void ShellSort(ElemType[] A, int n) {
-	for(dk = n >> 1; dk >= 1; dk >>= 1) {
-		for(int i = dk + 1; i <= n; i++) {
-			if(A[i] < A[i - dk]) {
-				A[0] = A[i];
-				for(int j = i - dk; j > 0 && A[0] < A[j]; j-= dk) {
-					A[j + dk] = A[j];
-				}
-				A[j + dk] = A[0];
-			}
-		}
-	}
-}
-```
-
-###  交换排序
-
-- 冒泡排序
-
-```java
-void BubbleSort(ElemType[] A, int n) {
-	boolean flag = false;
-	for(int i = 0; i < n - 1; i++) {
-		flag = false;
-		for(int j = n - 1; j > i; j--) {
-			if(A[j - 1] > A[j]) {
-				int temp = A[j - 1];
-				A[j - 1] = A[j];
-				A[j] = temp;
-				flag = true;
-			}
-		}
-		if(flag == false) {
-			return;
-		}
-	}
-}
-```
-
-- 快速排序
-
-```java
-void QuickSort(ElemType A[], int low, int high) {
-	if(low < high) {
-		//Partition() 划分操作 将表A[low,high]划分为满足条件的两个子表（以第一个元素为哨兵，左边子表均小于它，右			//边子表均大于它）
-		int pivotpos = Partition(A, low, high);//划分
-		QuickSort(A, low, povptpos-1); //依次对两个子表进行递归排序
-		QuickSort(A, pivotpos+1, high);
-	}
-}
-
-//一趟划分操作
-int Partition(ElemType A[], int low, int high) {
-	ElemType pivot = A[low]; //将当前表中第一个元素设为枢轴，对表进行划分
-	while(low < high) {
-		while(low < high && A[high] >= pivot) {
-			--high;
-		}
-		A[low] = A[high]; //将比枢轴小的元素移动到左端
-		
-		while(low < high && A[low] <= pivot) {
-			++low;
-		}
-		A[high] = A[low]; //将比枢轴大的元素移动到右端
-	}
-	A[low] = pivot; //枢轴元素存放的最终位置
-	return low; //返回存放枢轴的最终位置
-}
-```
-
-###  选择排序
-
-- 简单选择排序
-
-每一趟在后面n-i+1(i=1,2,···,n-1)个待排序元素中选取关键字最小的元素，作为有序子序列的第i个元素，知道第n-1躺做完。
-
-```java
-//贪心 每次选择当前子列表最小的放在子列表首部
-void SelectSort(ElemType[] A, int n) {
-	for(int i = 0; i < n - 1; i++) {
-		min = i;
-		for(int j = i + 1; j < n; j++) {
-			if(A[j] < A[min]) {
-				min = j;
-			}
-		}
-		if(min != i) {
-			swap(A[i], A[min]);
-		}
-	}
-}
-```
-
-- 堆排序（大根堆、小根堆）
-
-堆顶最大（小）
-
-```java
-void BuildMaxHeap(ElemType[] A, int len) {
-	for(int i = len >> 1; i > 0; i--) { //从 i=[n>>1] ~ 1,反复调整堆
-		HeadAdjust(A, i, len);
-	}
-}
-
-void HeadAdjust(ElemType[] A, int k, int len) {
-	//将元素k为根的子树进行调整
-	A[0] = A[k]; //A[0] temp store the root of subTree
-	for(i = k << 1; i <= len; i <<= 1) { //沿k较大的子节点向下筛选
-		if(i < len && A[i] < A[i+1]) {
-			i++; //取key较大的子节点的下标
-		}
-		
-		if(A[0] >= A[i]) {
-			break;
-		} else {
-			A[k] = A[i]; //将A[i]调整到双亲节点上
-			k = i;
-		}
-	}
-	A[k] = A[0]; //被筛选的结点的值放入最终位置
-}
-
-void HeapSort(ElemType[] A, int len) {
-    BuildMaxHeap(A, len);
-    for(i = len; i > 1; i--) { //n-1 趟交换和建堆
-        Swap(A[i], A[1]); //输出堆顶元素（和堆底元素交换）
-        HeadAdjust(A, 1, i - 1); //调整，把剩余的i-1个元素整理成堆
-    }
-}
-```
-
-
-
-###  归并排序和基数排序
-
-```java
-   //合并两个有序数组
-   public static int[] mergeSort(int[] nums1, int[] nums2) {
-        if(nums1 == null || nums1.length == 0) {
-            return nums2;
-        } else if(nums2 == null || nums2.length == 0) {
-            return nums1;
-        }
-
-        int n1Len = nums1.length, n2Len = nums2.length;
-        int[] res = new int[n1Len + n2Len];
-        int p1 = 0, p2 = 0, count = 0;
-        while (p1 < n1Len && p2 < n2Len) {
-            while (p1 < n1Len && p2 < n2Len && nums1[p1] <= nums2[p2]) {
-                res[count++] = nums1[p1];
-                p1++;
-            }
-
-            while (p2 < n2Len && p1 < n1Len && nums1[p1] > nums2[p2]) {
-                res[count++] = nums2[p2];
-                p2++;
-            }
-        }
-
-        if(p1 == n1Len) {
-            for (int i = p2; i < n2Len; i++) {
-                res[count++] = nums2[i];
-            }
-        } else if(p2 == n2Len) {
-            for (int i = p1; i < n1Len; i++) {
-                res[count++] = nums1[i];
-            }
-        }
-        return res;
-    }
-```
-
-<div align='center'>
-    <img src='./imgs/20210831120047.png' width=1000px>
-     <img src='./imgs/20210831120117.png' width=1000px>
-</div>
-
-
-
-### 常用内部排序比较
-
-
-
-| 算法种类     | 时间复杂度 |            |            | 空间复杂度 | 是否稳定 |
-| ------------ | ---------- | ---------- | ---------- | ---------- | -------- |
-|              | 最好情况   | 平均情况   | 最坏情况   |            |          |
-| 直接插入排序 | O(n)       | O(n^2)     | O(n^2)     | O(1)       | 是       |
-| 冒泡排序     | O(n)       | O(n^2)     | O(n^2)     | O(1)       | 是       |
-| 简单选择排序 | O(n^2)     | O(n^2)     | O(n^2)     | O(1)       | 否       |
-| 希尔排序     | -          | -          | -          | O(1)       | 否       |
-| 快速排序     | O(nlog2 n) | O(nlog2 n) | O(n^2)     | O(log2 n)  | 否       |
-| 堆排序       | O(nlog2 n) | O(nlog2 n) | O(nlog2 n) | O(1)       | 否       |
-| 2路归并排序  | O(nlog2 n) | O(nlog2 n) | O(nlog2 n) | O(n)       | 是       |
-| 基数排序     | O(d(n+r))  | O(d(n+r))  | O(d(n+r))  | O(r)       | 是       |
-|              |            |            |            |            |          |
-
-## 树
-
-### B树
-
-### B+树
-
-### 红黑树
-
-# 操作系统
-
-## 操作系统概述
-
-### 分时与实时操作系统
-
-<div align='center'>
-    <img src='./imgs/differTimeOS.png' width='800px'>
-    <br/><br/>分时与实时系统
-</div>
-
-分时操作系统：主流PC机器，服务器
-
-实时操作系统：单片机，电梯控制系统、飞机、导弹、卫星
-
-Linux分时操作系统，可以改成实时，例如UCOS
-
-## 进程通信
-
-### 管道
-
-### 系统IPC（消息队列、信号量、信号、共享内存）
-
-### Socket
-
-## 调度算法
-
-### 先来先服务（FCFS）
-
-### 短作业优先（SJF）
-
-### 优先级调度算法
-
-###  高响应比优先调度算法
-
-​	响应比 R_p = (等待时间  + 要求服务时间)  /  要求服务时间
-
-### 时间片轮转
-
-### 多级反馈队列
-
-​	时间片片轮转 + 优先级调度
-
-## 进程同步
-
-### 信号量
-
-P（wait(s)）、V(signal(s))操作
-
-### 管程
-
-### 经典同步问题
-
-- 生产者-消费者问题
-
-<div align='center'>
-    <img src='./imgs/20210825175315.png' width='1000px'>
-</div>
-
-- 读者-写者问题
-
-<div align='center'>
-    <img src='./imgs/20210826195211.png' width='1000px'>
-    <img src='./imgs/20210826195315.png' width='1000px'>    
-	</br></br>读进程优先
-</div>
-
-
-
-<div align='center'>
-    <img src='./imgs/20210826195514.png' width='1000px'>
-    <img src='./imgs/20210826195546.png' width='1000px'>    
-    </br></br>读写公平法
-</div>
-
-- 哲学家进餐问题
-
-<div align='center'>
-    <img src='./imgs/20210826201858.png' width='1000px'>
-    <img src='./imgs/20210826201940.png' width='1000px'>    
-    </br></br>哲学家进餐
-</div>
-
-
-
-- 吸烟者问题
-
-<div align='center'>
-    <img src='./imgs/20210826202342.png' width='1000px'>
-    <img src='./imgs/20210826202715.png' width='1000px'>    
-    </br></br>吸烟者问题
-</div>
-
-## 死锁
-
-### 死锁的处理策略
-
-<div align='center'>
-    <img src='./imgs/20210826202907.png' width='1000px'>
-    </br></br>死锁的处理策略
-</div>
-
-<div align='center'>
-    <img src='./imgs/20210826203319.png' width='1000px'>
-    </br></br>死锁的预防
-</div>
-
-
-
-<div align='center'>
-    <img src='./imgs/20210826203442.png' width='1000px'>
-    <img src='./imgs/20210826203627.png' width='1000px'>
-    <img src='./imgs/20210826203743.png' width='1000px'>
-    </br></br>死锁避免
-</div>
-
-
-
-<div align='center'>
-    <img src='./imgs/20210827104730.png' width='1000px'>
-    <img src='./imgs/20210827104846.png' width='1000px'>
-    <img src='./imgs/20210827104905.png' width='1000px'>
-    <img src='./imgs/20210827104929.png' width='1000px'>
-    <img src='./imgs/20210827105022.png' width='1000px'>
-    </br></br>死锁避免
-</div>
-
-
-
-<div align='center'>
-    <img src='./imgs/20210826203859.png' width='1000px'>
-    <img src='./imgs/20210826203937.png' width='1000px'>
-    </br></br>死锁检测和解除
-</div>
-
-## 页面置换算法
-
-### 最佳（OPT）置换算法
-
-### 先进先出（FIFO）页面置换算法
-
-### 最近最久未使用（LRU）置换算法
-
-<div align='center'>
-    <img src='./imgs/LRU.png' width='1000px'>
-    </br></br>LRU
-</div>
-### 时钟（Clock）置换算法（NRU ）
-
-<div align='center'>
-    <img src='./imgs/20210903154002.png' width='800px'>
-    <img src='./imgs/20210903154019.png' width='800px'>
-    </br></br>NRU
-</div>
-### 操作系统IO模型
-
-# 计算机网络
-
-TCP/IP四、五、七层模型
-
-## 应用层
-
-### HTTPS
-
-#### 对称加密与非对称加密
-
-##### 对称加密
-
-对称加密指加密和解密使用同一密钥，优点是运算速度快，缺点是如何安全将密钥传输给另一方。常见的对称加密算法有DES、AES等。
-
-##### 非对称加密
-
-非对称加密指的是加密和解密使用不同的密钥（公钥 私钥），公钥加密的信息只有私钥才能解密，私钥加密的信息只有公钥才能解密。优点是解决了对称加密中存在的问题。缺点是运算速度慢。常见的非对称加密算法有RSA、DSA、ECC等。
-
-HTTPS实质上是非对称加密传输对称密钥，对称加密传输报文，从而保证通信效率。
-
-**简化流程：**服务端生成一对非对称密钥，将公钥发给客户端。客户端生成对称密钥，用服务端发来的公钥进行加密，加密后发给服务端。服务端收到后用私钥进行解密，得到客户端的对称密钥。然后通信双方就可以使用对称密钥进行高效的通信了。
-
-#### HTTPS加密过程
-
-1. 客户端向服务器发起第一次握手请求，告诉服务器客户端所支持的SSL的版本、加密算法以及密钥长度等信息。
-2. 服务端将自己的公钥发给数字认证机构，数字认证机构利用自己的私钥对服务器的公钥进行数字签名，并给服务器颁发公钥证书。
-3. 服务端将证书发给客户端。
-4. 客户端利用数字认证机构的公钥，向数字证书认证机构验证公钥证书上的数字签名，确认服务器公开密钥的真实性。
-5. 客户端使用服务端公开密钥加密自己生成的对称密钥，发给服务端。
-6. 服务端收到后利用私钥解密信息，获得客户端发来的对称密钥。
-7. 通信双方可用对称密钥来加密解密信息。
-
-<div align='center'>
-    <img src='./imgs/https.png' width='800px'>
-    <br/><br/>HTTPS加密过程
-</div>
-
-
-
-## 传输层
-
-### 传输控制协议（Transmission Control Protocol，TCP）
-
-<div align='center'>
-    <img src='./imgs/TCP02.png' width='1000px'>
-    <br/><br/>TCP包头
-</div>
-
-#### 三次握手
-
-<div align='center'>
-    <img src='./imgs/TCP01.png' width='1000px'>
-    <br/><br/>TCP三次握手
-</div>
-
-##### 为什么三次握手
-
-主要有两方面的原因：
-
-1. TCP是双工通信，为了确保客户端->服务器、服务器->客户端之间的链路都是通的，需要三次握手。服务端能收到客户端的SYN包说明客户端->服务器之间的链路是通的，但不能保证服务器发给客户端的SYN包能顺利到达，假若是两次（一次）握手并且服务器发给客户端的这个SYN包丢失了，会导致出现问题，客户端认为服务端没有和它建立链接，而服务端认为它已经和客户端建立了链接，再如果这时候服务端已经分配了相关资源还会造成资源的浪费。
-2. 防止已失效的请求到达服务端（这点最重要），如果是已失效的报文，如果是两次（一次）握手的话，服务端会直接建立链接会造成资源浪费。
-
-##### 建立链接是初始序列号怎么得来的
-
-根据双方地址、端口计算得到的
-
-```c
-//net/ipv4/tcp_ipv4.c
-	/*
-	 * 如果write_seq字段值为零，则说明该传输控制块还
-	 * 未设置初始序号，因此需调用secure_tcp_sequence_number()，
-	 * 根据双方的地址、端口、系统时间计算初始序列号，同时根据
-	 * 发送需要和当前时间得到用于设置IP首部ID域的值。
-	 */
-	if (!tp->write_seq)
-		tp->write_seq = secure_tcp_sequence_number(inet->inet_saddr,
-							   inet->inet_daddr,
-							   inet->inet_sport,
-							   usin->sin_port);
-
-	inet->inet_id = tp->write_seq ^ jiffies;
-```
-
-```c
-#ifdef CONFIG_INET
-static u32 seq_scale(u32 seq)
-{
-	/*
-	 *	As close as possible to RFC 793, which
-	 *	suggests using a 250 kHz clock.
-	 *	Further reading shows this assumes 2 Mb/s networks.
-	 *	For 10 Mb/s Ethernet, a 1 MHz clock is appropriate.
-	 *	For 10 Gb/s Ethernet, a 1 GHz clock should be ok, but
-	 *	we also need to limit the resolution so that the u32 seq
-	 *	overlaps less than one time per MSL (2 minutes).
-	 *	Choosing a clock of 64 ns period is OK. (period of 274 s)
-	 */
-	return seq + (ktime_get_real_ns() >> 6);
-}
-#endif
-
-u64 siphash_3u32(const u32 first, const u32 second, const u32 third,
-		 const siphash_key_t *key)
-{
-	u64 combined = (u64)second << 32 | first;
-	PREAMBLE(12)
-	v3 ^= combined;
-	SIPROUND;
-	SIPROUND;
-	v0 ^= combined;
-	b |= third;
-	POSTAMBLE
-        
-    /*
-    /lib/siphash.c
-    #define PREAMBLE(len) \
-	u64 v0 = 0x736f6d6570736575ULL; \
-	u64 v1 = 0x646f72616e646f6dULL; \
-	u64 v2 = 0x6c7967656e657261ULL; \
-	u64 v3 = 0x7465646279746573ULL; \
-	u64 b = ((u64)(len)) << 56; \
-	v3 ^= key->key[1]; \
-	v2 ^= key->key[0]; \
-	v1 ^= key->key[1]; \
-	v0 ^= key->key[0];
-	
-	#define SIPROUND \
-	do { \
-	v0 += v1; v1 = rol64(v1, 13); v1 ^= v0; v0 = rol64(v0, 32); \
-	v2 += v3; v3 = rol64(v3, 16); v3 ^= v2; \
-	v0 += v3; v3 = rol64(v3, 21); v3 ^= v0; \
-	v2 += v1; v1 = rol64(v1, 17); v1 ^= v2; v2 = rol64(v2, 32); \
-	} while (0)
-	
-	#define POSTAMBLE \
-	v3 ^= b; \
-	SIPROUND; \
-	SIPROUND; \
-	v0 ^= b; \
-	v2 ^= 0xff; \
-	SIPROUND; \
-	SIPROUND; \
-	SIPROUND; \
-	SIPROUND; \
-	return (v0 ^ v1) ^ (v2 ^ v3);
-    */
-}
-
-u32 secure_tcp_seq(__be32 saddr, __be32 daddr,
-		   __be16 sport, __be16 dport)
-{
-	u32 hash;
-
-	net_secret_init();
-	hash = siphash_3u32((__force u32)saddr, (__force u32)daddr,
-			    (__force u32)sport << 16 | (__force u32)dport,
-			    &net_secret);
-	return seq_scale(hash);
-}
-```
-
-
-
-
-#### 四次挥手
-
-<div align='center'>
-    <img src='./imgs/TCP03.png' width='1000px'>
-    <br/><br/>TCP四次挥手
-</div>
-##### 为什么四次挥手
-
-双工通信，确保两个链接都正常关闭。
-
-##### TIME-WAIT和CLOSE-WAIT的区别
-
-TIME-WAIT是主动关闭形成的，当第四次挥手报文发出后，主动关闭链接的一方进入TIME-WAIT状态。
-
-CLOSE-WAIT是被动关闭形成的，当收到主动关闭链接方的FIN报文后，返回ACK报文并进入CLOSE-WAIT状态
-
-
-#### 拥塞控制
-
-#### 流量控制
-
-#### 滑动窗口
-
-#### TCP如何保证可靠重传
-
-- 校验和
-
-	TCP校验和覆盖TCP首部及TCP数据，而IP首部中的校验和只覆盖IP的首部，不覆盖IP数据报中的任何数据。
-
-	计算校验和与IP类似，每16位字取反后相加，但TCP长度可以为奇数字节，在计算校验和时不足16位的填充0，但填充的字节可能不会被传送。
-
-	计算校验和时TCP段包含一个12B的伪首部，目的是让TCP double check 检查数据是否已经正确到达目的地（IP有没有错接，接受非本IP的，接受非本应用的）。
-
-	如果校验和为0，则最终校验结果为16位全1（65535，二进制反码），如果传送的校验和为0，则说明发送端没有计算校验和。
-
-	<div align='center'>
-	    <img src='./imgs/20210921191508.png' width='1000px'>
-	    <br/><br/>计算校验和的伪首部
-	</div>
-
-	<div align='center'>
-	    <img src='./imgs/20210921200313.png' width='1000px'>
-	    <img src='./imgs/20210921200329.png' width='1000px'>
-	    <br/><br/>输入TCP段的校验和检测
-	    <img src='./imgs/20210921200811.png' width='1000px'>
-	    <br/><br/>输出TCP段的校验和检测
-	</div>
-
-	
-- 序列号
-
-- 超时重传
-
-- 流量控制
-
-- 拥塞避免
-
-#### TCP粘包
-
-### 用户数据报协议（User Datagram Protocol， UDP）
-
-### TCP与UDP区别
-
-|      | 是否面向连接 | 可靠性 | 传输形式   | 传输效率 | 消耗资源 | 应用场景      | 首部字节 |
-| ---- | ------------ | ------ | ---------- | -------- | -------- | ------------- | -------- |
-| TCP  | 面向连接     | 可靠   | 字节流     | 慢       | 多       | 文件/邮件传输 | 20-60    |
-| UDP  | 无连接       | 不可靠 | 数据报文段 | 块       | 少       | 视频/语音传输 | 8        |
-
-
-
-## 网络层	
-
-### IP与MAC的区别
-
-IP为逻辑地址，MAC为硬件地址。IP有可能发生变化，不固定，屏蔽了硬件差异。MAC地址是固定的，每个硬件唯一。
-
-IP地址是地域相关的，对于同一个子网上的设备，IP前缀是一样的，便于路由，而MAC分布不规律。
-
-IP地址可以理解为快递的收件地址，MAC地址可以理解为收件人，在一次网络通信中二者是缺一不可的。
-
-## 物理链路层
-
 # JAVA
 
 ## JAVA基础
 
-### 自动拆装箱
+### 关键字及其作用
+
+|                      |          |            |          |              |            |           |        |       |
+| -------------------- | -------- | ---------- | -------- | ------------ | ---------- | --------- | ------ | ----- |
+| 分类                 | 关键字   |            |          |              |            |           |        |       |
+| 访问控制             | private  | protected  | public   |              |            |           |        |       |
+| 类，方法和变量修饰符 | abstract | class      | extends  | final        | implements | interface | native |       |
+|                      | new      | static     | strictfp | synchronized | transient  | volatile  |        |       |
+| 过程控制             | break    | continue   | return   | do           | while      | if        | else   |       |
+|                      | for      | instanceof | switch   | case         | default    |           |        |       |
+| 错误处理             | try      | catch      | throw    | throws       | finally    |           |        |       |
+| 包相关               | import   | package    |          |              |            |           |        |       |
+| 基本类型             | boolean  | byte       | char     | double       | float      | int       | long   | short |
+| 特殊值               | null     | void       | true     | false        |            |           |        |       |
+| 变量引用             | super    | this       |          |              |            |           |        |       |
+| 保留字               | goto     | const      |          |              |            |           |        |       |
+
+
+
+### 拆装箱
 
 ```java
-        Integer integer = Integer.valueOf(1);
+        //自动拆装箱 实质（字节码）也是调用方法拆装箱
+		Integer i = 10;  //装箱
+		int n = i;   //拆箱
+
+		//调用方法拆装箱
+		Integer integer = Integer.valueOf(1);
         int intValue = integer.intValue();
 
         Short aShort = Short.valueOf((short) 1);
@@ -701,6 +63,15 @@ IP地址可以理解为快递的收件地址，MAC地址可以理解为收件人
         double d = f;
 ```
 
+package.png
+
+<div align='center'>
+    <img src='./imgs/package.png' width='600px'>
+	</br></br>Integer i = 10;int n = i;字节码
+</div>
+
+
+
 ### 常量池
 
 Byte, Short, Integer, Long, Character, Boolean实现了常量池技术
@@ -719,7 +90,7 @@ public class Main {
 		
         
          //new String()均是在堆上创建的对象，str.intern() 会将str添加到常量池中 并返回引用
-		String s1 = "abcdefg"; //直接放在常量池
+		 String s1 = "abcdefg"; //直接放在常量池
          String s2 = new String("abcdefg"); //堆上创建
          String s3 = new String(s1); //堆上创建
          String s4 = "abcdefg"; //常量池
@@ -745,9 +116,11 @@ public class Main {
 }
 ```
 
-### String API
+### String
 
-- char charAt(int index)
+#### 常用API
+
+- **char charAt(int index)**
 
 	返回给定位置的代码单元。
 
@@ -771,7 +144,7 @@ public class Main {
 
 	用数组中从 offset 开始的 count 个码点构造一个字符串。
 
-- boolean equals(0bject other)
+- **boolean equals(0bject other)**
 
 	如果字符串与 other 相等， 返回 true。
 
@@ -779,9 +152,9 @@ public class Main {
 
 	如果字符串与 other 相等 （ 忽略大小写，) 返回 tme。
 
-- boolean startsWith(String prefix )
+- **boolean startsWith(String prefix )**
 
-- boolean endsWith(String suffix )
+- **boolean endsWith(String suffix )**
 
 	如果字符串以 suffix 开头或结尾， 则返回 true。
 
@@ -805,7 +178,7 @@ public class Main {
 
 	返回与字符串 str 或代码点 cp 匹配的最后一个子串的开始位置。 这个位置从原始串尾 端或 fromlndex 开始计算。 
 
-- int 1ength( ) 
+- **int 1ength( )** 
 
 	返回字符串的长度。 
 
@@ -813,29 +186,121 @@ public class Main {
 
 	返回 startlndex 和 endludex-l之间的代码点数量。没有配成对的代用字符将计入代码点。 
 
--  String replace( CharSequence oldString,CharSequence newString) 
+-  **String replace( CharSequence oldString,CharSequence newString)** 
 
 	返回一个新字符串。这个字符串用 newString 代替原始字符串中所有的 oldString。可 以用 String 或 StringBuilder 对象作为 CharSequence 参数。 
 
-- String substring(int beginlndex ) 
+- **String substring(int beginlndex )** 
 
-- String substring(int beginlndex, int endlndex ) 
+- **String substring(int beginlndex, int endlndex )** 
 
 	返回一个新字符串。这个字符串包含原始字符串中从 beginlndex 到串尾或 endlndex-l 的所有代码单元。
 
-- String toLowerCase( ) 
+- **String toLowerCase( )** 
 
--  String toUpperCase( ) 
+-  **String toUpperCase( )** 
 
 	返回一个新字符串。 这个字符串将原始字符串中的大写字母改为小写，或者将原始字 符串中的所有小写字母改成了大写字母。
 
-- String trim( ) 
+- **String trim( )** 
 
 	返回一个新字符串。这个字符串将删除了原始字符串头部和尾部的空格。
 
 - String join(CharSequence delimiter, CharSequence ... elements ) 8 
 
 	返回一个新字符串， 用给定的定界符连接所有元素。
+
+#### String、StringBuilder和StringBuffer区别
+
+JDK1.9之前为char[]，JDK1.9之后为byte[]
+
+|              | String | StringBuilder | StringBuffer |
+| ------------ | ------ | ------------- | ------------ |
+| 是否可修改   | 否     | 是            | 是           |
+| 效率         | 低     | 高            | 中           |
+| 是否线程安全 | 是     | 否            | 是           |
+
+#### String
+
+```java
+public final class String
+    implements java.io.Serializable, Comparable<String>, CharSequence {
+	    private final char value[]; //底层为char数组 final修饰不可变 线程安全
+}
+```
+
+#### StringBuilder & StringBuffer
+
+```java
+abstract class AbstractStringBuilder implements Appendable, CharSequence {
+    /**
+     * The value is used for character storage.
+     */
+    char[] value;
+}
+```
+
+```java
+public final class StringBuilder
+    extends AbstractStringBuilder
+    implements java.io.Serializable, CharSequence
+{
+ 	public StringBuilder() {
+        super(16);
+    }
+    
+    public StringBuilder(int capacity) {
+        super(capacity);
+    }
+    
+    public StringBuilder(String str) {
+        super(str.length() + 16);
+        append(str);
+    }
+    
+    public StringBuilder(CharSequence seq) {
+        this(seq.length() + 16);
+        append(seq);
+    }
+}
+```
+
+```java
+ public final class StringBuffer
+    extends AbstractStringBuilder
+    implements java.io.Serializable, CharSequence
+{
+    private transient char[] toStringCache; //防止序列化和反序列化
+     
+    public StringBuffer() {
+        super(16);
+    }
+     
+    public StringBuffer(int capacity) {
+        super(capacity);
+    }
+     
+    public StringBuffer(String str) {
+        super(str.length() + 16);
+        append(str);
+    }
+     
+    public StringBuffer(CharSequence seq) {
+        this(seq.length() + 16);
+        append(seq);
+    }
+     
+    /**
+    通过对方法加锁来保证线程安全
+    **/
+    @Override
+    public synchronized int length() {
+        return count;
+    }
+}
+```
+
+
 
 ### 重载与重写的区别
 
@@ -847,9 +312,25 @@ public class Main {
 
 重载的方法不能根据返回类型进行区分，函数调用时不能指定返回类型，编译器不知道要调用哪个函数。
 
-### 面向对象三大特征
+### [面向对象三大特征](https://snailclimb.gitee.io/javaguide/#/docs/java/basis/Java%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86?id=%e9%9d%a2%e5%90%91%e5%af%b9%e8%b1%a1%e4%b8%89%e5%a4%a7%e7%89%b9%e5%be%81)
 
 封装、继承、多态
+
+#### 封装
+
+封装是指把一个对象的状态信息（也就是属性）隐藏在对象内部，不允许外部对象直接访问对象的内部信息。但是可以提供一些可以被外界访问的方法来操作属性。
+
+#### 继承
+
+不同类型的对象，相互之间经常有一定数量的共同点。每一个对象还定义了额外的特性使得他们与众不同。继承是使用已存在的类的定义作为基础建立新类的技术，新类的定义可以增加新的数据或新的功能，也可以用父类的功能，但不能选择性地继承父类。通过使用继承，可以快速地创建新的类，可以提高代码的重用，程序的可维护性，节省大量创建新类的时间 ，提高我们的开发效率。
+
+- 子类拥有父类对象所有的属性和方法（包括私有属性和私有方法），但是父类中的私有属性和方法子类是无法访问，**只是拥有**。
+- 子类可以拥有自己属性和方法，即子类可以对父类进行扩展。
+- 子类可以用自己的方式实现父类的方法。
+
+#### 多态
+
+表示一个对象具有多种的状态。具体表现为父类的引用指向子类的实例。
 
 ### JAVA反射
 
@@ -860,6 +341,85 @@ public class Main {
 缺点：性能比直接的代码要慢
 
 应用场景：Spring中的xml的配置模式、动态代理设计模式也采用了反射机制
+
+### [泛型](https://snailclimb.gitee.io/javaguide/#/docs/java/basis/Java%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86?id=java-%e6%b3%9b%e5%9e%8b%e4%ba%86%e8%a7%a3%e4%b9%88%ef%bc%9f%e4%bb%80%e4%b9%88%e6%98%af%e7%b1%bb%e5%9e%8b%e6%93%a6%e9%99%a4%ef%bc%9f%e4%bb%8b%e7%bb%8d%e4%b8%80%e4%b8%8b%e5%b8%b8%e7%94%a8%e7%9a%84%e9%80%9a%e9%85%8d%e7%ac%a6%ef%bc%9f)
+
+参数化类型，所操作的数据类型被指定为一个参数。
+
+Java 的泛型是伪泛型，这是因为 Java 在运行期间，所有的泛型信息都会被擦掉，这也就是通常所说类型擦除 。
+
+Java中泛型一般有三种：泛型类、泛型接口、泛型方法。
+
+#### 常用通配符
+
+T，E，K，V，?
+
+- T 表示具体的一个java类型
+- E表示Element
+- K V代表键值对 key value
+- ？表示不确定的java类型
+
+#### 泛型类
+
+```java
+//此处T可以随便写为任意标识，常见的如T、E、K、V等形式的参数常用于表示泛型
+//在实例化泛型类时，必须指定T的具体类型
+public class Generic<T> {
+
+    private T key;
+
+    public Generic(T key) {
+        this.key = key;
+    }
+
+    public T getKey() {
+        return key;
+    }
+}
+
+Generic<Integer> genericInteger = new Generic<Integer>(123456);
+```
+
+#### 泛型接口
+
+```java
+public interface Generator<T> {
+    public T method();
+}
+
+//实现泛型接口不指定类型
+class GeneratorImpl<T> implements Generator<T>{
+    @Override
+    public T method() {
+        return null;
+    }
+}
+
+//实现泛型接口指定类型
+class GeneratorImpl implements Generator<String>{
+    @Override
+    public String method() {
+        return "hello";
+    }
+}
+```
+
+#### 泛型方法
+
+```java
+public static <E> void printArray(E[] inputArray) {
+    for (E element : inputArray) {
+        System.out.printf("%s ", element);
+    }
+    System.out.println();
+}
+
+// 创建不同类型数组： Integer, Double 和 Character
+Integer[] intArray = { 1, 2, 3 };
+String[] stringArray = { "Hello", "World" };
+printArray(intArray);
+printArray(stringArray);
+```
 
 ### IO流
 
@@ -1289,7 +849,7 @@ static class Node<K,V> implements Map.Entry<K,V> {
 
 
 
-#### 线程
+### 线程
 
 [JDK1.8 Thread.java](./JDK1.8Src/java/lang/Thread.java)
 
@@ -1318,9 +878,10 @@ static class Node<K,V> implements Map.Entry<K,V> {
 可调用getState方法获取线程当前状态
 
 <div align='center'>
-    <img src='./imgs/ThreadState.png' width='400px'>
+    <img src='./imgs/ThreadState.jpg' width='800px'>
     </br></br>线程状态
 </div>
+
 ##### 线程同步
 
 ###### synchronized(内置锁/互斥锁、可重入)
@@ -1624,6 +1185,88 @@ Abort（中止）策略是默认的饱和策略，该策略将抛出未检查的
 
 抛弃最旧的策略会抛弃下一个将被执行的任务，然后尝试重新提交新的任务。如果工作队列是一个优先队列，则该策略会抛弃优先级最高的任务，因此最好不要将该策略与优先级队列放在一起使用。
 
+## 并发、锁
+
+### [Atomic原子类型](Atomic原子类型)
+
+具有原子/原子特征的类。
+
+<div align='center'>
+    <img src='./imgs/JUC.svg' width='1000px'>
+    </br></br>JUC包下包含的类（JDK1.8）
+</div>
+
+根据操作的类型可以将JUC包中的原子类分为4类。
+
+#### 基本类型
+
+使用原子方式更新基本类型
+
+##### [AtomicInteger 整型原子类](https://snailclimb.gitee.io/javaguide/#/docs/java/multi-thread/Atomic%E5%8E%9F%E5%AD%90%E7%B1%BB%E6%80%BB%E7%BB%93?id=_24-atomicinteger-%e7%ba%bf%e7%a8%8b%e5%ae%89%e5%85%a8%e5%8e%9f%e7%90%86%e7%ae%80%e5%8d%95%e5%88%86%e6%9e%90)
+
+###### 常用方法
+
+```java
+public final int get() //获取当前的值
+public final int getAndSet(int newValue)//获取当前的值，并设置新的值
+public final int getAndIncrement()//获取当前的值，并自增
+public final int getAndDecrement() //获取当前的值，并自减
+public final int getAndAdd(int delta) //获取当前的值，并加上预期的值
+boolean compareAndSet(int expect, int update) //如果输入的数值等于预期值，则以原子方式将该值设置为输入值（update）
+public final void lazySet(int newValue)//最终设置为newValue,使用 lazySet 设置之后可能导致其他线程在之后的一小段时间内还是可以读到旧的值。
+```
+
+```java
+ // setup to use Unsafe.compareAndSwapInt for updates
+private static final Unsafe unsafe = Unsafe.getUnsafe();
+private static final long valueOffset;
+
+static {
+    try {
+        valueOffset = unsafe.objectFieldOffset
+            (AtomicInteger.class.getDeclaredField("value"));
+    } catch (Exception ex) { throw new Error(ex); }
+}
+
+private volatile int value;
+```
+
+AtomicInteger 类主要利用 CAS (compare and swap) + volatile 和 native 方法来保证原子操作，从而避免 synchronized 的高开销，执行效率大为提升。
+
+CAS的原理是拿期望的值和原本的一个值作比较，如果相同则更新成新的值。UnSafe 类的 objectFieldOffset() 方法是一个本地方法，这个方法是用来拿到“原来的值”的内存地址。另外 value 是一个volatile变量，在内存中可见，因此 JVM 可以保证任何时刻任何线程总能拿到该变量的最新值。
+
+##### AtomicLong 长整型原子类
+
+##### AtomicBoolean 布尔型原子类
+
+#### 数组类型
+
+使用原子方式更新数组中的某个元素
+
+##### AtomicIntegerArray 整型数组原子类
+
+##### AtomicLongArray 长整型数组原子类
+
+##### AtomicReferenceArray  引用类型数组原子类
+
+#### 引用类型
+
+##### AtomicReference：引用类型原子类
+
+##### AtomicMarkableReference：原子更新带有标记的引用类型。该类将 boolean 标记与引用关联起来。
+
+##### AtomicStampedReference ：原子更新带有版本号的引用类型。该类将整数值与引用关联起来，可用于解决原子的更新数据和数据的版本号，可以解决使用 CAS 进行原子更新时可能出现的 ABA 问题。
+
+#### 对象的属性修改类型
+
+##### AtomicIntegerFieldUpdater:原子更新整型字段的更新器
+
+##### AtomicLongFieldUpdater：原子更新长整型字段的更新器
+
+##### AtomicReferenceFieldUpdater：原子更新引用类型里的字段
+
+
+
 ### 锁
 
 #### [锁的级别](https://www.cnblogs.com/wuqinglong/p/9945618.html)
@@ -1645,15 +1288,58 @@ Abort（中止）策略是默认的饱和策略，该策略将抛出未检查的
 </div>
 
 
-### 垃圾回收
 
-#### 概述
+
+
+# JVM
+
+## References
+
+[1]	（日） 中村成洋著.深入Java虚拟机 JVM G1GC的算法与实现[M].北京：人民邮电出版社.2021.
+[2] 	周志明著.深入理解Java虚拟机[M].北京：机械工业出版社.2019.
+[3] 	华保健著.深入浅出 Java虚拟机设计与实现[M].北京：机械工业出版社.2020.
+[4] 	周志明著.深入理解Java虚拟机 JVM高级特性与最佳实践[M].北京：机械工业出版社.2013.
+
+## JAVA内存区域与内存溢出异常
+
+<div align='center'>
+    <img src='./imgs/JVMRuntimeDataArea.svg' width='800px'>
+    </br></br>Java虚拟机运行时数据区
+</div>
+
+### 程序计数器
+
+当前线程所执行的字节码行号指示器（线程私有）。
+
+如果正在执行的是一个Java方法，则记录的是正在执行的虚拟机字节码指令的地址；如果执行的是本地方法（Native），则这个计数器的值为空（Undefinde）。并且程序计数器内存区域是唯一一个在《Java虚拟机规范》中没有规定任何OutOfMemoryError情况的区域。
+
+### Java虚拟机栈
+
+线程私有，生命周期与线程相同。虚拟机栈描述的是Java方法执行的线程内存模型：每个方法被执行的时候，Java虚拟机都 会同步创建一个栈帧（Stack Frame）用于存储局部变量表、操作数栈、动态连接、方法出口等信 息。每一个方法被调用直至执行完毕的过程，就对应着一个栈帧在虚拟机栈中从入栈到出栈的过程。
+
+局部变量表存放了编译期可知的各种Java虚拟机基本数据类型（boolean、byte、char、short、int、 float、long、double）、对象引用（reference类型，它并不等同于对象本身，可能是一个指向对象起始 地址的引用指针，也可能是指向一个代表对象的句柄或者其他与此对象相关的位置）和returnAddress 类型（指向了一条字节码指令的地址）。
+
+在《Java虚拟机规范》中，对这个内存区域规定了两类异常状况：如果线程请求的栈深度大于虚 拟机所允许的深度，将抛出StackOverflowError异常；如果Java虚拟机栈容量可以动态扩展（HotSpot不可动态扩展，申请栈空间成功不会有OOM ，如果申请时失败会出现OOM），当栈扩 展时无法申请到足够的内存会抛出OutOfMemoryError异常。
+
+### 本地方法栈
+
+与虚拟机栈作用相似，区别在于虚拟机栈为虚拟机执行Java方法（字节码）服务，而本地方法则是为虚拟机使用到本地（Native）方法服务。
+
+《Java虚拟机规范》对本地方法栈中使用的语言、方式与数据结构并没有任何强制规定。Hotspot虚拟机中将本地方法栈与虚拟机栈合二为一。本地方法栈也会在栈深度溢出或者栈扩展失败时分别抛出StackOverflowError和OutOfMemoryError异常。
+
+### Java堆
+
+
+
+## 垃圾回收
+
+### 概述
 
 Garbage Collection：哪些内存需要回收、什么时候回收、如何回收
 
-##### 判断对象是否可回收
+#### 判断对象是否可回收
 
-##### 引用计数法
+#### 引用计数法
 
 <div align='center'>
     <img src='./imgs/20210909113712.png' width='800px'>
@@ -1664,14 +1350,16 @@ Garbage Collection：哪些内存需要回收、什么时候回收、如何回�
 
 
 
-##### 可达性分析法
+
+#### 可达性分析法
 
 <div align='center'>
     <img src='./imgs/20210909113911.png' width='800px'>
     </br></br>引用计数法
 </div>
 
-##### 引用类型
+
+#### 引用类型
 
 强引用
 
@@ -1683,9 +1371,9 @@ Garbage Collection：哪些内存需要回收、什么时候回收、如何回�
 
 
 
-#### 垃圾收集算法
+### 垃圾收集算法
 
-##### 标记-清除算法
+#### 标记-清除算法
 
 概述：分为标记和清除两个阶段
 
@@ -1698,7 +1386,8 @@ Garbage Collection：哪些内存需要回收、什么时候回收、如何回�
 
 
 
-##### 复制算法
+
+#### 复制算法
 
 概述：将总内存分为两半，每次只使用一半，当需要收集时把存活的对象复制到未使用的另一半上，当前空间直接清除。
 
@@ -1710,14 +1399,16 @@ Garbage Collection：哪些内存需要回收、什么时候回收、如何回�
     </br></br>复制算法
 </div>
 
-##### 标记-整理算法
+
+#### 标记-整理算法
 
 <div align='center'>
     <img src='./imgs/GarbageCollectionAro031.png' width='800px'>
     </br></br>标记-整理算法
 </div>
 
-##### 分代收集算法
+
+#### 分代收集算法
 
 概述：根据不同年代选取算法，新生代（少量存活），复制算法，老年代（大量存活），标记清理/标记整理
 
@@ -1725,11 +1416,12 @@ Garbage Collection：哪些内存需要回收、什么时候回收、如何回�
     <img src='./imgs/GarbageCollectionAro041.png' width='800px'>
     </br></br>分代收集算法
 </div>
-#### 垃圾收集器
+
+### 垃圾收集器
 
 [比较新的参考](https://mp.weixin.qq.com/s/oGWfEovQRx-i1dE7eiXKsA)
 
-##### Serial收集器
+#### Serial收集器
 
 <div align='center'>
     <img src='./imgs/20210903152828.png' width='800px'>
@@ -1737,7 +1429,8 @@ Garbage Collection：哪些内存需要回收、什么时候回收、如何回�
     </br></br>Serial收集器
 </div>
 
-##### ParNew收集器
+
+#### ParNew收集器
 
 <div align='center'>
     <img src='./imgs/ParNew01.png' width='800px'>
@@ -1745,7 +1438,8 @@ Garbage Collection：哪些内存需要回收、什么时候回收、如何回�
     </br></br>ParNew收集器
 </div>
 
-##### Parallel Scavenge收集器
+
+#### Parallel Scavenge收集器
 
 <div align='center'>
     <img src='./imgs/ParallelScavenge.png' width='800px'>
@@ -1753,7 +1447,8 @@ Garbage Collection：哪些内存需要回收、什么时候回收、如何回�
     </br></br>Parallel Scavenge收集器
 </div>
 
-##### Serial Old 收集器
+
+#### Serial Old 收集器
 
 
 
@@ -1762,14 +1457,16 @@ Garbage Collection：哪些内存需要回收、什么时候回收、如何回�
     </br></br>Serial Old收集器
 </div>
 
-##### Parallel Old 收集器
+
+#### Parallel Old 收集器
 
 <div align='center'>
     <img src='./imgs/ParallelOld.png' width='800px'>
     </br></br>Parallel Old收集器
 </div>
 
-##### CMS 收集器
+
+#### CMS 收集器
 
 <div align='center'>
     <img src='./imgs/CMS01.png' width='800px'>
@@ -1777,7 +1474,8 @@ Garbage Collection：哪些内存需要回收、什么时候回收、如何回�
     <img src='./imgs/CMS03.png' width='800px'>
     </br></br>CMS收集器
 </div>
-##### G1（Garbage-First）收集器
+
+#### G1（Garbage-First）收集器
 
 <div align='center'>
     <img src='./imgs/G101.png' width='800px'>
@@ -1789,11 +1487,12 @@ Garbage Collection：哪些内存需要回收、什么时候回收、如何回�
     </br></br>G1收集器
 </div>
 
-##### Epsilon（JDK11.0）低开销垃圾回收器
+
+#### Epsilon（JDK11.0）低开销垃圾回收器
 
 Epsilon 垃圾回收器的目标是开发一个控制内存分配，但是不执行任何实际的垃圾回收工作。它提供一个完全消极的 GC 实现，分配有限的内存资源，最大限度的降低内存占用和内存吞吐延迟时间各种垃圾回收器使用场景
 
-##### ZGC（JDK11.0）可伸缩低延迟垃圾收集器
+#### ZGC（JDK11.0）可伸缩低延迟垃圾收集器
 
 ZGC 即 Z Garbage Collector（垃圾收集器或垃圾回收器），这应该是 Java 11 中最为瞩目的特性，没有之一。ZGC 是一个可伸缩的、低延迟的垃圾收集器，主要为了满足如下目标进行设计：
 
@@ -1810,7 +1509,7 @@ JDK1.14之前只支持Linux/64 JDK1.14开始支持MacOs和Windows
 -XX:+UnlockExperimentalVMOptions -XX:+UseZGC
 ```
 
-##### Shenandoah (JDK12.0) 一个低停顿垃圾收集器（实验阶段）
+#### Shenandoah (JDK12.0) 一个低停顿垃圾收集器（实验阶段）
 
 Java 12 中引入一个新的垃圾收集器：Shenandoah，它是作为一中低停顿时间的垃圾收集器而引入到 Java 12 中的，其工作原理是通过与 Java 应用程序中的执行线程同时运行，用以执行其垃圾收集、内存回收任务，通过这种运行方式，给虚拟机带来短暂的停顿时间。
 
@@ -1860,7 +1559,9 @@ Shenandoah 垃圾回收器是 Red Hat 在 2014 年宣布进行的一项垃圾收
 
 
 
-#### 类加载机制
+
+
+## 类加载机制
 
 
 
@@ -1868,25 +1569,215 @@ Shenandoah 垃圾回收器是 Red Hat 在 2014 年宣布进行的一项垃圾收
     <img src='./imgs/ClassLoad01.png' width='1000px'>
     </br></br>类的声明周期
 </div>
+### 类加载过程
 
-##### 加载
+#### 加载
 
-##### 验证
+1. 通过一个类的全限定名来获取定义此类的二进制字节流。
+2. 将这个字节流所代表的静态存储结构转化为方法区的运行时数据结构。
+3. 在内存中生成一个代表这个类的java.lang.Class对象，作为方法区这个类的各种数据的访问入口。
 
-##### 准备
+#### 验证
 
-##### 解析
+为了确保Class文件的字节流中包含的信息符合当前虚拟机的要求，并且不会危害虚拟机自身的安全。
 
-##### 初始化
+#### 文件格式验证
 
-#### 并发、锁
+验证字节流是否符合Class文件格式的规范，并且能被当前版本的虚拟机处理。
 
-#### [内存模型](https://zhuanlan.zhihu.com/p/29881777)
+包含（部分）：
+
+- 是否以魔数0xCAFEBABE开头
+- 主、次版本号是否再当前虚拟机处理范围内
+- 常量池中的常量是否有不被支持的常量类型（检查常量tag标志）
+- 指向常量的各种索引值是否有指向不存在的常量或不符合类型的常量
+- CONSTANT_Utf8_info型的常量中是否有不符合UTF8编码的数据
+- Class文件中各个部分及文件本身是否有被删除的或附加的其他信息
+
+该阶段验证基于二进制字节流，通过该阶段验证，字节流会被存入内存中的方法区，后续的验证阶段都是基于方法区的存储结构进行的，不再直接操作字节流。
+
+#### 元数据验证
+
+对字节码描述的信息进行语义分析，以保证其描述的信息符合Java语言规范的要求。
+
+包含（部分）：
+
+- 这个类是否有父类（除了java.lang.Object之外，所有的类都应当有父类）
+- 这个类的父类是否继承了不允许被继承的类（被final修饰的类）
+- 如果这个类不是抽象类，是否实现了其父类或接口中要求实现的所有方法
+- 类中的字段、方法是否与父类产生矛盾（例如覆盖了父类的final字段，或者出现不符合规则的方法重载）
+
+该阶段验证目的是对类的元数据信息进行语义校验，保证不存在不符合Java语言规范的元数据信息。
+
+#### 字节码验证
+
+该阶段主要目的是通过数据流和控制流分析，确定程序语义是合法的、符合逻辑的。该阶段对类的方法体进行校验分析，保证被校验的类的方法在运行时不会做出危害虚拟机的安全事件。
+
+StackMapTable属性，描述了方法体的所有的基本块开始时本地变量表和操作栈应有的状态，验证时期只需检查该属性中的记录是否合法即可。
+
+#### 符号引用验证
+
+对类自身以外（常量池中的各种符号引用）的信息进行匹配性校验，包含（部分）：
+
+- 符号引用中通过字符串描述的全限定名是否能找到对应的类
+- 在指定类中是否存在符合方法的字段描述符以及简单名称所描述的方法和字段
+- 符号引用中的类、字段、方法的访问性（private、protected、public、default）是否可被当前类访问
+
+如果所运行的全部代码（包括自己编写以及第三方包中的代码）已经被反复使用和验证过，那么实施阶段可以考虑使用-Xverify:none参数关闭大部分的类的验证措施，用以缩短虚拟机类加载的时间。
+
+#### 准备
+
+正式为类变量分配内存并设置类变量初始值（该数据类型的零值，赋初始值在初始化阶段）的阶段，这些变量所使用的内存都将在方法区中进行分配。这里进行内存分配的仅包含类变量（被static修饰的变量），而不包括实例变量，实例变量将会在对象实例化时随着对象一起分配在Java堆中。
+
+| 数据类型  | 零值     |
+| --------- | -------- |
+| int       | 0        |
+| long      | 0L       |
+| short     | (short)0 |
+| char      | '\u0000' |
+| byte      | (byte) 0 |
+| boolean   | false    |
+| float     | 0.0f     |
+| double    | 0.0d     |
+| reference | null     |
+
+如果类字段属性表存在ConstantValue属性，那么准备阶段变量就会被初始化为ConstantValue属性所指定的值，例如：
+
+```java
+public static final int value = 123;	
+```
+
+#### 解析
+
+该阶段虚拟机将常量池内的符号引用替换为直接引用的过程。
+
+- 符号引用（Symbolic References）：符号引用以一组符号来描述所引用的目标，符号可以是任何形式的字面量，只要使用时能无歧义地定位到目标即可。符号引用与虚拟机实现的内存布局无关，引用的目标不一定已经加载到内存中。
+- 直接引用（Direct References）：直接引用可以是直接指向目标的指针、相对偏移量或是一个能间接定位到目标的句柄。直接引用和虚拟机实现的内存布局相关的，同一个符号引用在不同虚拟机实例上翻译出来的直接引用一般不会相同。如果有了直接引用，那引用的目标必定已经在内存中存在。
+
+解析动作主要针对类或接口、字段、类方法、接口方法、方法类型、方法句柄和调用点限定符7类符号引用进行，分别对应于常量池的CONSTANT_Class_info、CONSTANT_Fieldref_info、CONSTANT_Methodref_info、CONSTANT_InterfaceMethodref_info、CONSTANT_MethodType_info、CONSTANT_MethodHandle_infohe和CONSTANT_InvokeDynamic_info 7种常量类型。
+
+#### 初始化
+
+该阶段为类加载过程的最后一步，类加载的前面几个阶段除了加载阶段用户应用程序可以通过自定义类加载器参与外，其余动作完全由虚拟机主导和控制。到了初始化阶段，才真正开始执行类中定义的Java程序代码（字节码）。
+
+### 类加载器
+
+类加载阶段中的“通过一个类的全限定名来获取描述此类的二进制字节流”这个动作放到Java虚拟机外部去实现，以便让应用程序自己决定如何获取所需要的类。实现这个动作的代码模块称为“类加载器”。
+
+#### 双亲委派模型
+
+站在Java虚拟机的角度来看，只存在两种不同的类加载器：一种是启动类加载器（Bootstrap ClassLoader），这个类加载器使用C++语言实现（仅限于HotSpot），是虚拟机自身的一部分；另外一种就是其他所有 的类加载器，这些类加载器都由Java语言实现，独立存在于虚拟机外部，并且全都继承自抽象类 java.lang.ClassLoader。并且这些加载器之间并不是继承关系，而是组合关系。
+
+<div align='center'>
+    <img src = './imgs/ParentsDelegationModel.svg' width='800px'>
+	</br></br>类加载器双亲委派模型
+</div>
+
+双亲委派模型工作过程：如果一个类加载器收到了类加载的请求，它首先不会自己去尝试加载这个类，而是把这个请求委派给自己的父类加载器去完成，每一个层次的类加载器都是如此，因此所有的加载请求最终都应该传送到最顶层的启动类加载器中，只有当父类加载器反馈自己无法完成这个加载请求（它的搜索范围中没有找到所需的类）时，子加载器才会尝试自己去完成加载。
+
+优点：java原生的类具有最高优先级（例如java.lang.Object），即便用户创建一个与原生类相同的类（java.lang.Object），也能够始终保证原生的类被正确加载。
+
+双亲委派模型实现（java.lang.ClassLoader）
+
+先检查该类是否被加载，若没有则调用父类加载器的loadClass()方法，若父类加载器为空则使用启动类加载器加载，若父类加载器加载失败，抛出ClassNotFoundException异常后调用自己的findClass()方法尝试进行加载。
+
+```java
+   protected Class<?> loadClass(String name, boolean resolve)
+        throws ClassNotFoundException
+    {
+        synchronized (getClassLoadingLock(name)) {
+            // First, check if the class has already been loaded
+            Class<?> c = findLoadedClass(name);
+            if (c == null) {
+                long t0 = System.nanoTime();
+                try {
+                    if (parent != null) {
+                        c = parent.loadClass(name, false);
+                    } else {
+                        c = findBootstrapClassOrNull(name);
+                    }
+                } catch (ClassNotFoundException e) {
+                    // ClassNotFoundException thrown if class not found
+                    // from the non-null parent class loader
+                }
+
+                if (c == null) {
+                    // If still not found, then invoke findClass in order
+                    // to find the class.
+                    long t1 = System.nanoTime();
+                    c = findClass(name);
+
+                    // this is the defining class loader; record the stats
+                    sun.misc.PerfCounter.getParentDelegationTime().addTime(t1 - t0);
+                    sun.misc.PerfCounter.getFindClassTime().addElapsedTimeFrom(t1);
+                    sun.misc.PerfCounter.getFindClasses().increment();
+                }
+            }
+            if (resolve) {
+                resolveClass(c);
+            }
+            return c;
+        }
+    }
+```
+
+#### 破坏双亲委派模型
+
+##### 第一次破坏
+
+JDK1.2之前，那时候还没有双亲委派模型，但已经有了ClassLoader这个抽象类，已经有人继承这个抽象类，重写loadClass方法来实现用户自定义类加载器。
+
+JDK1.2引入双亲委派模型，为了向前兼容，loadClass这个方法还得保留，新出了个findClass方法让用户重写，并呼吁用户不要重写loadClass而只重写findClass。
+
+因为双亲委派的逻辑在loadClass上，但是又允许重写loadClass，重写了之后就可以破坏双亲委派模型了。
+
+##### 第二次破坏
+
+双亲委派模型本身缺陷导致。
+
+Service Privider Interface（SPI）
+
+线程上下文类加载器。
+
+JNDI、JDBC、JCE、JAXB和JBI等。在JDK 6时，当SPI的服务提供者多于一个的时候，代码就只能根据具体提供 者的类型来硬编码判断，为了消除这种极不优雅的实现方式，JDK提供了 java.util.ServiceLoader类，以META-INF/services中的配置信息，辅以责任链模式，这才算是给SPI的加 载提供了一种相对合理的解决方案。
+
+##### 第三次破坏
+
+用户对程序动态性的追求而导致的，这里所说的“动态 性”指的是一些非常“热”门的名词：代码热替换（Hot Swap）、模块热部署（Hot Deployment）等。
+
+OSGi实现模块化热部署的关键是它自定义的类加载器机制的实现，每一个程序模块（OSGi中称为 Bundle）都有一个自己的类加载器，当需要更换一个Bundle时，就把Bundle连同类加载器一起换掉以实 现代码的热替换。在OSGi环境下，类加载器不再双亲委派模型推荐的树状结构，而是进一步发展为更 加复杂的网状结构，当收到类加载请求时，OSGi将按照下面的顺序进行类搜索：
+
+1）将以java.*开头的类，委派给父类加载器加载。 2）否则，将委派列表名单内的类，委派给父类加载器加载。 3）否则，将Import列表中的类，委派给Export这个类的Bundle的类加载器加载。 4）否则，查找当前Bundle的ClassPath，使用自己的类加载器加载。 5）否则，查找类是否在自己的Fragment Bundle中，如果在，则委派给Fragment Bundle的类加载器 加载。 6）否则，查找Dynamic Import列表的Bundle，委派给对应Bundle的类加载器加载。 7）否则，类查找失败。
+
+##### 第四次破坏
+
+JDK9引入模块系统后。
+
+当收到类加载请求，会先判断该类在具名模块中是否有定义，如果有定义就自己加载了，没的话再委派给父类。
+
+##### JAVA模块化系统（Java Platform Module System，JPMS）
+
+<div align='center'>
+    <img src = './imgs/ParentsDelegationModel1.9.svg' width='800px'>
+	</br></br>JDK1.9后类加载器双亲委派模型
+</div>
+
+JDK 9中虽然仍然维持着三层类加载器和双亲委派的架构，但类加载的委派关系也发生了 变动。当平台及应用程序类加载器收到类加载请求，在委派给父加载器加载前，要先判断该类是否能 够归属到某一个系统模块中，如果可以找到这样的归属关系，就要优先委派给负责那个模块的加载器 完成加载，也许这可以算是对双亲委派的第四次破坏。
+
+<div align='center'>
+    <img src = './imgs/20211112173504.png' width='1000px'>
+	</br></br>JDK1.9后类加载器双亲委派模型
+</div>
+
+
+
+## [内存模型](https://zhuanlan.zhihu.com/p/29881777)
 
 <div align='center'>
     <img src='./imgs/JMM02.png' width='800px'>
     </br></br>实际硬件中处理器、高速缓存、主内存间的交互关系
 </div>
+
 
 JAVA Memory Model（JMM），屏蔽掉各种硬件和操作系统的内存访问差异，以实现让Java程序在各种平台下都能达到一致的内存访问效果。
 
@@ -1897,411 +1788,20 @@ JAVA Memory Model（JMM），屏蔽掉各种硬件和操作系统的内存访问
     <img src='./imgs/JMM02.jpg' width='500px'>
     </br></br>JMM（内存模型）
 </div>
-### JVM调优
 
-## [设计模式](./DensigPatten.md)
+## JVM调优
 
-#### 开闭原则
 
-对修改封闭，对扩展开放
 
-- 软件测试时只需测试扩展的部分
 
-- 可提高代码可复用性
 
-- 可提高软件可维护性
+# 大数据与分布式
 
-#### 里氏替换原则
+## 常用的分布式协议与理论
 
-子类能够代替父类，且父类出现的地方子类一定能够出现。
+## Kubernetes
 
-子类可以扩展父类的功能，但不能改变父类原有的功能。
-
-- 子类可以实现父类的抽象方法，但不能覆盖父类的非抽象方法
-- 子类中可以增加自己特有的方法
-- 当子类的方法重载父类的方法时，方法的前置条件（即方法的输入参数）要比父类的方法更宽松
-- 当子类的方法实现父类的方法时（重写/重载或实现抽象方法），方法的后置条件（即方法的的输出/返回值）要比父类的方法更严格或相等
-
-#### 依赖倒置原则
-
-#### 单一职责（功能）原则
-
-一个类应该有且仅有一个引起它变化的原因（功能尽可能单一）。
-
-#### 接口隔离原则
-
-#### 迪米特法则
-
-#### 合成复用原则
-
-主要分为三种：创建型、结构型、行为型。
-
-创建型：单例、原型、工厂方法、抽象工厂、建造者
-
-结构型：代理、适配器、桥接、装饰、外观、享元、组合
-
-行为型：模板、策略、命令、职责链、状态、观察者、中介者、迭代器、备忘录、解释器
-
-### 单例模式
-
-
-
-<div align='center'>
-    <img src='./imgs/Singleton.png' width='1000px'>
-    </br></br>单例模式
-</div>
-
-```java
-//饿汉式
-public class Hungry {
-    private Hungry(){}
-    private final static Hungry HUNGRY = new Hungry();
-    public static Hungry getInstance(){
-        return HUNGRY;
-    }
-}
-
-//静态内部类实现单例
-public class Holder {
-    private Holder() {}
-
-    public static Holder getInstance(){
-        return InnerClass.HOLDER;
-    }
-
-    public static class InnerClass{
-        private static final Holder HOLDER = new Holder();
-    }
-}
-
-
-//懒汉式单例
-public class Lazy {
-    private Lazy(){
-        //System.out.println(Thread.currentThread().getName() + "start");
-        synchronized (Lazy.class){
-            if(lazy == null){
-                throw new RuntimeException("不要试图使用反射破坏异常");
-            }
-        }
-    }
-
-    private volatile static Lazy lazy;
-
-    //双重检测锁模式的懒汉式单例 DCL懒汉式
-    public static Lazy getInstance() {
-        if(lazy == null)
-        {
-            synchronized (Lazy.class){
-                if(lazy == null)
-                {
-                    lazy = new Lazy();
-                    //不是一个原子操作
-                    /**
-                     *1. 分配内存空间
-                     *2. 执行构造方法，初始化对象
-                     *3. 把这个对象指向这个空间
-                     *
-                     * 123 Thread A
-                     * 132
-                     *     Thread B //此时还没有完成构造
-                     */
-                }
-            }
-        }
-        return lazy;
-    }
-}
-```
-
-
-
-### 简单工厂模式
-
-
-
-<div align='center'>
-    <img src='./imgs/SimpleFactory.png' width='1400px'>
-    </br></br>简单工厂模式
-</div>
-
-```java
-//操作类
-package simpleFactory;
-
-/**
- * @author simple.jbx
- */
-abstract class Operation {
-    private double numA = 0, numB = 0;
-
-    public double getNumA() {
-        return numA;
-    }
-
-    public void setNumA(double numA) {
-        this.numA = numA;
-    }
-
-    public double getNumB() {
-        return numB;
-    }
-
-    public void setNumB(double numB) {
-        this.numB = numB;
-    }
-
-    public abstract double getResult();
-}
-
-class OperationAdd extends Operation {
-    @Override
-    public double getResult() {
-        return getNumA() + getNumB();
-    }
-}
-
-class OperationSub extends Operation {
-    @Override
-    public double getResult() {
-        return getNumA() - getNumB();
-    }
-}
-
-class OperationMul extends Operation {
-    @Override
-    public double getResult() {
-        return getNumA() * getNumB();
-    }
-}
-
-class OperationDiv extends Operation{
-    @Override
-    public double getResult() {
-        if(0.0 == getNumB()) {
-            System.out.println("Error:被除数不能为0");
-            return 0.0;
-        } else {
-            return getNumA() / getNumB();
-        }
-    }
-}
-
-//运算类
-public class OperationFactory {
-    public static Operation createOperation(String operate) {
-        Operation oper = null;
-        switch (operate) {
-            case "+" :
-                oper = new OperationAdd();
-                break; //这里不加break可以编译通过 C#不允许穿透 java c等可以
-            case "-" :
-                oper = new OperationSub();
-                break;
-            case "*" :
-                oper = new OperationMul();
-                break;
-            case "/" :
-                oper = new OperationDiv();
-                break;
-            default:
-                break;
-        }
-        return oper;
-    }
-
-    public static void main(String[] args) {
-        Operation oper = OperationFactory.createOperation("+");
-        oper.setNumA(1.0);
-        oper.setNumB(2.0);
-        System.out.println(oper.getResult());
-    }
-}
-
-```
-
-### 代理模式
-
-## 数据库
-
-### 三/五范式
-
-- 第一范式：确保每列保持原子性，数据表中的所有字段值都是不可分解的原子值。
-- 第二范式：确保表中的每列都和主键相关。
-- 第三范式：确保每列都和主键列直接相关而不是间接相关。
-- BC范式（BCNF）：消除主属性对键的部分和传递函数依赖。
-- 第四范式：消除非平凡且非函数依赖的多值依赖。
-
-
-
-<div align='center'>
-    <img src='./imgs/Database01.png' width='500px'>
-    </br></br>规范化过程
-</div>
-
-<div align='center'>
-    <img src='./imgs/Database02.png' width='300px'>
-    </br></br>各种范式之间的关系
-</div>
-
-### 主键和外键
-
-|      | 主键                                       | 外键                                                 | 索引                               |
-| ---- | ------------------------------------------ | ---------------------------------------------------- | ---------------------------------- |
-| 定义 | 唯一标识一条记录，不能有重复的，不允许为空 | 表的外键是另一表的主键, 外键可以有重复的, 可以是空值 | 该字段没有重复值，但可以有一个空值 |
-| 作用 | 用来保证数据完整性                         | 用来和其他表建立联系用的                             | 是提高查询排序的速度               |
-| 个数 | 主键只能有一个                             | 一个表可以有多个外键                                 | 一个表可以有多个索引               |
-
-
-
-### 数据库的事务
-
-#### 什么是数据库的事务
-
-数据库事务是访问并可能操作各种数据项的一个数据库操作序列，这些操作要么全部执行，要么全部不执行，是一个不可分割的工作单位。事务由事务开始与事务结束之间执行的全部数据库操作组成。
-
-#### 事务的四大特性（ACID）
-
-- 原子性：指包含事务的操作要么全部执行成功，要么全部失败回滚。
-- 一致性：指事务在执行前后状态是一致的。
-- 隔离性：一个事务所进行的修改在最终提交之前，对其他事务是不可见的。
-- 持久性：数据一旦提交，其所作的修改将永久地保存到数据库中。
-
-#### 数据库并发一致性问题
-
-当多个事务并发执行时，可能会出现以下问题：
-
-- 脏读：事务A更新了数据，但还没有提交，这时事务B读取到事务A更新后的数据，然后事务A回滚了，事务B读取到的数据就成为脏数据了。
-
-- 不可重复度：事务A对数据进行多次读取，事务B在事务A多次读取的过程中执行了更新操作，并提交了，导致事务A多次读取到的数据并不一致。
-
-- 幻读：事务A在读取数据后，事务B向事务A读取的数据中插入了几条数据，事务A再次读取数据的时候发现多了几条数据，和之前读取的数据不一致。
-
-- 丢失修改：事务A和事务B都对同一个数据进行修改，事务A先修改，事务B随后修改，事务B的修改覆盖了事务A的修改。
-
-#### 数据库的隔离级别
-
-- 未提交读：一个事务在提交前，它的修改对其他事务也是可见的
-
-- 提交读：一个事务提交后，它的修改才能被其他事务看到
-
-- 可重复度：在同一个事务中多次读取到的数据是一致的
-
-- 串行化：需要加锁实现，会前置事务串行执行
-
-事务的隔离级别分别可以解决数据库的脏读、不可重复读、幻读等问题。
-
-| 隔离级别 | 脏读   | 不可重复读 | 幻读   |
-| -------- | ------ | ---------- | ------ |
-| 未提交读 | 允许   | 允许       | 允许   |
-| 提交读   | 不允许 | 允许       | 允许   |
-| 可重复读 | 不允许 | 不允许     | 允许   |
-| 串行化   | 不允许 | 不允许     | 不允许 |
-
-##### 隔离级别如何实现
-
-事务的隔离机制主要是依靠锁机制和MVCC实现的，提交读和可重复读可以通过MVCC实现，串行化可以通过锁机制实现。
-
-#### MVCC
-
-MVCC(multiple version concurrent control)是一种控制并发的方法，主要用来提高数据库的并发性能。
-
-### 索引
-
-索引是对数据库表中的一列或者多列的值进行排序一种结构，使用索引可以快速访问数据表中的特定信息。
-
-#### 索引优缺点
-
-**优点**：
-
-- 加快检索速度
-
-- 将随机IO变为顺序IO（B+树的叶子结点是连接在一起的）
-
-- 加快表与表之间的连接
-
-**缺点**：
-
-- 占用物理空间
-
-- 创建和维护索引都需要花费时间（对数据进行增删改的时候都要维护索引）
-
-#### 索引的数据结构
-
-B+树、哈希表（B+树、哈希索引）。InnoDB引擎的索引类型有B+树、哈希索引，默认索引类型为B+树索引。
-
-B+树索引
-
-#### 索引的种类
-
-- 主键索引：数据列不允许重复，不能为null，一个表只能有一个主键索引。
-
-- 组合索引：由多个列值组成的索引。
-
-- 唯一索引：数据列不允许重复，可以为null，索引列的值必须唯一，如果是组合索引，则列值的组合必须唯一。
-
-- 全文索引：对文本的内容进行索引。
-
-- 普通索引：基本的索引类型，可以为null。
-
-#### B树和B+树的区别
-
-#### 索引为什么使用B+树而不用B树
-
-#### 聚簇索引和非聚簇索引
-
-主要区别是**数据和索引是否分开存储**。
-
-**聚簇索引：**将数据和索引放到一起存储，索引结构的叶子结点保留了数据行。
-
-**非聚簇索引：**将数据和索引分开存储，索引叶子结点存储的是指向数据行的地址。
-
-#### 索引的使用场景
-
-- 对于中大型表建立索引非常有效，对于非常小的表，一般全部表扫描。
-- 对于超大型的表，建立和维护索引的代价也会非常高，可以考虑分区。
-- 增删改非常多的，查询比较少的没必要建立索引。
-- 多个字段经常被查询的可以考虑联合索引。
-- 字段多且字段值没有重复的时候考虑唯一索引。
-- 字段多且有重复的时候考虑普通索引。
-
-#### 如何对索引进行优化
-
-- 索引列不能是表达式的一部分。
-- 将区分度高的索引放在前面
-- 尽量少使用select *
-
-#### 创建与删除索引
-
-#### 索引的设计原则
-
-- 出现在where后面的列或者连接句子中指定的列，不会出现在where条件中的字段不适合创建索引。
-- 索引列值的可能越多，索引效果越好（唯一性太差的字段不适合建立索引）。
-- 尽量使用短索引，对于较长字符串进行索引时应该指定一个较短的前缀长度，较小的索引涉及到的磁盘I/O较少，并且索引高速缓存中的块可以容纳更多的键值，会使得查询速度更快。
-- 尽量使用最左前缀。
-- 不要过度使用索引，每个索引都需要额外的物理空间，维护也需要花费时间，所以索引不是越多越好。
-
-- 较频繁作为查询条件的字段
-
-- 更新太频繁的字段不适合创建索引
-
-#### 索引在什么情况下会失效
-
-- 条件中有 or。
-- 索引列参与计算。
-- 在索引的类型上进行数据类型的隐形转换
-- 在索引中使用函数
-- 在使用like查询时以%开头（模糊查询）
-- 在索引上使用！、=、<>进行判断
-- 索引字段上使用 is null/is not null判断时
-
-## 大数据与分布式
-
-### 常用的分布式协议与理论
-
-### Kubernetes
-
-#### 入门
+### 入门
 
 
 
@@ -2312,11 +1812,11 @@ B+树索引
     </br></br>k8s基础知识
 </div>
 
-### 分布式操作系统
+## 分布式操作系统
 
-#### 概述
+### 概述
 
-##### 什么是分布式操作系统
+#### 什么是分布式操作系统
 
 是一些独立的计算机的组合，但是对于该系统的用户来说，系统就像一台计算机一样
 
@@ -2345,4 +1845,46 @@ B+树索引
     <img src='./imgs/20210918201800.png' width='800px'>
     </br></br>并行及分布式计算机系统分类法
 </div>
+# 生产力
 
+## Java命令行调试
+
+### 查看字节码
+
+```java
+javap -c xxx.class
+```
+
+## IDEA
+
+### 快捷键
+
+### 插件
+
+#### Alibaba Java Coding Guidelines
+
+Alibaba 编码规范
+
+#### LeetCode Editor
+
+LeetCode刷题
+
+#### Rainbow Brackets
+
+彩虹括号
+
+#### Background Image Plus
+
+更改IDEA背景
+
+#### Maven
+
+#### Lombok
+
+注解 web开发
+
+#### Bytecode Editor
+
+查看字节码
+
+选中要查看的.class文件然后点上方菜单view->Show ByteCode

@@ -127,6 +127,18 @@ zip
 
 rar
 
+## 服务相关
+
+systemctl
+
+systemctl start xxx.service
+
+systemctl restart xxx.service
+
+systemctl status xxx.service
+
+
+
 # 计算机硬件软件体系
 
 ## 冯诺依曼体系结构
