@@ -1,0 +1,167 @@
+<svg height="610" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="1108" viewBox="0 0 1108 610">
+    <defs/>
+    <g transform="translate(-1127.86,-81.93)">
+        <g transform="translate(1552.86,354.01)" id="shape1">
+            <path stroke-width="4" d="M33.0,.0L197.3,.0C215.5,.0,230.3,14.8,230.3,33.0C230.3,51.2,215.5,66.0,197.3,66.0L33.0,66.0C14.8,66.0,.0,51.2,.0,33.0C.0,14.8,14.8,.0,33.0,.0z" fill="#ffffff" fill-rule="nonzero" stroke="#ffffff"/>
+            <text style="fill:#454545;font-family:Microsoft YaHei;font-size:16.00pt" xml:space="preserve">
+                <tspan x="32.9" y="41.0">秒杀系统实施方案</tspan>
+            </text>
+        </g>
+        <g transform="translate(1846.14,128.88)" id="shape2">
+            <path stroke-width="2" d="M.0,47.8L125.0,47.8" fill="none" stroke="#ff6063"/>
+            <text style="fill:#454545;font-family:Microsoft YaHei;font-size:16.00pt" xml:space="preserve">
+                <tspan x="21.6" y="31.8">项目搭建</tspan>
+            </text>
+        </g>
+        <g transform="translate(1846.14,276.81)" id="shape3">
+            <path stroke-width="2" d="M.0,47.8L180.0,47.8" fill="none" stroke="#26a1ff"/>
+            <text style="fill:#454545;font-family:Microsoft YaHei;font-size:16.00pt" xml:space="preserve">
+                <tspan x="21.6" y="31.8">分布式Session</tspan>
+            </text>
+        </g>
+        <g transform="translate(1846.14,449.46)" id="shape4">
+            <path stroke-width="2" d="M.0,47.8L125.0,47.8" fill="none" stroke="#ffcb46"/>
+            <text style="fill:#454545;font-family:Microsoft YaHei;font-size:16.00pt" xml:space="preserve">
+                <tspan x="21.6" y="31.8">功能实现</tspan>
+            </text>
+        </g>
+        <g transform="translate(1846.14,622.11)" id="shape5">
+            <path stroke-width="2" d="M.0,47.8L125.0,47.8" fill="none" stroke="#fa88d8"/>
+            <text style="fill:#454545;font-family:Microsoft YaHei;font-size:16.00pt" xml:space="preserve">
+                <tspan x="21.6" y="31.8">压力测试</tspan>
+            </text>
+        </g>
+        <g transform="translate(1364.86,190.48)" id="shape6">
+            <path stroke-width="2" d="M.0,47.8L125.0,47.8" fill="none" stroke="#5cd3f3"/>
+            <text style="fill:#454545;font-family:Microsoft YaHei;font-size:16.00pt" xml:space="preserve">
+                <tspan x="21.6" y="31.8">页面优化</tspan>
+            </text>
+        </g>
+        <g transform="translate(1364.86,338.41)" id="shape7">
+            <path stroke-width="2" d="M.0,47.8L125.0,47.8" fill="none" stroke="#7bdd5f"/>
+            <text style="fill:#454545;font-family:Microsoft YaHei;font-size:16.00pt" xml:space="preserve">
+                <tspan x="21.6" y="31.8">服务优化</tspan>
+            </text>
+        </g>
+        <g transform="translate(1364.86,511.06)" id="shape8">
+            <path stroke-width="2" d="M.0,47.8L125.0,47.8" fill="none" stroke="#fa864c"/>
+            <text style="fill:#454545;font-family:Microsoft YaHei;font-size:16.00pt" xml:space="preserve">
+                <tspan x="21.6" y="31.8">安全优化</tspan>
+            </text>
+        </g>
+        <g transform="translate(1996.14,82.93)" id="shape9">
+            <path stroke-width="2" d="M.0,40.8L221.0,40.8" fill="none" stroke="#ff6063"/>
+            <text style="fill:#454545;font-family:Microsoft YaHei;font-size:16.00pt" xml:space="preserve">
+                <tspan x="12.6" y="28.1">IDEA创建Spring项目</tspan>
+            </text>
+        </g>
+        <g transform="translate(1996.14,132.38)" id="shape10">
+            <path stroke-width="2" d="M.0,40.8L195.0,40.8" fill="none" stroke="#ff6063"/>
+            <text style="fill:#454545;font-family:Microsoft YaHei;font-size:16.00pt" xml:space="preserve">
+                <tspan x="12.6" y="28.1">pom.xml添加依赖</tspan>
+            </text>
+        </g>
+        <g transform="translate(1996.14,181.83)" id="shape11">
+            <path stroke-width="2" d="M.0,40.8L149.0,40.8" fill="none" stroke="#ff6063"/>
+            <text style="fill:#454545;font-family:Microsoft YaHei;font-size:16.00pt" xml:space="preserve">
+                <tspan x="12.6" y="28.1">修改配置文件</tspan>
+            </text>
+        </g>
+        <g transform="translate(2051.14,255.58)" id="shape12">
+            <path stroke-width="2" d="M.0,40.8L107.0,40.8" fill="none" stroke="#26a1ff"/>
+            <text style="fill:#454545;font-family:Microsoft YaHei;font-size:16.00pt" xml:space="preserve">
+                <tspan x="12.6" y="28.1">用户登陆</tspan>
+            </text>
+        </g>
+        <g transform="translate(2051.14,305.03)" id="shape13">
+            <path stroke-width="2" d="M.0,40.8L141.0,40.8" fill="none" stroke="#26a1ff"/>
+            <text style="fill:#454545;font-family:Microsoft YaHei;font-size:16.00pt" xml:space="preserve">
+                <tspan x="12.6" y="28.1">共享Session</tspan>
+            </text>
+        </g>
+        <g transform="translate(1996.14,378.78)" id="shape14">
+            <path stroke-width="2" d="M.0,40.8L107.0,40.8" fill="none" stroke="#ffcb46"/>
+            <text style="fill:#454545;font-family:Microsoft YaHei;font-size:16.00pt" xml:space="preserve">
+                <tspan x="12.6" y="28.1">商品列表</tspan>
+            </text>
+        </g>
+        <g transform="translate(1996.14,428.23)" id="shape15">
+            <path stroke-width="2" d="M.0,40.8L108.0,40.8" fill="none" stroke="#ffcb46"/>
+            <text style="fill:#454545;font-family:Microsoft YaHei;font-size:16.00pt" xml:space="preserve">
+                <tspan x="13.1" y="28.1">商品详情</tspan>
+            </text>
+        </g>
+        <g transform="translate(1996.14,477.68)" id="shape16">
+            <path stroke-width="2" d="M.0,40.8L65.0,40.8" fill="none" stroke="#ffcb46"/>
+            <text style="fill:#454545;font-family:Microsoft YaHei;font-size:16.00pt" xml:space="preserve">
+                <tspan x="12.6" y="28.1">秒杀</tspan>
+            </text>
+        </g>
+        <g transform="translate(1996.14,527.13)" id="shape17">
+            <path stroke-width="2" d="M.0,40.8L108.0,40.8" fill="none" stroke="#ffcb46"/>
+            <text style="fill:#454545;font-family:Microsoft YaHei;font-size:16.00pt" xml:space="preserve">
+                <tspan x="13.1" y="28.1">订单详情</tspan>
+            </text>
+        </g>
+        <g transform="translate(1996.14,600.88)" id="shape18">
+            <path stroke-width="2" d="M.0,40.8L134.0,40.8" fill="none" stroke="#fa88d8"/>
+            <text style="fill:#454545;font-family:Microsoft YaHei;font-size:16.00pt" xml:space="preserve">
+                <tspan x="12.6" y="28.1">JMeter入门</tspan>
+            </text>
+        </g>
+        <g transform="translate(1996.14,650.33)" id="shape19">
+            <path stroke-width="2" d="M.0,40.8L239.0,40.8" fill="none" stroke="#fa88d8"/>
+            <text style="fill:#454545;font-family:Microsoft YaHei;font-size:16.00pt" xml:space="preserve">
+                <tspan x="12.6" y="28.1">JMeter自定义变量压测</tspan>
+            </text>
+        </g>
+        <g transform="translate(1274.86,169.26)" id="shape20">
+            <path stroke-width="2" d="M.0,40.8L65.0,40.8" fill="none" stroke="#5cd3f3"/>
+            <text style="fill:#454545;font-family:Microsoft YaHei;font-size:16.00pt" xml:space="preserve">
+                <tspan x="12.6" y="28.1">缓存</tspan>
+            </text>
+        </g>
+        <g transform="translate(1211.86,218.71)" id="shape21">
+            <path stroke-width="2" d="M.0,40.8L128.0,40.8" fill="none" stroke="#5cd3f3"/>
+            <text style="fill:#454545;font-family:Microsoft YaHei;font-size:16.00pt" xml:space="preserve">
+                <tspan x="12.6" y="28.1">静态化分离</tspan>
+            </text>
+        </g>
+        <g transform="translate(1128.86,292.46)" id="shape22">
+            <path stroke-width="2" d="M.0,40.8L211.0,40.8" fill="none" stroke="#7bdd5f"/>
+            <text style="fill:#454545;font-family:Microsoft YaHei;font-size:16.00pt" xml:space="preserve">
+                <tspan x="12.6" y="28.1">RabbitMQ消息队列</tspan>
+            </text>
+        </g>
+        <g transform="translate(1232.86,341.91)" id="shape23">
+            <path stroke-width="2" d="M.0,40.8L107.0,40.8" fill="none" stroke="#7bdd5f"/>
+            <text style="fill:#454545;font-family:Microsoft YaHei;font-size:16.00pt" xml:space="preserve">
+                <tspan x="12.6" y="28.1">接口优化</tspan>
+            </text>
+        </g>
+        <g transform="translate(1232.86,391.36)" id="shape24">
+            <path stroke-width="2" d="M.0,40.8L107.0,40.8" fill="none" stroke="#7bdd5f"/>
+            <text style="fill:#454545;font-family:Microsoft YaHei;font-size:16.00pt" xml:space="preserve">
+                <tspan x="12.6" y="28.1">分布式锁</tspan>
+            </text>
+        </g>
+        <g transform="translate(1190.86,465.11)" id="shape25">
+            <path stroke-width="2" d="M.0,40.8L149.0,40.8" fill="none" stroke="#fa864c"/>
+            <text style="fill:#454545;font-family:Microsoft YaHei;font-size:16.00pt" xml:space="preserve">
+                <tspan x="12.6" y="28.1">隐藏秒杀地址</tspan>
+            </text>
+        </g>
+        <g transform="translate(1253.86,514.56)" id="shape26">
+            <path stroke-width="2" d="M.0,40.8L86.0,40.8" fill="none" stroke="#fa864c"/>
+            <text style="fill:#454545;font-family:Microsoft YaHei;font-size:16.00pt" xml:space="preserve">
+                <tspan x="12.6" y="28.1">验证码</tspan>
+            </text>
+        </g>
+        <g transform="translate(1232.86,564.01)" id="shape27">
+            <path stroke-width="2" d="M.0,40.8L107.0,40.8" fill="none" stroke="#fa864c"/>
+            <text style="fill:#454545;font-family:Microsoft YaHei;font-size:16.00pt" xml:space="preserve">
+                <tspan x="12.6" y="28.1">接口限流</tspan>
+            </text>
+        </g>
+    </g>
+</svg>
