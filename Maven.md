@@ -1,4 +1,4 @@
-整个示例项目放在[GitHub]()上。
+整个示例项目放在[GitHub](https://github.com/simple-jbx/MavenLearn)上。
 
 [原始视频学习连接](https://www.bilibili.com/video/BV1Fz4y167p5)
 
