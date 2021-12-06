@@ -4,6 +4,32 @@
 
 # 图&树
 
+## 二叉树
+
+### [二叉树的最近公共祖先](https://leetcode-cn.com/problems/lowest-common-ancestor-of-a-binary-tree/)
+
+```java
+class Solution {
+    public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+        //一个是另一个的祖先
+        if(root == null || root.val == p.val || root.val == q.val) {
+            return root;
+        }
+
+        //p q分布在左右子树
+        TreeNode l = lowestCommonAncestor(root.left, p, q);
+        TreeNode r = lowestCommonAncestor(root.right, p, q);
+
+        if(l != null && r != null) {
+            return root;
+        }
+
+        //p q分布在同一子树
+        return l == null ? r : l;
+    }
+}
+```
+
 ## **拓扑排序**★★★★★
 
 ### [LeetCode 207.课程表](https://leetcode-cn.com/problems/course-schedule/)
