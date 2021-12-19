@@ -304,66 +304,90 @@ class Solution {
 
 ```java
 class SegmentTree {
-    
-    int n;
-    int[] tree;
-    
-    public SegmentTree(int[] nums) {
-        int n = nums.length;
-        tree = new int[n << 1];
-        buildTree(nums);
-    }
-    
-    private void buildTree(int[] nums) {
-		//构造tree的n - 2n-1部分
-		for (int i = n, j = 0; i < n << 1; i++, j++) {
-			tree[i] = nums[j];
-		}
-		//构造tree的1-n-1部分
-		for (int i = n - 1; i > 0; i--) {
-			tree[i] = tree[i << 1] + tree[(i << 1) + 1];
-		}
-	}
+        int n;
+        int[] tree;
+        boolean iSMAX;
 
-	public void update(int i, int val) {
-        i += n;//nums的索引与tree的索引相差n
-        tree[i] = val;
-        while (i > 0) {
-            int left = i;
-            int right = i;
-            if (i & 1 == 0) {
-                right = i + 1;//i为左孩子
-            } 
-            else {
-                left = i - 1;//i为右孩子
-            } 
-            tree[i >> 1] = tree[left] + tree[right];
-            i >>= 1;
+        public SegmentTree(int[] nums, boolean isMax) {
+            n = nums.length;
+            tree = new int[n << 1];
+            this.iSMAX = isMax;
+            buildTree(nums, isMax);
+        }
+
+        private void buildTree(int[] nums, boolean isMax) {
+            //构造tree的n - 2n-1部分
+            for (int i = n, j = 0; i < (n << 1); i++, j++) {
+                tree[i] = nums[j];
+            }
+            //构造tree的1-n-1部分
+            for (int i = n - 1; i > 0; i--) {
+                if(isMax) {
+                    tree[i] = Math.max(tree[i << 1], tree[(i << 1) + 1]);
+                } else {
+                    tree[i] = Math.min(tree[i << 1], tree[(i << 1) + 1]);
+                }
+            }
+        }
+    
+        public void update(int i, int val) {
+            i += n;//nums的索引与tree的索引相差n
+            tree[i] = val;
+            while (i > 0) {
+                int left = i;
+                int right = i;
+                if ((i & 1) == 0) {
+                    right = i + 1;//i为左孩子
+                } 
+                else {
+                    left = i - 1;//i为右孩子
+                } 
+                tree[i >> 1] = tree[left] + tree[right];
+                if(iSMAX) {
+                	 tree[i >> 1] = Math.max(tree[left], tree[right]);
+            	} else {
+                	tree[i >> 1] = Math.min(tree[left], tree[right]);
+            	}
+                i >>= 1;
+            }
+        }
+
+        public int queryRange(int i, int j) {
+            //nums的索引与tree的索引相差n
+            i += n;
+            j += n;
+            int ans = 0;
+            if(iSMAX) {
+                ans = Integer.MIN_VALUE;
+            } else {
+                ans = Integer.MAX_VALUE;
+            }
+
+            while (i <= j) {
+                //目的是维持[i,j]我左右孩子，或者一个节点本身
+                if ((i & 1) == 1) {//i为右孩子
+                    if(iSMAX) {
+                        ans = Math.max(ans, tree[i]);
+                    } else {
+                        ans = Math.min(ans, tree[i]);
+                    }
+                    i++;
+                }
+
+                if ((j & 1) == 0) {//j为左孩子
+                    if(iSMAX) {
+                        ans = Math.max(ans, tree[j]);
+                    } else {
+                        ans = Math.min(ans, tree[j]);
+                    }
+                    j--;
+                }
+                i >>= 1;
+                j >>= 1;
+            }
+            return ans;
         }
     }
-
-    public int sumRange(int i, int j) {
-        //nums的索引与tree的索引相差n
-        i += n;
-        j += n;
-        int sum = 0;
-        while (i <= j) {
-            //目的是维持[i,j]我左右孩子，或者一个节点本身
-            if (i & 1 == 1) {//i为右孩子
-                sum += tree[i];
-                i++;
-            }
-            
-            if (j & 1 == 0) {//j为左孩子
-                sum += tree[j];
-                j--;
-            }
-            i >>= 1;
-            j >>= 1;
-        }
-        return sum;
-    }
-}
 ```
 
 
