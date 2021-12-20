@@ -1,0 +1,113 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 939 644" width="939" height="644" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <defs/>
+    <g transform="translate(-83.50,-74.85)">
+        <g id="shape1" transform="translate(417.50,365.85)">
+            <path stroke-width="3" d="M4.0,.0L288.0,.0C290.2,.0,292.0,1.8,292.0,4.0L292.0,58.0C292.0,60.2,290.2,62.0,288.0,62.0L4.0,62.0C1.8,62.0,.0,60.2,.0,58.0L.0,4.0C.0,1.8,1.8,.0,4.0,.0z" fill-rule="nonzero" fill="#3a6eb6" stroke="#3a6eb6"/>
+            <text style="fill:#ffffff;font-family:Microsoft YaHei;font-size:14.00pt" xml:space="preserve">
+                <tspan x="25.8" y="38.5">java.util.concurrent.atomic</tspan>
+            </text>
+        </g>
+        <g id="shape2" transform="translate(772.50,75.85)">
+            <path d="M4.0,.0L154.0,.0C156.2,.0,158.0,1.8,158.0,4.0L158.0,38.0C158.0,40.2,156.2,42.0,154.0,42.0L4.0,42.0C1.8,42.0,.0,40.2,.0,38.0L.0,4.0C.0,1.8,1.8,.0,4.0,.0z" fill-rule="nonzero" fill="#ebf9f5" stroke="#ebf9f5"/>
+            <text style="fill:#303030;font-family:Microsoft YaHei;font-size:12.00pt" xml:space="preserve">
+                <tspan x="22.8" y="27.5">AtomicBoolean</tspan>
+            </text>
+        </g>
+        <g id="shape3" transform="translate(772.50,150.85)">
+            <path d="M4.0,.0L147.0,.0C149.2,.0,151.0,1.8,151.0,4.0L151.0,38.0C151.0,40.2,149.2,42.0,147.0,42.0L4.0,42.0C1.8,42.0,.0,40.2,.0,38.0L.0,4.0C.0,1.8,1.8,.0,4.0,.0z" fill-rule="nonzero" fill="#ebf9f5" stroke="#ebf9f5"/>
+            <text style="fill:#303030;font-family:Microsoft YaHei;font-size:12.00pt" xml:space="preserve">
+                <tspan x="22.8" y="27.5">AtomicInteger</tspan>
+            </text>
+        </g>
+        <g id="shape4" transform="translate(772.50,225.85)">
+            <path d="M4.0,.0L187.0,.0C189.2,.0,191.0,1.8,191.0,4.0L191.0,38.0C191.0,40.2,189.2,42.0,187.0,42.0L4.0,42.0C1.8,42.0,.0,40.2,.0,38.0L.0,4.0C.0,1.8,1.8,.0,4.0,.0z" fill-rule="nonzero" fill="#ebf9f5" stroke="#ebf9f5"/>
+            <text style="fill:#303030;font-family:Microsoft YaHei;font-size:12.00pt" xml:space="preserve">
+                <tspan x="22.8" y="27.5">AtomicIntegerArray</tspan>
+            </text>
+        </g>
+        <g id="shape5" transform="translate(772.50,450.85)">
+            <path d="M4.0,.0L170.0,.0C172.2,.0,174.0,1.8,174.0,4.0L174.0,38.0C174.0,40.2,172.2,42.0,170.0,42.0L4.0,42.0C1.8,42.0,.0,40.2,.0,38.0L.0,4.0C.0,1.8,1.8,.0,4.0,.0z" fill-rule="nonzero" fill="#ebf9f5" stroke="#ebf9f5"/>
+            <text style="fill:#303030;font-family:Microsoft YaHei;font-size:12.00pt" xml:space="preserve">
+                <tspan x="22.8" y="27.5">AtomicLongArray</tspan>
+            </text>
+        </g>
+        <g id="shape6" transform="translate(772.50,375.85)">
+            <path d="M4.0,.0L130.0,.0C132.2,.0,134.0,1.8,134.0,4.0L134.0,38.0C134.0,40.2,132.2,42.0,130.0,42.0L4.0,42.0C1.8,42.0,.0,40.2,.0,38.0L.0,4.0C.0,1.8,1.8,.0,4.0,.0z" fill-rule="nonzero" fill="#ebf9f5" stroke="#ebf9f5"/>
+            <text style="fill:#303030;font-family:Microsoft YaHei;font-size:12.00pt" xml:space="preserve">
+                <tspan x="22.8" y="27.5">AtomicLong</tspan>
+            </text>
+        </g>
+        <g id="shape7" transform="translate(772.50,300.85)">
+            <path d="M4.0,.0L245.0,.0C247.2,.0,249.0,1.8,249.0,4.0L249.0,38.0C249.0,40.2,247.2,42.0,245.0,42.0L4.0,42.0C1.8,42.0,.0,40.2,.0,38.0L.0,4.0C.0,1.8,1.8,.0,4.0,.0z" fill-rule="nonzero" fill="#ebf9f5" stroke="#ebf9f5"/>
+            <text style="fill:#303030;font-family:Microsoft YaHei;font-size:12.00pt" xml:space="preserve">
+                <tspan x="22.8" y="27.5">AtomicIntegerFieldUpdater</tspan>
+            </text>
+        </g>
+        <g id="shape8" transform="translate(772.50,525.85)">
+            <path d="M4.0,.0L228.0,.0C230.2,.0,232.0,1.8,232.0,4.0L232.0,38.0C232.0,40.2,230.2,42.0,228.0,42.0L4.0,42.0C1.8,42.0,.0,40.2,.0,38.0L.0,4.0C.0,1.8,1.8,.0,4.0,.0z" fill-rule="nonzero" fill="#ebf9f5" stroke="#ebf9f5"/>
+            <text style="fill:#303030;font-family:Microsoft YaHei;font-size:12.00pt" xml:space="preserve">
+                <tspan x="22.8" y="27.5">AtomicLongFieldUpdater</tspan>
+            </text>
+        </g>
+        <g id="shape9" transform="translate(160.50,338.35)">
+            <path d="M4.0,.0L190.0,.0C192.2,.0,194.0,1.8,194.0,4.0L194.0,38.0C194.0,40.2,192.2,42.0,190.0,42.0L4.0,42.0C1.8,42.0,.0,40.2,.0,38.0L.0,4.0C.0,1.8,1.8,.0,4.0,.0z" fill-rule="nonzero" fill="#ebf9f5" stroke="#ebf9f5"/>
+            <text style="fill:#303030;font-family:Microsoft YaHei;font-size:12.00pt" xml:space="preserve">
+                <tspan x="22.8" y="27.5">DoubleAccumulator</tspan>
+            </text>
+        </g>
+        <g id="shape10" transform="translate(114.50,263.35)">
+            <path d="M4.0,.0L236.0,.0C238.2,.0,240.0,1.8,240.0,4.0L240.0,38.0C240.0,40.2,238.2,42.0,236.0,42.0L4.0,42.0C1.8,42.0,.0,40.2,.0,38.0L.0,4.0C.0,1.8,1.8,.0,4.0,.0z" fill-rule="nonzero" fill="#ebf9f5" stroke="#ebf9f5"/>
+            <text style="fill:#303030;font-family:Microsoft YaHei;font-size:12.00pt" xml:space="preserve">
+                <tspan x="22.8" y="27.5">AtomicStampedReference</tspan>
+            </text>
+        </g>
+        <g id="shape11" transform="translate(84.50,188.35)">
+            <path d="M4.0,.0L266.0,.0C268.2,.0,270.0,1.8,270.0,4.0L270.0,38.0C270.0,40.2,268.2,42.0,266.0,42.0L4.0,42.0C1.8,42.0,.0,40.2,.0,38.0L.0,4.0C.0,1.8,1.8,.0,4.0,.0z" fill-rule="nonzero" fill="#ebf9f5" stroke="#ebf9f5"/>
+            <text style="fill:#303030;font-family:Microsoft YaHei;font-size:12.00pt" xml:space="preserve">
+                <tspan x="22.8" y="27.5">AtomicReferenceFieldUpdater</tspan>
+            </text>
+        </g>
+        <g id="shape12" transform="translate(142.50,113.35)">
+            <path d="M4.0,.0L208.0,.0C210.2,.0,212.0,1.8,212.0,4.0L212.0,38.0C212.0,40.2,210.2,42.0,208.0,42.0L4.0,42.0C1.8,42.0,.0,40.2,.0,38.0L.0,4.0C.0,1.8,1.8,.0,4.0,.0z" fill-rule="nonzero" fill="#ebf9f5" stroke="#ebf9f5"/>
+            <text style="fill:#303030;font-family:Microsoft YaHei;font-size:12.00pt" xml:space="preserve">
+                <tspan x="22.8" y="27.5">AtomicReferenceArray</tspan>
+            </text>
+        </g>
+        <g id="shape13" transform="translate(772.50,675.85)">
+            <path d="M4.0,.0L168.0,.0C170.2,.0,172.0,1.8,172.0,4.0L172.0,38.0C172.0,40.2,170.2,42.0,168.0,42.0L4.0,42.0C1.8,42.0,.0,40.2,.0,38.0L.0,4.0C.0,1.8,1.8,.0,4.0,.0z" fill-rule="nonzero" fill="#ebf9f5" stroke="#ebf9f5"/>
+            <text style="fill:#303030;font-family:Microsoft YaHei;font-size:12.00pt" xml:space="preserve">
+                <tspan x="22.8" y="27.5">AtomicReference</tspan>
+            </text>
+        </g>
+        <g id="shape14" transform="translate(772.50,600.85)">
+            <path d="M4.0,.0L240.0,.0C242.2,.0,244.0,1.8,244.0,4.0L244.0,38.0C244.0,40.2,242.2,42.0,240.0,42.0L4.0,42.0C1.8,42.0,.0,40.2,.0,38.0L.0,4.0C.0,1.8,1.8,.0,4.0,.0z" fill-rule="nonzero" fill="#ebf9f5" stroke="#ebf9f5"/>
+            <text style="fill:#303030;font-family:Microsoft YaHei;font-size:12.00pt" xml:space="preserve">
+                <tspan x="22.8" y="27.5">AtomicMarkableReference</tspan>
+            </text>
+        </g>
+        <g id="shape15" transform="translate(228.50,563.35)">
+            <path d="M4.0,.0L122.0,.0C124.2,.0,126.0,1.8,126.0,4.0L126.0,38.0C126.0,40.2,124.2,42.0,122.0,42.0L4.0,42.0C1.8,42.0,.0,40.2,.0,38.0L.0,4.0C.0,1.8,1.8,.0,4.0,.0z" fill-rule="nonzero" fill="#ebf9f5" stroke="#ebf9f5"/>
+            <text style="fill:#303030;font-family:Microsoft YaHei;font-size:12.00pt" xml:space="preserve">
+                <tspan x="22.8" y="27.5">LongAdder</tspan>
+            </text>
+        </g>
+        <g id="shape16" transform="translate(177.50,488.35)">
+            <path d="M4.0,.0L173.0,.0C175.2,.0,177.0,1.8,177.0,4.0L177.0,38.0C177.0,40.2,175.2,42.0,173.0,42.0L4.0,42.0C1.8,42.0,.0,40.2,.0,38.0L.0,4.0C.0,1.8,1.8,.0,4.0,.0z" fill-rule="nonzero" fill="#ebf9f5" stroke="#ebf9f5"/>
+            <text style="fill:#303030;font-family:Microsoft YaHei;font-size:12.00pt" xml:space="preserve">
+                <tspan x="22.8" y="27.5">LongAccumulator</tspan>
+            </text>
+        </g>
+        <g id="shape17" transform="translate(211.50,413.35)">
+            <path d="M4.0,.0L139.0,.0C141.2,.0,143.0,1.8,143.0,4.0L143.0,38.0C143.0,40.2,141.2,42.0,139.0,42.0L4.0,42.0C1.8,42.0,.0,40.2,.0,38.0L.0,4.0C.0,1.8,1.8,.0,4.0,.0z" fill-rule="nonzero" fill="#ebf9f5" stroke="#ebf9f5"/>
+            <text style="fill:#303030;font-family:Microsoft YaHei;font-size:12.00pt" xml:space="preserve">
+                <tspan x="22.8" y="27.5">DoubleAdder</tspan>
+            </text>
+        </g>
+        <g id="shape18" transform="translate(239.50,638.35)">
+            <path d="M4.0,.0L111.0,.0C113.2,.0,115.0,1.8,115.0,4.0L115.0,38.0C115.0,40.2,113.2,42.0,111.0,42.0L4.0,42.0C1.8,42.0,.0,40.2,.0,38.0L.0,4.0C.0,1.8,1.8,.0,4.0,.0z" fill-rule="nonzero" fill="#ebf9f5" stroke="#ebf9f5"/>
+            <text style="fill:#303030;font-family:Microsoft YaHei;font-size:12.00pt" xml:space="preserve">
+                <tspan x="23.3" y="27.5">Striped64</tspan>
+            </text>
+        </g>
+    </g>
+</svg>
