@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 585 528" xmlns:xlink="http://www.w3.org/1999/xlink" height="528" width="585">
+    <defs/>
+    <g transform="translate(-197.57,-125.00)">
+        <path id="shape1" fill="#ffffff" transform="translate(198.57,321.00)" stroke="#323232" fill-rule="nonzero" d="M567.4,331.0L567.4,.0L.0,.0L.0,331.0L567.4,331.0z"/>
+        <g id="shape2" transform="translate(281.00,458.00)">
+            <path fill="#ffffff" stroke="#323232" fill-rule="nonzero" d="M124.0,124.0L124.0,.0L.0,.0L.0,124.0L124.0,124.0z"/>
+            <text style="fill:#191919;font-family:Microsoft YaHei;font-size:10.00pt" xml:space="preserve">
+                <tspan x="9.6" y="56.6">Inode:67209769</tspan>
+                <tspan x="38.4" y="75.0">Ori文件</tspan>
+            </text>
+        </g>
+        <g id="shape3" transform="translate(470.00,458.00)">
+            <path fill="#ffffff" stroke="#323232" fill-rule="nonzero" d="M124.0,124.0L124.0,.0L.0,.0L.0,124.0L124.0,124.0z"/>
+            <text style="fill:#191919;font-family:Microsoft YaHei;font-size:10.00pt" xml:space="preserve">
+                <tspan x="9.6" y="56.6">Inode:67202188</tspan>
+            </text>
+        </g>
+        <g id="shape4" transform="translate(282.00,126.00)">
+            <path fill="#ffffff" stroke="#323232" fill-rule="nonzero" d="M120.0,120.0L120.0,.0L.0,.0L.0,120.0L120.0,120.0z"/>
+            <text style="fill:#191919;font-family:Microsoft YaHei;font-size:10.00pt" xml:space="preserve">
+                <tspan x="32.4" y="64.1">hardLink</tspan>
+            </text>
+        </g>
+        <g id="shape5" transform="translate(472.00,126.00)">
+            <path fill="#ffffff" stroke="#323232" fill-rule="nonzero" d="M120.0,120.0L120.0,.0L.0,.0L.0,120.0L120.0,120.0z"/>
+            <text style="fill:#191919;font-family:Microsoft YaHei;font-size:10.00pt" xml:space="preserve">
+                <tspan x="50.0" y="64.1">Ori</tspan>
+            </text>
+        </g>
+        <g id="shape6" transform="translate(662.00,126.00)">
+            <path fill="#ffffff" stroke="#323232" fill-rule="nonzero" d="M120.0,120.0L120.0,.0L.0,.0L.0,120.0L120.0,120.0z"/>
+            <text style="fill:#191919;font-family:Microsoft YaHei;font-size:10.00pt" xml:space="preserve">
+                <tspan x="33.6" y="64.1">SoftLink</tspan>
+            </text>
+        </g>
+        <g id="shape7" transform="translate(722.00,246.00)">
+            <path fill="none" stroke="#191919" d="M.0,.0L.0,274.0L-122.0,274.0"/>
+            <path fill="#191919" stroke="#191919" stroke-linecap="round" stroke-width="1" d="M-122.0,277.0L-128.0,274.0L-122.0,271.0L-122.0,277.0"/>
+        </g>
+        <g id="shape8" transform="translate(532.00,458.00)">
+            <path fill="none" stroke="#191919" d="M.0,.0L.0,-206.0"/>
+            <path fill="#191919" stroke="#191919" stroke-linecap="round" stroke-width="1" d="M-3.0,-206.0L.0,-212.0L3.0,-206.0L-3.0,-206.0"/>
+        </g>
+        <g id="shape9" transform="translate(472.00,186.00)">
+            <path fill="none" stroke="#191919" d="M.0,.0L-35.0,.0L-35.0,334.0L-61.0,334.0"/>
+            <path fill="#191919" stroke="#191919" stroke-linecap="round" stroke-width="1" d="M-61.0,337.0L-67.0,334.0L-61.0,331.0L-61.0,337.0"/>
+        </g>
+        <g id="shape10" transform="translate(342.00,246.00)">
+            <path fill="none" stroke="#191919" d="M.0,.0L.0,180.0L1.0,180.0L1.0,206.0"/>
+            <path fill="#191919" stroke="#191919" stroke-linecap="round" stroke-width="1" d="M4.0,206.0L1.0,212.0L-2.0,206.0L4.0,206.0"/>
+        </g>
+    </g>
+</svg>

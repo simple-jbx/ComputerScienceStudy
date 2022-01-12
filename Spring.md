@@ -384,8 +384,9 @@ ApplicationContext ac = new ClassPathXmlApplicationContext("spring.xml", "dao.xm
         https://www.springframework.org/schema/beans/spring-beans.xsd">
 
     <!--导入需要包含的资源文件-->
-    <import resource="service.xml">
-    <import resource="dao.xml">
+    <import resource="service.xml"></import>
+    <import resource="dao.xml"></import>
+</beans>
 ```
 
 ## Spring IOC 容器 Bean 对象实例化
@@ -510,8 +511,6 @@ public class InstanceFactory {
         typeController.test();
 ```
 
-
-
 ### Spring三种实例化 Bean 方式比较
 
 - 方式一：通过bean的缺省构造函数创建，当各个bean的业务逻辑相互比较独立的时候或者和外界关联较少的时候可以使用
@@ -519,3 +518,386 @@ public class InstanceFactory {
 - 方式三：利用实例化factory方法创建，即将factory方法也做了业务bean来控制，可以你敢于集成其他框架的bean创建管理方法，能够使bean和factory的角色互换。
 
 ## Spring IOC 注入
+
+[Code]()
+
+### Spring IOC 手动装配（注入）
+
+#### set方法注入
+
+注：
+
+- 属性字段需要提供set方法
+- 四种方式，图见使用set方法注入
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        https://www.springframework.org/schema/beans/spring-beans.xsd">
+    <bean id="userDao" class="tech.snnukf.dao.UserDao"></bean>
+
+    <!--
+        Set方法注入
+            通过property属性注入
+    -->
+    <bean id="userService" class="tech.snnukf.service.UserService">
+        <property name="userDao" ref="userDao"/>
+        <property name="host" value="127.0.0.1"/>
+        <property name="list">
+            <list>
+                <value>上海</value>
+                <value>北京</value>
+                <value>深圳</value>
+            </list>
+        </property>
+        <property name="set">
+            <set>
+                <value>杭州</value>
+                <value>天津</value>
+                <value>西安</value>
+            </set>
+        </property>
+
+        <property name="map">
+            <map>
+                <entry>
+                    <key><value>周杰伦</value></key>
+                    <value>晴天</value>
+                </entry>
+                <entry>
+                    <key>
+                        <value>林俊杰</value>
+                    </key>
+                    <value>江南</value>
+                </entry>
+            </map>
+        </property>
+
+        <property name="properties">
+            <props>
+                <prop key="bj">Beijing</prop>
+                <prop key="sh">ShangHai</prop>
+            </props>
+        </property>
+    </bean>
+</beans>
+```
+
+```java
+package tech.snnukf.service;
+
+import tech.snnukf.dao.UserDao;
+
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Set;
+
+/**
+ * @author simple.jbx
+ * @ClassName UserService
+ * @description //TODO
+ * @email jb.xue@qq.com
+ * @github https://github.com/simple-jbx
+ * @date 2022/01/07/ 18:48
+ */
+public class UserService {
+
+    //手动实例化
+    //private UserDao userDao = new UserDao();
+
+    //业务逻辑对象 JavaBean对象 set方法注入
+    ///*
+    private UserDao userDao;
+
+    public void setUserDao(UserDao userDao) {
+        this.userDao = userDao;
+    }
+    // */
+
+    //常用类型 基本类型
+    private String host;
+    public void setHost(String host) {
+        this.host = host;
+    }
+
+    //集合注入
+    private List<String> list;
+    public void setList(List<String> list) {
+        this.list = list;
+    }
+
+    //Set 集合
+    private Set<String> set;
+    public void setSet(Set<String> set) {
+        this.set = set;
+    }
+    
+    //Map
+    private Map<String, Object> map;
+
+    public void setMap(Map<String, Object> map) {
+        this.map = map;
+    }
+
+    //properties属性对象
+    private Properties properties;
+
+    public void setProperties(Properties properties) {
+        this.properties = properties;
+    }
+
+    public void printList() {
+        list.forEach((v -> System.out.println(v)));
+    }
+
+    public void printSet() {
+        set.forEach((v -> System.out.println(v)));
+    }
+
+    public void printMap() {
+        map.forEach(((k, v) -> System.out.println(k + "=" + v)));
+    }
+
+    public void printProperties() {
+        properties.forEach(((k, v) -> System.out.println(k + "=" + v)));
+    }
+
+
+    public void test() {
+        userDao.test();
+        System.out.println(host);
+        printList();
+        printMap();
+        printSet();
+        printProperties();
+        System.out.println("UserService Test...");
+    }
+}
+```
+
+#### 构造器注入
+
+注：
+
+- 提供带参构造器
+
+```java
+package tech.snnukf.service;
+
+import tech.snnukf.dao.StudentDao;
+import tech.snnukf.dao.UserDao;
+
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Set;
+
+/**
+ * @author simple.jbx
+ * @ClassName UserService
+ * @description 构造器注入 需要提供带参构造器
+ * @email jb.xue@qq.com
+ * @github https://github.com/simple-jbx
+ * @date 2022/01/07/ 18:48
+ */
+public class UserService02 {
+
+    //构造器注入
+    private UserDao userDao;
+    private StudentDao studentDao;
+    private String name;
+    UserService02(UserDao userDao, StudentDao studentDao, String name) {
+        this.userDao = userDao;
+        this.studentDao = studentDao;
+        this.name = name;
+    }
+
+    public void test() {
+        userDao.test();
+        studentDao.test();
+        System.out.println(name);
+        System.out.println("UserService02 test...");
+   }
+}
+```
+
+```xml
+    <!--
+        构造器注入
+        设置构造器所需要的参数
+        通过constructor-arg标签设置构造器的参数
+        name:属性名称
+        ref:要注入的bean对象对应的bean标签的id属性值
+        value:数据具体的值
+        index:参数的位置（从0开始）
+    -->
+    <bean id="userService02" class="tech.snnukf.service.UserService02">
+        <constructor-arg name="userDao" ref="userDao"></constructor-arg>
+        <constructor-arg name="name" value="127.0.0.1" index="2"></constructor-arg>
+        <constructor-arg name="studentDao" ref="studentDao" index="1"></constructor-arg>
+    </bean>
+```
+
+##### 循环依赖问题
+
+构造器注入需要注入A，A依赖B B依赖A，形成循环
+
+对于该类问题需要通过set注入解决
+
+```java
+package tech.snnukf.service;
+
+import tech.snnukf.dao.AccountDao;
+
+/**
+ * @author simple.jbx
+ * @ClassName AccountService
+ * @description //TODO
+ * @email jb.xue@qq.com
+ * @github https://github.com/simple-jbx
+ * @date 2022/01/08/ 17:19
+ */
+public class AccountService {
+    private AccountDao accountDao;
+
+    public void setAccountDao(AccountDao accountDao) {
+        this.accountDao = accountDao;
+    }
+//    public AccountService(AccountDao accountDao) {
+//        this.accountDao = accountDao;
+//    }
+
+    public void test() {
+        System.out.println(AccountService.class.getName());
+    }
+}
+```
+
+```java
+package tech.snnukf.dao;
+
+import tech.snnukf.service.AccountService;
+
+/**
+ * @author simple.jbx
+ * @ClassName AccountDao
+ * @description 构造器注入出现循环依赖问题
+ * @email jb.xue@qq.com
+ * @github https://github.com/simple-jbx
+ * @date 2022/01/08/ 17:19
+ */
+public class AccountDao {
+
+    private AccountService accountService;
+
+    public void setAccountService(AccountService accountService) {
+        this.accountService = accountService;
+    }
+    //    public AccountDao(AccountService accountService) {
+//        this.accountService = accountService;
+//    }
+
+    public void test() {
+        System.out.println(AccountDao.class.getName());
+    }
+}
+```
+
+```xml
+<!--    循环依赖问题 需要通过set注入解决&ndash;&gt;-->
+<!--    <bean id="accountDao" class="tech.snnukf.dao.AccountDao">-->
+<!--        <constructor-arg name="accountService" ref="accountService"></constructor-arg>-->
+<!--    </bean>-->
+
+<!--    <bean id="accountService" class="tech.snnukf.service.AccountService">-->
+<!--        <constructor-arg name="accountDao" ref="accountDao"></constructor-arg>-->
+<!--    </bean>-->
+
+    <bean id="accountService" class="tech.snnukf.service.AccountService">
+        <property name="accountDao" ref="accountDao"></property>
+    </bean>
+
+    <bean id="accountDao" class="tech.snnukf.dao.AccountDao">
+        <property name="accountService" ref="accountService"></property>
+    </bean>
+```
+
+#### 静态工厂注入
+
+与实例化工厂注入一样本质上还是set方法注入。
+
+```xml
+    <!--静态工厂注入
+        通过静态工厂实例化需要被注入的bean对象
+    -->
+<bean id="typeDao" class="tech.snnukf.factory.StaticFactory" factory-method="createTypeDao"></bean>
+
+```
+
+```java
+package tech.snnukf.factory;
+
+import tech.snnukf.dao.TypeDao;
+
+/**
+ * @author simple.jbx
+ * @ClassName StaticFactory
+ * @description 静态工厂
+ * @email jb.xue@qq.com
+ * @github https://github.com/simple-jbx
+ * @date 2022/01/08/ 18:47
+ */
+public class StaticFactory {
+//    定义静态方法
+    public static TypeDao createTypeDao() {
+        return new TypeDao();
+    }
+}
+```
+
+#### 实例化工厂注入
+
+```xml
+  <!-- 实例化工厂注入
+            通过实例化工厂实例化需要被注入的bean对象
+    -->
+    <bean id="instanceFactory" class="tech.snnukf.factory.InstanceFactory"></bean>
+    <bean id="typeDao" factory-bean="instanceFactory" factory-method="createTypeDao"></bean>
+```
+
+```java
+package tech.snnukf.factory;
+
+import tech.snnukf.dao.TypeDao;
+
+/**
+ * @author simple.jbx
+ * @ClassName InstanceFactory
+ * @description //TODO
+ * @email jb.xue@qq.com
+ * @github https://github.com/simple-jbx
+ * @date 2022/01/08/ 18:54
+ */
+public class InstanceFactory {
+    public TypeDao createTypeDao() {
+        return new TypeDao();
+    }
+}
+```
+
+#### 注入方式的选择
+
+set方式注入首选
+
+spring2.5之后，为了简化setter方法属性注入，引入p名称空间，可以将<property>子元素简化为<bean>元素属性配置。
+
+
+
+### Spring IOC自动装配（注入）
+
+## Spring IOC 扫描器
+
+## Bean的作用域和声明周期
