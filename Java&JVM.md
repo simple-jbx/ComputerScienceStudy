@@ -504,7 +504,7 @@ AIO适用于连接数目多且连接比较长（重操作）的架构，比如�
 
 ### 集合
 
-[JAVA集合源码](./JDK1.8Src/java/util/Collection.java)
+[JAVA集合源码](https://github.com/simple-jbx/SourceCode/tree/main/JAVA/JDK8Src/java/util/Collection.java)
 
 <div align='center'>
     <img src='./imgs/Collection01.png' width='1200px'>
@@ -536,7 +536,7 @@ HashSet如何保证数据的不可重复？
 
 #### Map
 
-##### [HashMap](./JDK1.8Src/java/util/HashMap.java)
+##### [HashMap](https://github.com/simple-jbx/SourceCode/tree/main/JAVA/JDK8Src/java/util/HashMap.java)
 
 ```java
 //初始容量 16
@@ -851,7 +851,7 @@ static class Node<K,V> implements Map.Entry<K,V> {
 
 ### 线程
 
-[JDK1.8 Thread.java](./JDK1.8Src/java/lang/Thread.java)
+[JDK1.8 Thread.java](https://github.com/simple-jbx/SourceCode/tree/main/JAVA/JDK8Src/java/lang/Thread.java)
 
 ##### 线程状态
 
@@ -1189,7 +1189,7 @@ Abort（中止）策略是默认的饱和策略，该策略将抛出未检查的
 
 ## 并发、锁
 
-### [Atomic原子类型](Atomic原子类型)
+### [Atomic原子类型]()
 
 具有原子/原子特征的类。
 

@@ -1,0 +1,100 @@
+<svg width="983" viewBox="0 0 983 319" xmlns="http://www.w3.org/2000/svg" height="319" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <defs/>
+    <g transform="translate(-37.00,-59.50)">
+        <g transform="translate(38.00,60.50)" id="shape1">
+            <path d="M100.0,53.0L100.0,7.0C100.0,3.1,96.9,.0,93.0,.0L7.0,.0C3.1,.0,.0,3.1,.0,7.0L.0,53.0C.0,56.9,3.1,60.0,7.0,60.0L93.0,60.0C96.9,60.0,100.0,56.9,100.0,53.0z" fill-rule="nonzero" fill="#ffffff" stroke="#323232"/>
+            <text xml:space="preserve" style="fill:#191919;font-family:Times New Roman;font-size:15.00pt">
+                <tspan y="38.3" x="30.0">电源</tspan>
+            </text>
+        </g>
+        <g transform="translate(166.00,60.50)" id="shape2">
+            <path d="M100.0,53.0L100.0,7.0C100.0,3.1,96.9,.0,93.0,.0L7.0,.0C3.1,.0,.0,3.1,.0,7.0L.0,53.0C.0,56.9,3.1,60.0,7.0,60.0L93.0,60.0C96.9,60.0,100.0,56.9,100.0,53.0z" fill-rule="nonzero" fill="#ffffff" stroke="#323232"/>
+            <text xml:space="preserve" style="fill:#191919;font-family:Times New Roman;font-size:15.00pt">
+                <tspan y="24.4" x="27.6">BIOS</tspan>
+                <tspan y="50.8" x="10.0">启动方式	</tspan>
+            </text>
+        </g>
+        <g transform="translate(294.00,60.50)" id="shape3">
+            <path d="M100.0,53.0L100.0,7.0C100.0,3.1,96.9,.0,93.0,.0L7.0,.0C3.1,.0,.0,3.1,.0,7.0L.0,53.0C.0,56.9,3.1,60.0,7.0,60.0L93.0,60.0C96.9,60.0,100.0,56.9,100.0,53.0z" fill-rule="nonzero" fill="#ffffff" stroke="#323232"/>
+            <text xml:space="preserve" style="fill:#191919;font-family:Times New Roman;font-size:15.00pt">
+                <tspan y="36.9" x="28.8">/boot</tspan>
+            </text>
+        </g>
+        <g transform="translate(422.00,60.50)" id="shape4">
+            <path d="M145.0,53.0L145.0,7.0C145.0,3.1,141.9,.0,138.0,.0L7.0,.0C3.1,.0,.0,3.1,.0,7.0L.0,53.0C.0,56.9,3.1,60.0,7.0,60.0L138.0,60.0C141.9,60.0,145.0,56.9,145.0,53.0z" fill-rule="nonzero" fill="#ffffff" stroke="#323232"/>
+            <text xml:space="preserve" style="fill:#191919;font-family:Times New Roman;font-size:15.00pt">
+                <tspan y="26.8" x="32.5">运行级别</tspan>
+                <tspan y="50.8" x="25.3">/etc/inittab3</tspan>
+            </text>
+        </g>
+        <g transform="translate(605.00,60.50)" id="shape5">
+            <path d="M145.0,53.0L145.0,7.0C145.0,3.1,141.9,.0,138.0,.0L7.0,.0C3.1,.0,.0,3.1,.0,7.0L.0,53.0C.0,56.9,3.1,60.0,7.0,60.0L138.0,60.0C141.9,60.0,145.0,56.9,145.0,53.0z" fill-rule="nonzero" fill="#ffffff" stroke="#323232"/>
+            <text xml:space="preserve" style="fill:#191919;font-family:Times New Roman;font-size:15.00pt">
+                <tspan y="25.8" x="12.5">执行对应启动</tspan>
+                <tspan y="52.2" x="38.9">systemd</tspan>
+            </text>
+        </g>
+        <g transform="translate(605.00,160.00)" id="shape6">
+            <path d="M145.0,53.0L145.0,7.0C145.0,3.1,141.9,.0,138.0,.0L7.0,.0C3.1,.0,.0,3.1,.0,7.0L.0,53.0C.0,56.9,3.1,60.0,7.0,60.0L138.0,60.0C141.9,60.0,145.0,56.9,145.0,53.0z" fill-rule="nonzero" fill="#ffffff" stroke="#323232"/>
+            <text xml:space="preserve" style="fill:#191919;font-family:Times New Roman;font-size:15.00pt">
+                <tspan y="26.8" x="22.5">自定义服务</tspan>
+                <tspan y="50.8" x="57.3">rc.d</tspan>
+            </text>
+        </g>
+        <g transform="translate(363.00,272.50)" id="shape7">
+            <path d="M128.0,98.0L128.0,7.0C128.0,3.1,124.9,.0,121.0,.0L7.0,.0C3.1,.0,.0,3.1,.0,7.0L.0,98.0C.0,101.9,3.1,105.0,7.0,105.0L121.0,105.0C124.9,105.0,128.0,101.9,128.0,98.0z" fill-rule="nonzero" fill="#ffffff" stroke="#323232"/>
+            <text xml:space="preserve" style="fill:#191919;font-family:Times New Roman;font-size:15.00pt">
+                <tspan y="46.9" x="43.6">init.d</tspan>
+                <tspan y="73.3" x="4.0">要启动的服务</tspan>
+            </text>
+        </g>
+        <g transform="translate(576.00,264.50)" id="shape8">
+            <path d="M203.0,106.0L203.0,7.0C203.0,3.1,199.9,.0,196.0,.0L7.0,.0C3.1,.0,.0,3.1,.0,7.0L.0,106.0C.0,109.9,3.1,113.0,7.0,113.0L196.0,113.0C199.9,113.0,203.0,109.9,203.0,106.0z" fill-rule="nonzero" fill="#ffffff" stroke="#323232"/>
+            <text xml:space="preserve" style="fill:#191919;font-family:Times New Roman;font-size:15.00pt">
+                <tspan y="25.9" x="81.5">rc3.d</tspan>
+                <tspan y="52.3" x="65.1">(软连接)</tspan>
+                <tspan y="78.7" x="21.1">S+NUM(开机启动)</tspan>
+                <tspan y="105.1" x="19.5">K+NUM(关机关闭)</tspan>
+            </text>
+        </g>
+        <g transform="translate(874.00,264.50)" id="shape9">
+            <path d="M145.0,106.0L145.0,7.0C145.0,3.1,141.9,.0,138.0,.0L7.0,.0C3.1,.0,.0,3.1,.0,7.0L.0,106.0C.0,109.9,3.1,113.0,7.0,113.0L138.0,113.0C141.9,113.0,145.0,109.9,145.0,106.0z" fill-rule="nonzero" fill="#ffffff" stroke="#323232"/>
+            <text xml:space="preserve" style="fill:#191919;font-family:Times New Roman;font-size:15.00pt">
+                <tspan y="50.9" x="43.7">rc.local</tspan>
+                <tspan y="77.3" x="6.9">(自定义sh脚本)</tspan>
+            </text>
+        </g>
+        <g transform="translate(138.00,90.50)" id="shape10">
+            <path d="M.0,.0L22.0,.0" stroke="#191919" fill="none"/>
+            <path stroke-width="1" d="M22.0,-3.0L28.0,.0L22.0,3.0L22.0,-3.0" fill="#191919" stroke="#191919" stroke-linecap="round"/>
+        </g>
+        <g transform="translate(266.00,90.50)" id="shape11">
+            <path d="M.0,.0L22.0,.0" stroke="#191919" fill="none"/>
+            <path stroke-width="1" d="M22.0,-3.0L28.0,.0L22.0,3.0L22.0,-3.0" fill="#191919" stroke="#191919" stroke-linecap="round"/>
+        </g>
+        <g transform="translate(394.00,90.50)" id="shape12">
+            <path d="M.0,.0L22.0,-0.0" stroke="#191919" fill="none"/>
+            <path stroke-width="1" d="M22.0,-3.0L28.0,-0.0L22.0,3.0L22.0,-3.0" fill="#191919" stroke="#191919" stroke-linecap="round"/>
+        </g>
+        <g transform="translate(567.00,90.50)" id="shape13">
+            <path d="M.0,.0L32.0,.0" stroke="#191919" fill="none"/>
+            <path stroke-width="1" d="M32.0,-3.0L38.0,.0L32.0,3.0L32.0,-3.0" fill="#191919" stroke="#191919" stroke-linecap="round"/>
+        </g>
+        <g transform="translate(677.50,120.50)" id="shape14">
+            <path d="M.0,.0L.0,33.5" stroke="#191919" fill="none"/>
+            <path stroke-width="1" d="M3.0,33.5L.0,39.5L-3.0,33.5L3.0,33.5" fill="#191919" stroke="#191919" stroke-linecap="round"/>
+        </g>
+        <g transform="translate(677.50,220.00)" id="shape15">
+            <path d="M.0,.0L.0,38.5" stroke="#191919" fill="none"/>
+            <path stroke-width="1" d="M3.0,38.5L.0,44.5L-3.0,38.5L3.0,38.5" fill="#191919" stroke="#191919" stroke-linecap="round"/>
+        </g>
+        <g transform="translate(677.50,220.00)" id="shape16">
+            <path d="M.0,.0L.0,14.0L-250.5,14.0L-250.5,46.5" stroke="#191919" fill="none"/>
+            <path stroke-width="1" d="M-247.5,46.5L-250.5,52.5L-253.5,46.5L-247.5,46.5" fill="#191919" stroke="#191919" stroke-linecap="round"/>
+        </g>
+        <g transform="translate(677.50,220.00)" id="shape17">
+            <path d="M.0,.0L.0,14.0L269.0,14.0L269.0,38.5" stroke="#191919" fill="none"/>
+            <path stroke-width="1" d="M272.0,38.5L269.0,44.5L266.0,38.5L272.0,38.5" fill="#191919" stroke="#191919" stroke-linecap="round"/>
+        </g>
+    </g>
+</svg>

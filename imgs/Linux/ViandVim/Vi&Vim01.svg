@@ -1,0 +1,76 @@
+<svg viewBox="0 0 627 429" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" height="429" width="627">
+    <defs/>
+    <g transform="translate(-280.50,-134.00)">
+        <g transform="translate(526.00,207.00)" id="shape1">
+            <path d="M132.0,70.0L132.0,.0L.0,.0L.0,70.0L132.0,70.0z" fill="#ffffff" fill-rule="nonzero" stroke="#000000" stroke-width="3"/>
+            <text style="fill:#191919;font-family:Times New Roman;font-size:16.00pt" xml:space="preserve">
+                <tspan x="22.8" y="43.6">编辑模式</tspan>
+            </text>
+        </g>
+        <g transform="translate(282.00,491.00)" id="shape2">
+            <path d="M132.0,70.0L132.0,.0L.0,.0L.0,70.0L132.0,70.0z" fill="#ffffff" fill-rule="nonzero" stroke="#000000" stroke-width="3"/>
+            <text style="fill:#191919;font-family:Times New Roman;font-size:16.00pt" xml:space="preserve">
+                <tspan x="22.8" y="43.6">输入模式</tspan>
+            </text>
+        </g>
+        <g transform="translate(755.57,491.00)" id="shape3">
+            <path d="M150.9,70.0L150.9,.0L.0,.0L.0,70.0L150.9,70.0z" fill="#ffffff" fill-rule="nonzero" stroke="#000000" stroke-width="3"/>
+            <text style="fill:#191919;font-family:Times New Roman;font-size:16.00pt" xml:space="preserve">
+                <tspan x="10.6" y="43.6">末行命令模式</tspan>
+            </text>
+        </g>
+        <g transform="matrix(-0.66,0.75,-0.75,-0.66,534.3,277.0)" id="shape4">
+            <path d="M.0,.0L273.3,.0" fill="none" stroke="#303030" stroke-width="3"/>
+            <path stroke-linecap="round" d="M273.3,-5.2L283.7,.0L273.3,5.2L273.3,-5.2" fill="#303030" stroke-width="1" stroke="#303030"/>
+        </g>
+        <g transform="translate(375.72,491.00)" id="shape5">
+            <path d="M.0,.0L171.9,-206.0" fill="none" stroke="#303030" stroke-width="3"/>
+            <path stroke-linecap="round" d="M167.9,-209.3L178.5,-214.0L175.9,-202.7L167.9,-209.3" fill="#303030" stroke-width="1" stroke="#303030"/>
+        </g>
+        <g transform="translate(617.08,277.00)" id="shape6">
+            <path d="M.0,.0L192.9,206.4" fill="none" stroke="#303030" stroke-width="3"/>
+            <path stroke-linecap="round" d="M196.7,202.9L200.0,214.0L189.1,210.0L196.7,202.9" fill="#303030" stroke-width="1" stroke="#303030"/>
+        </g>
+        <g transform="translate(855.44,491.00)" id="shape7">
+            <path d="M.0,.0L-199.2,-206.5" fill="none" stroke="#303030" stroke-width="3"/>
+            <path stroke-linecap="round" d="M-202.9,-202.9L-206.4,-214.0L-195.5,-210.1L-202.9,-202.9" fill="#303030" stroke-width="1" stroke="#303030"/>
+        </g>
+        <g transform="translate(317.50,350.43)" id="shape8">
+            <text style="fill:#191919;font-family:Times New Roman;font-size:16.00pt" xml:space="preserve">
+                <tspan x="17.3" y="33.9">输入 i a o</tspan>
+            </text>
+        </g>
+        <g transform="translate(426.06,400.05)" id="shape9">
+            <text style="fill:#191919;font-family:Times New Roman;font-size:16.00pt" xml:space="preserve">
+                <tspan x="29.2" y="24.1">ESC键</tspan>
+            </text>
+        </g>
+        <g transform="translate(631.50,354.43)" id="shape10">
+            <text style="fill:#191919;font-family:Times New Roman;font-size:16.00pt" xml:space="preserve">
+                <tspan x="31.1" y="28.5">:</tspan>
+            </text>
+        </g>
+        <g transform="translate(703.55,306.43)" id="shape11">
+            <text style="fill:#191919;font-family:Times New Roman;font-size:16.00pt" xml:space="preserve">
+                <tspan x="14.6" y="29.2">命令(w q wq)</tspan>
+                <tspan x="32.2" y="57.2">回车结束</tspan>
+            </text>
+        </g>
+        <g transform="translate(604.41,207.00)" id="shape12">
+            <path d="M.0,.0L.0,-56.0L189.6,-56.0L189.6,9.6" fill="none" stroke="#303030" stroke-width="3"/>
+            <path stroke-linecap="round" d="M194.8,9.6L189.6,20.0L184.4,9.6L194.8,9.6" fill="#303030" stroke-width="1" stroke="#303030"/>
+            <rect fill="#ffffff" height="28.0" x="40.1" y="-69.8" width="103.2"/>
+            <text style="fill:#191919;font-family:Times New Roman;font-size:16.00pt" xml:space="preserve">
+                <tspan x="40.1" y="-47.4">退出 :q/wq </tspan>
+            </text>
+        </g>
+        <g transform="translate(378.00,227.00)" id="shape13">
+            <path d="M.0,.0L.0,-76.0L197.5,-76.0L197.5,-30.4" fill="none" stroke="#303030" stroke-width="3"/>
+            <path stroke-linecap="round" d="M202.7,-30.4L197.5,-20.0L192.3,-30.4L202.7,-30.4" fill="#303030" stroke-width="1" stroke="#303030"/>
+            <rect fill="#ffffff" height="28.0" x="30.2" y="-89.8" width="135.2"/>
+            <text style="fill:#191919;font-family:Times New Roman;font-size:16.00pt" xml:space="preserve">
+                <tspan x="30.2" y="-67.4">进入 vi/vim file</tspan>
+            </text>
+        </g>
+    </g>
+</svg>
