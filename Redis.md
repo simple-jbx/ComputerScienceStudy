@@ -385,11 +385,12 @@ Redis单机版通过RDB或AOF持久化机制将数据持久化到硬盘上，但
 一种特殊的哈希算法，目的是解决分布式缓存问题。将key均匀映射到一组服务器上。当新增或者删除服务器（宕机）可以顺延改变映射关系。但是当组内服务器过少的时候，节点变换会对整个环中数据影响较大，容易出现数据倾斜的情况，即部分节点数据过多，部分节点数据过少。面对这种情况可以引入虚拟节点。每个虚拟节点会映射一个真实节点，最终将数据存放在虚拟节点映射的真实节点上。
 
 <div align='center'>
-    <img src='./imgs/Redis/Redis07.png' width='800px'>
+    <img src='./imgs/Redis/Redis07.svg' width='800px'>
 	</br></br>一致性Hash
-    <img src='./imgs/Redis/Redis08.png' width='800px'>
+    <img src='./imgs/Redis/Redis08.svg' width='800px'>
 	</br></br>引入虚拟节点的一致性Hash
 </div>
+
 
 ### Redis 哈希槽
 

@@ -315,8 +315,9 @@ systemctl status xxx.service
 ## 文件目录
 
 <div align='center'>
-    <img src='./imgs/Linux/File01.png' width='800px'>
+    <img src='./imgs/Linux/File01.svg' width='800px'>
 </div>
+
 
 - /bin
   - Binary 存放着二进制程序等
@@ -811,8 +812,9 @@ systemctl status xxx.service
 ## 权限
 
 <div align='center'>
-    <img src='./imgs/Linux/Linux001.png' width='800px'>
+    <img src='./imgs/Linux/Linux001.svg' width='800px'>
 </div>
+
 
 - 三组权限
 
@@ -843,8 +845,9 @@ systemctl status xxx.service
     - chmod 777 xxx
 
 <div align='center'>
-    <img src='./imgs/Linux/Linux002.png' width='800px'>
+    <img src='./imgs/Linux/Linux002.svg' width='800px'>
 </div>
+
 
 # 管道与重定向
 
@@ -1754,3 +1757,14 @@ echo "-----funwithParam stop-----"
 
 ## 定时任务
 
+- crond负责周期任务
+  - systemctl status crond.service
+- 添加任务，编辑当前用户的任务表
+  - crontab -e
+- 编辑任务
+  - \* \* \* \* \* cmd
+  - min hour day mon week cmd
+  - \*表示任意时间
+  - \-表示区间
+  - ,表示分割时段 30 3,19,21 * * * cmd 每天3 19 21点30分执行命令
+  - /n 表示分割， \*/5 \* \* \* \* cmd，每隔5分钟执行一次

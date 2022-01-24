@@ -312,7 +312,7 @@ public final class StringBuilder
 
 重载的方法不能根据返回类型进行区分，函数调用时不能指定返回类型，编译器不知道要调用哪个函数。
 
-### [面向对象三大特征](https://snailclimb.gitee.io/javaguide/#/docs/java/basis/Java%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86?id=%e9%9d%a2%e5%90%91%e5%af%b9%e8%b1%a1%e4%b8%89%e5%a4%a7%e7%89%b9%e5%be%81)
+### 面向对象三大特征
 
 封装、继承、多态
 
@@ -342,7 +342,7 @@ public final class StringBuilder
 
 应用场景：Spring中的xml的配置模式、动态代理设计模式也采用了反射机制
 
-### [泛型](https://snailclimb.gitee.io/javaguide/#/docs/java/basis/Java%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86?id=java-%e6%b3%9b%e5%9e%8b%e4%ba%86%e8%a7%a3%e4%b9%88%ef%bc%9f%e4%bb%80%e4%b9%88%e6%98%af%e7%b1%bb%e5%9e%8b%e6%93%a6%e9%99%a4%ef%bc%9f%e4%bb%8b%e7%bb%8d%e4%b8%80%e4%b8%8b%e5%b8%b8%e7%94%a8%e7%9a%84%e9%80%9a%e9%85%8d%e7%ac%a6%ef%bc%9f)
+### 泛型
 
 参数化类型，所操作的数据类型被指定为一个参数。
 
@@ -1189,7 +1189,7 @@ Abort（中止）策略是默认的饱和策略，该策略将抛出未检查的
 
 ## 并发、锁
 
-### [Atomic原子类型]()
+### Atomic原子类型
 
 具有原子/原子特征的类。
 
@@ -1204,7 +1204,7 @@ Abort（中止）策略是默认的饱和策略，该策略将抛出未检查的
 
 使用原子方式更新基本类型
 
-##### [AtomicInteger 整型原子类](https://snailclimb.gitee.io/javaguide/#/docs/java/multi-thread/Atomic%E5%8E%9F%E5%AD%90%E7%B1%BB%E6%80%BB%E7%BB%93?id=_24-atomicinteger-%e7%ba%bf%e7%a8%8b%e5%ae%89%e5%85%a8%e5%8e%9f%e7%90%86%e7%ae%80%e5%8d%95%e5%88%86%e6%9e%90)
+##### [AtomicInteger 整型原子类]
 
 ###### 常用方法
 

@@ -894,10 +894,289 @@ set方式注入首选
 
 spring2.5之后，为了简化setter方法属性注入，引入p名称空间，可以将<property>子元素简化为<bean>元素属性配置。
 
+在配置文件中引入p名称空间
+
+ ```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<!--引入p名称空间 xmlns:p="http://www.springframework.org/schema/p"-->
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       https://www.springframework.org/schema/beans/spring-beans.xsd">
+
+<!--spring2.5之后，为了简化setter方法属性注入，引入p名称空间，可以将<property>子元素简化为<bean>元素属性配置。-->
+        <bean id="userDao" class="tech.snnukf.dao.UserDao"></bean>
+        <bean id="userService03" class="tech.snnukf.service.UserService03"
+            p:name="127.0.0.1"
+            p:userDao-ref="userDao"
+        ></bean>
+</beans>
+ ```
+
 
 
 ### Spring IOC自动装配（注入）
 
+完整代码见[Spring04](https://github.com/simple-jbx/SpringLearning/tree/main/Spring04)
+
+#### 注解方式注入Bean
+
+注解的配置，可以简化配置文件，提高开发速度，使得程序看上去更简洁。Spring中通过注解实现对应bean对象的注入，通过反射技术实现。
+
+#### 准备环境
+
+- 修改配置文件
+
+```xml
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       https://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context/xsd">
+</beans>
+```
+
+- 开启自动化注入
+
+```xml
+<!--开启自动化装配(注入)-->
+<context:annotation-config/>
+<bean id="userDao" class="tech.snnukf.dao.UserDao"></bean>
+<bean id="userService" class="tech.snnukf.service.Uservice"></bean>
+```
+
+- 给bean对象添加注解
+
+#### @Resource注解
+
+@Resource注解实现自动注入(反射)
+
+- 默认根据属性字段名称查找对应的bean对象（属性字段的名称与bean标签的id属性值相等）
+- 如果属性字段名称未找到，则会通过类型(Class类型)查找
+- 属性可以提供set方法，也可以不提供set方法
+- 注解可以声明在属性级别或set方法级别
+- 可以设置name属性，name属性值必须与bean标签的id属性值一致；如果设置了name属性值，就只会按照name属性值查找bean队形
+- 当注入接口时，如果接口只有一个实现则正常实例化；如果接口有多个实现，则需要使用name属性指定需要被实例化的bean对象
+
+[Code](https://github.com/simple-jbx/SpringLearning/tree/main/Spring04/src/main/java/tech/snnukf/service/UserService.java)
+
+```java
+package tech.snnukf.service;
+
+import tech.snnukf.dao.IUserDao;
+import tech.snnukf.dao.UserDao;
+
+import javax.annotation.Resource;
+
+/**
+ * @author simple.jbx
+ * @ClassName UserService
+ * @description //TODO
+ * @email jb.xue@qq.com
+ * @github https://github.com/simple-jbx
+ * @date 2022/01/23/ 16:39
+ */
+public class UserService {
+
+    //注入JavaBean对象
+    //@Resource(name = "userDao")
+    @Resource
+    private UserDao userDao;
+
+    //@Resource
+    public void setUserDao(UserDao userDao) {
+        this.userDao = userDao;
+    }
+
+    //注入接口
+    @Resource(name = "userDaoImpl02")
+    private IUserDao iUserDao;
+
+
+    public void test() {
+        userDao.test();
+        iUserDao.test();
+        System.out.println(UserService.class.getName());
+    }
+}
+
+```
+
+#### @Autowired注解
+
+@Autowired注解实现自动化注入
+
+- 默认通过类型(Class类型)查找bean对象，与属性字段的名称无关
+- 属性可以提供set方法，也可以不提供set方法
+- 注解可以声明在属性级别或set方法级别
+- 可以添加@Qualifier结合使用，通过value属性值查找bean对象(value属性值必须设置，且值与bean标签的id属性值对应)
+
+[Code](https://github.com/simple-jbx/SpringLearning/tree/main/Spring04/src/main/java/tech/snnukf/service/AccountService.java)
+
+```java
+package tech.snnukf.service;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import tech.snnukf.dao.AccountDao;
+
+/**
+ * @author simple.jbx
+ * @ClassName UserService02
+ * @description //TODO
+ * @email jb.xue@qq.com
+ * @github https://github.com/simple-jbx
+ * @date 2022/01/23/ 17:40
+ */
+public class AccountService {
+
+    @Autowired
+    @Qualifier(value = "accountDao") //需要的时候可结合使用
+    private AccountDao accountDao;
+
+    public void test() {
+        accountDao.test();
+        System.out.printf(AccountService.class.getName());
+    }
+}
+```
+
 ## Spring IOC 扫描器
 
-## Bean的作用域和声明周期
+实际项目中有非常多的Bean，手动配置显然不能满足生产需要，Spring提供了扫描方式，对扫描到的bean对象统一管理，简化开发配置，提高效率。
+
+### Spring IOC 扫描器配置
+
+Spring IOC扫描器：bean对象统一管理，简化开发配置
+
+1. 设置自动化扫描范围
+
+   - 如果bean对象为在指定包范围，即使声明了注解，也无法实例化
+
+   - ```xml
+     <!--设置自动化扫描范围-->
+     <context:commonent-scan base-package="xxx.xxx"/>
+     ```
+
+2. 使用指定的注解(声明在类级别) bean对象的id属性默认是类名称（首字母小写）
+
+   - Dao层：@Repository
+   - Service层：@Service
+   - Controller层：@Controller
+   - 任意类：@Component
+
+
+
+## Bean的作用域和生命周期
+
+### Bean作用域
+
+默认情况下，从Spring容器中拿到的对象均是单例的。
+
+#### Singleton作用域
+
+<div align='center'>
+    <img src='./imgs/Java/Spring/SpringContainer.svg' width='800px'>
+    <br/><br/>Singleton作用域
+</div>
+
+#### prototype作用域
+
+通过scope="prototype"设置bean的类型，每次向Spring容器请求获取bean都会返回一个全新的bean，相对于Singleton作用域来说就是不会缓存bean，每次都会创建新的bean。
+
+#### Web应用中的作用域
+
+1. request作用域
+   - 每个请求创建新的bean。提交表单的数据必须对每次请求创建一个bean来保持这些表单数据，请求结束释放这些数据。
+2. session作用域
+   - 每个会话容器需要创建新bean。
+3. globalSession作用域
+   - 类似于session作用域，用于protlet(基于java的web组建)环境的web应用。如果在非portlet环境将视为session作用域。
+
+### Bean生命周期
+
+对比Servlet生命周期（容器启动加载并实例化servlet，调用servlet方法，销毁servlet）。
+
+在Spring中，bean的生命周期包括bean定义、初始化、使用和销毁4个阶段。
+
+#### Bean定义
+
+通过配置文档定义Bean，在一个配置文档中可以定义多个Bean。
+
+#### Bean初始化
+
+默认IOC容器加载时，实例化对象。
+
+1. 在配置文档中通过指定init-method属性来完成
+
+   ```java
+   public class RoleService {
+       public void init() {
+           System.out.println("RoleService init");
+       }
+   }
+   ```
+
+   ```xml
+   <bean id="roleService" class="tech.snnukf.service.RoleService" init-method="init"></bean>
+   ```
+
+   
+
+2. 实现org.springframework.beans.factory.InitializingBean接口
+
+   ```java
+   pulic class RoleService implements InitializindBean {
+       @Override
+       public void afterPropertiesSet() throws Exception {
+           System.out.println("RpleService init...");
+       }
+   }
+   ```
+
+   ```xml
+   <bean id="roleService" class="tech.snnukf.service.RoleService"></bean>
+   ```
+
+   ​		bean对象实例化过程是在Spring容器初始化时候完成的，可以通过lazy-init="true"属性延迟bean对象的初始化操作，然后在调用getBean方法时才会进行初始化。
+
+#### Bean使用
+
+1. 使用BeanFactory
+
+   ```java
+   BeanFactory beanFactory = new ClassPathXmlApplicationContext("spring.xml");
+   RoleService roleService = (RoleService)beanFactory.getBean("roleService");
+   
+   ```
+
+2. 使用ApplicationContext
+
+   ```java
+   ApplicationContext ac = new ClassPathXmlApplicationContext("spring.xml");
+   UserService userService = (UserService) ac.getBean("userService");
+   ```
+
+#### Bean销毁
+
+Spring容器会维护bean对象的管理，可以指定bean对象的销毁所要执行的方法。
+
+1. 指定bean对象销毁所需执行的方法
+
+   ```xml
+   <bean id="roleService" class="tech.snnukf.Service.RoleService" destroy-method="destroy"></bean>
+   ```
+
+2. 通过AbstractApplicationContext对象，调用其close方法实现bean销毁过程(这个应该会关闭所有)
+
+   ```java
+   AbstractApplicationContext ac = new ClassPathXmlApplicationContext("spring.xml");
+   ac.close();
+   ```
+
+# Spring AOP
+
