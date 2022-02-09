@@ -489,6 +489,7 @@ systemctl status xxx.service
 
 - scp 源数据地址(soucce) 目标数据地址(target)
   - -r 传文件夹
+- 数据同步 rsync -rvl zookeeper-3.5.7 root@192.168.232.131:/opt
 
 # Vi&Vim
 
