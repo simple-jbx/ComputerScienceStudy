@@ -335,6 +335,8 @@ aclVersion = 0
 ephemeralOwner = 0x0
 dataLength = 5
 numChildren = 3
+bin/kafka-topics.sh --zookeeper
+192.168.232.130:2181 --create --replication-factor 3 --partitions 1 --topic first
 ```
 
 ## 客户端API操作

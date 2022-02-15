@@ -753,7 +753,7 @@ systemctl status xxx.service
 修改/etc/ssh/ssh_config文件的配置，以后不会出现这个问题。
 
 - StrictHostKeyChecking no
-- UserKnownHostsFile /dev/null
+- UserKnownHostsFile ~/.ssh/konwn_hosts
 
 # 日期和时间
 
