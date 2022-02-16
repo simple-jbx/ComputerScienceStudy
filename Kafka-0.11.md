@@ -9,9 +9,10 @@ Kafka是一个**分布式**的基于**发布/订阅模式**的消息队列(Messa
 ### 应用场景
 
 <div align='center'>
-    <img src='./imgs/Kafka/kafka001.png' width='800px'>
+    <img src='./imgs/Kafka-0.11/kafka001.png' width='800px'>
     <br/><br/>消息队列应用场景
 </div>
+
 
 ### 使用消息队列的优点
 
@@ -38,23 +39,26 @@ Kafka是一个**分布式**的基于**发布/订阅模式**的消息队列(Messa
 #### 点对点模式（一对一，消费者主动拉取数据，消费者消费后会清除消息）
 
 <div align='center'>
-    <img src='./imgs/Kafka/kafka002.png' width='800px'>
+    <img src='./imgs/Kafka-0.11/kafka002.png' width='800px'>
     <br/><br/>点对点模式
 </div>
+
 
 #### 发布/订阅模式（一对多，消费者消费数据后不会清除消息）
 
 <div align='center'>
-    <img src='./imgs/Kafka/kafka003.png' width='800px'>
+    <img src='./imgs/Kafka-0.11/kafka003.png' width='800px'>
     <br/><br/>发布/订阅模式
 </div>
+
 
 #### 基础架构
 
 <div align='center'>
-    <img src='./imgs/Kafka/kafka004.png' width='1000px'>
+    <img src='./imgs/Kafka-0.11/kafka004.png' width='1000px'>
     <br/><br/>Kafka基础架构
 </div>
+
 
 一个Topic可以有多个Partition。每个Partition可以分布在不同的机器上，提高并发。
 
@@ -189,9 +193,10 @@ esac
 ### 工作流程及文件存储机制
 
 <div align='center'>
-    <img src='./imgs/Kafka/kafka005.png' width='1000px'>
-    <img src='./imgs/Kafka/kafka006.png' width='1000px'>
+    <img src='./imgs/Kafka-0.11/kafka005.png' width='1000px'>
+    <img src='./imgs/Kafka-0.11/kafka006.png' width='1000px'>
 </div>
+
 
 Kafka 中消息是以 **topic** 进行分类的，生产者生产消息，消费者消费消息，都是面向 topic 的。 
 
@@ -202,8 +207,9 @@ topic 是逻辑上的概念，而 partition 是物理上的概念，每个 parti
 index 和 log 文件以当前 segment 的第一条消息的 offset 命名。下图为 index 文件和 log 文件的结构示意图。
 
 <div align='center'>
-    <img src='./imgs/Kafka/kafka007.png' width='1000px'>
+    <img src='./imgs/Kafka-0.11/kafka007.png' width='1000px'>
 </div>
+
 
 **“.index”文件存储大量的索引信息，“.log”文件存储大量的数据，**索引文件中的元 数据指向对应数据文件中 message 的物理偏移地址。
 
@@ -221,7 +227,7 @@ index 和 log 文件以当前 segment 的第一条消息的 offset 命名。下�
   - 需要将producer发送的数据封装成一个**ProducerRecord**对象。
 
   - <div align='center'>
-        <img src='./imgs/Kafka/kafka008.png' width='1000px'>
+        <img src='./imgs/Kafka-0.11/kafka008.png' width='1000px'>
     </div>
 
   - 指明partition的情况下，直接将指明的值作为partition值。
@@ -235,8 +241,9 @@ index 和 log 文件以当前 segment 的第一条消息的 offset 命名。下�
 **为保证 producer 发送的数据，能可靠的发送到指定的 topic，topic 的每个 partition 收到 producer 发送的数据后，都需要向 producer 发送 ack（acknowledgement 确认收到），如果 producer 收到 ack，就会进行下一轮的发送，否则重新发送数据。**
 
 <div align='center'>
-    <img src='./imgs/Kafka/kafka009.png' width='1000px'>
+    <img src='./imgs/Kafka-0.11/kafka009.png' width='1000px'>
 </div>
+
 
 1. 副本数据同步策略
 
@@ -273,19 +280,21 @@ index 和 log 文件以当前 segment 的第一条消息的 offset 命名。下�
      - -1（all）：producer 等待 broker 的 ack，partition 的 leader 和 follower 全部落盘成功后才 返回 ack。但是如果在 follower 同步完成后，broker 发送 ack 之前，leader 发生故障，那么会 造成数据重复。
 
    - <div align='center'>
-         <img src='./imgs/Kafka/kafka010.png' width='1000px'>
-             <img src='./imgs/Kafka/kafka011.png' width='1000px'>
+         <img src='./imgs/Kafka-0.11/kafka010.png' width='1000px'>
+             <img src='./imgs/Kafka-0.11/kafka011.png' width='1000px'>
      </div>
 
 4. 故障处理细节
 
    <div align='center'>
-       <img src='./imgs/Kafka/kafka012.png' width='1000px'>
+       <img src='./imgs/Kafka-0.11/kafka012.png' width='1000px'>
    </div>
 
-   LEO：指的是每个副本最大的 offset； 
+   
 
-   HW：指的是消费者能见到的最大的 offset，ISR 队列中最小的 LEO。
+LEO：指的是每个副本最大的 offset； 
+
+HW：指的是消费者能见到的最大的 offset，ISR 队列中最小的 LEO。
 
    - follower 故障
      - follower 发生故障后会被临时踢出 ISR，待该 follower 恢复后，follower 会读取本地磁盘 记录的上次的 HW，并将 log 文件高于 HW 的部分截取掉，从 HW 开始向 leader 进行同步。 等**该 follower 的 LEO 大于等于该 Partition 的 HW**，即 follower 追上 leader 之后，就可以重 新加入 ISR 了。
@@ -328,14 +337,14 @@ Kafka 有两种分配策略，一是 Range，一是RoundRobin 。
   - 一个Consumer消费一个range内的partition.
 
   - <div align='center'>
-        <img src='./imgs/Kafka/kafka013.png' width='1000px'>
+        <img src='./imgs/Kafka-0.11/kafka013.png' width='1000px'>
         </br></br> Range
     </div>
 
 - RoundRobin
 
   - <div align='center'>
-        <img src='./imgs/Kafka/kafka014.png' width='1000px'>
+        <img src='./imgs/Kafka-0.11/kafka014.png' width='1000px'>
         </br></br> RoundRobin
     </div>
 
@@ -381,7 +390,7 @@ group.id=snnukf01
 - 零复制技术
 
   - <div align='center'>
-        <img src='./imgs/Kafka/kafka015.png' width='1000px'>
+        <img src='./imgs/Kafka-0.11/kafka015.png' width='1000px'>
     </div>
 
 ### Zookeeper在Kafka中的作用
@@ -393,8 +402,9 @@ Controller 的管理工作都是依赖于 Zookeeper 的。
  以下为 partition 的 leader 选举过程：
 
 <div align='center'>
-    <img src='./imgs/Kafka/kafka016.png' width='1000px'>
+    <img src='./imgs/Kafka-0.11/kafka016.png' width='1000px'>
 </div>
+
 
 ### kafka事务
 
@@ -421,8 +431,9 @@ Kafka 从 0.11 版本开始引入了事务支持。事务可以保证 Kafka 在 
 Kafka 的 Producer 发送消息采用的是**异步发送**的方式。在消息发送的过程中，涉及到了 两个线程——**main 线程和 Sender 线程**，以及**一个线程共享变量——RecordAccumulator。** main 线程将消息发送给 RecordAccumulator，Sender 线程不断从 RecordAccumulator 中拉取 消息发送到 Kafka broker。
 
 <div align='center'>
-    <img src='./imgs/Kafka/kafka017.png' width='1000px'>
+    <img src='./imgs/Kafka-0.11/kafka017.png' width='1000px'>
 </div>
+
 
 - 相关参数
   - batch.size 只有数据积累到batch.size之后，sender才会发送数据。
@@ -743,8 +754,210 @@ ConsuemrRecord：每条数据都要封装成一个 ConsumerRecord 对象
 
 #### 自定义存储 offset
 
+Kafka 0.9 版本之前，offset 存储在 zookeeper，0.9 版本及之后，默认将 offset 存储在 Kafka 的一个内置的 topic 中。除此之外，Kafka 还可以选择自定义存储 offset。
+
+offset 的维护是相当繁琐的，因为需要考虑到消费者的 Rebalace。
+
+**当有新的消费者加入消费者组、已有的消费者推出消费者组或者所订阅的主题的分区发 生变化，就会触发到分区的重新分配，重新分配的过程叫做 Rebalance。**
+
+消费者发生 Rebalance 之后，每个消费者消费的分区就会发生变化。**因此消费者要首先获取到自己被重新分配到的分区，并且定位到每个分区最近提交的 offset 位置继续消费。**
+
+要实现自定义存储 offset，需要借助 **ConsumerRebalanceListener**，以下为示例代码，其 中提交和获取 offset 的方法，需要根据所选的 offset 存储系统自行实现。
+
+```java
+package tech.snnukf.Consumer;
+
+import org.apache.kafka.clients.consumer.*;
+import org.apache.kafka.common.TopicPartition;
+import java.util.*;
+
+/**
+ * @author simple.jbx
+ * @ClassName CustomConsumer01
+ * @description 自定义提交Offset
+ * @email jb.xue@qq.com
+ * @github https://github.com/simple-jbx
+ * @date 2022/02/15/ 15:52
+ */
+public class CustomConsumer04 {
+
+    private static Map<TopicPartition, Long> currentOffset = new HashMap<>();
+
+    public static void main(String[] args) {
+        //创建配置信息
+        Properties props = new Properties();
+        //Kafka 集群
+        props.put("bootstrap.servers", "hadoop102:9092");
+        //消费者组，只要 group.id 相同，就属于同一个消费者组
+        props.put("group.id", "test");
+        //关闭自动提交 offset
+        props.put("enable.auto.commit", "false");
+        //Key 和 Value 的反序列化类
+        props.put("key.deserializer",
+                "org.apache.kafka.common.serialization.StringDeserializer");
+        props.put("value.deserializer",
+                "org.apache.kafka.common.serialization.StringDeserializer");
+        //创建一个消费者
+        KafkaConsumer<String, String> consumer = new
+                KafkaConsumer<>(props);
+        //消费者订阅主题
+        consumer.subscribe(Arrays.asList("first"), new
+                ConsumerRebalanceListener() {
+
+                    //该方法会在 Rebalance 之前调用
+                    @Override
+                    public void
+                    onPartitionsRevoked(Collection<TopicPartition> partitions) {
+                        commitOffset(currentOffset);
+                    }
+                    //该方法会在 Rebalance 之后调用
+                    @Override
+                    public void
+                    onPartitionsAssigned(Collection<TopicPartition> partitions) {currentOffset.clear();
+                        for (TopicPartition partition : partitions) {
+                            consumer.seek(partition, getOffset(partition));//定位到最近提交的 offset 位置继续消费
+                        }
+                    }
+                });
+        while (true) {
+            ConsumerRecords<String, String> records =
+                    consumer.poll(100);//消费者拉取数据
+            for (ConsumerRecord<String, String> record : records) {
+                System.out.printf("offset = %d, key = %s, value = %s%n", record.offset(), record.key(), record.value());
+                currentOffset.put(new TopicPartition(record.topic(),
+                        record.partition()), record.offset());
+            }
+            commitOffset(currentOffset);//异步提交
+        }
+    }
+
+
+    //获取某分区的最新 offset
+    private static long getOffset(TopicPartition partition) {
+        return 0;
+    }
+
+    //提交该消费者所有分区的 offset
+    private static void commitOffset(Map<TopicPartition, Long> currentOffset) {
+
+    }
+
+}
+```
+
 ### 自定义 Interceptor
 
-## 监控
+#### 拦截器原理
 
-## Flume对接Kafka
+Producer 拦截器(interceptor)是在 Kafka 0.10 版本被引入的，主要用于实现 clients 端的定 制化控制逻辑。
+
+对于 producer 而言，interceptor 使得用户在消息发送前以及 producer 回调逻辑前有机会 对消息做一些定制化需求，比如修改消息等。同时，producer 允许用户指定多个 interceptor 按序作用于同一条消息从而形成一个拦截链(interceptor chain)。Intercetpor 的实现接口是 org.apache.kafka.clients.producer.ProducerInterceptor，其定义的方法包括：
+
+- configure(configs) 获取配置信息和初始化数据时调用。
+- onSend(ProducerRecord)： 该方法封装进 KafkaProducer.send 方法中，即它运行在用户主线程中。Producer 确保在消息被序列化以及计算分区前调用该方法。**用户可以在该方法中对消息做任何操作，但最好 保证不要修改消息所属的 topic 和分区**，否则会影响目标分区的计算。
+- onAcknowledgement(RecordMetadata, Exception)： **该方法会在消息从 RecordAccumulator 成功发送到 Kafka Broker 之后，或者在发送过程 中失败时调用。**并且通常都是在 producer 回调逻辑触发之前。onAcknowledgement 运行在 producer 的 IO 线程中，因此不要在该方法中放入很重的逻辑，否则会拖慢 producer 的消息 发送效率。
+- close： 关闭 interceptor，主要用于执行一些资源清理工作  如前所述，interceptor 可能被运行在多个线程中，因此在具体实现时用户需要自行确保 线程安全。另外倘若指定了多个 interceptor，则 producer 将按照指定顺序调用它们，并仅仅 是捕获每个 interceptor 可能抛出的异常记录到错误日志中而非在向上传递。这在使用过程中 要特别留意。
+
+#### 拦截器案例
+
+**需求**
+
+实现一个简单的双 interceptor 组成的拦截链。第一个 interceptor 会在消息发送前将时间戳信息加到消息 value 的最前部；第二个 interceptor 会在消息发送后更新成功发送消息数或失败发送消息数。
+
+**实现**
+
+<div align='center'>
+    <img src='./imgs/Kafka-0.11/kafka018.png' width='1000px'>
+</div>
+
+1. 增加时间戳拦截器
+2. 统计发送消息成功和发送失败消息数，并在 producer 关闭时打印这两个计数器
+3. producer 主程序
+
+**测试**
+
+```shell
+[root@simple01 kafka-0.11]# bin/kafka-console-consumer.sh --bootstrap-server 192.168.232.128:9092 --topic first
+1645003309259,message3
+1645003309259,message9
+1645003309259,message5
+1645003309170,message0
+1645003309259,message6
+1645003309258,message1
+1645003309259,message7
+1645003309259,message2
+1645003309259,message8
+1645003309259,message4
+```
+
+<div align='center'>
+    <img src='./imgs/Kafka-0.11/kafka019.png' width='500px'>
+</div>
+
+## Kafka监控
+
+### Kafka Eagle
+
+1. 修改kafka启动命令
+
+   ```shell
+   if [ "x$KAFKA_HEAP_OPTS" = "x" ]; then
+    export KAFKA_HEAP_OPTS="-Xmx1G -Xms1G"
+   fi
+   为
+   if [ "x$KAFKA_HEAP_OPTS" = "x" ]; then
+    export KAFKA_HEAP_OPTS="-server -Xms2G -Xmx2G -XX:PermSize=128m -XX:+UseG1GC -XX:MaxGCPauseMillis=200 -XX:ParallelGCThreads=8 -XX:ConcGCThreads=5 -XX:InitiatingHeapOccupancyPercent=70"
+    export JMX_PORT="9999"
+   fi
+   ```
+
+2. 上传压缩包kafka-eagle-bin-1.3.7.tar.gz 到安装目录并解压
+
+3. 修改eagle config目录下的配置文件
+
+   - ```shell
+     ######################################
+     # multi zookeeper&kafka cluster list
+     ######################################
+     kafka.eagle.zk.cluster.alias=cluster1
+     cluster1.zk.list=hadoop102:2181,hadoop103:2181,hadoop104:2181
+     ######################################
+     # kafka offset storage
+     ######################################
+     cluster1.kafka.eagle.offset.storage=kafka
+     ######################################
+     # enable kafka metrics
+     ######################################
+     kafka.eagle.metrics.charts=true
+     kafka.eagle.sql.fix.error=false
+     ######################################
+     # kafka jdbc driver address 用mysql应该需要一个.sql的脚本，不然web无法访问
+     ######################################
+     kafka.eagle.driver=org.sqlite.JDBC
+     kafka.eagle.url=jdbc:sqlite:/opt/kafka-eagle-web-1.3.7/db/ke.db
+     kafka.eagle.username=root
+     kafka.eagle.password=123456
+     
+     
+     ```
+   
+4. 添加环境变量
+
+5. 启动 bin/ke.sh start
+
+   - ```
+     Version 1.3.7
+     *******************************************************************
+     * Kafka Eagle Service has started success.
+     * Welcome, Now you can visit 'http://192.168.232.128:8048/ke'
+     * Account:admin ,Password:123456
+     *******************************************************************
+     * <Usage> ke.sh [start|status|stop|restart|stats] </Usage>
+     * <Usage> https://www.kafka-eagle.org/ </Usage>
+     *******************************************************************
+     ```
+
+   - <div align='center'>
+         <img src='./imgs/Kafka-0.11/kafka020.png' width='500px'>
+     </div>
+
