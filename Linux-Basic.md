@@ -452,12 +452,42 @@ systemctl status xxx.service
 
 ### tar
 
-- 主要神队的问价是 xxx.tar.gz
-- 解压缩
-  - tar -zx(解压)v(过程)f(文件) xxx.tar.gz
-  - tar -zxf xxx.tar.gz -C /dir/
-- 压缩
-  - tar -zc(压缩)f(文件) xxx.tar.gz(压缩后的名字) xxx(源文件)
+- 参数(独立)
+
+  - -c: 建立压缩档案
+  - -x：解压
+  - -t：查看内容
+  - -r：向压缩归档文件末尾追加文件
+  - -u：更新原压缩包中的文件
+
+- 参数（可选）
+
+  - -z：有gzip属性的
+  - -j：有bz2属性的
+  - -Z：有compress属性的
+  - -v：显示所有过程
+  - -O：将文件解开到标准输出
+
+- 示例
+
+  - 参数f是必须的 后接文件名
+
+  - ```shell
+    #压缩为*.gz
+    tar -zcvf test.tar.gz test.txt
+    #*.gz解压缩
+    tar -zxvf test.tar.gz
+    
+    #压缩为*.tar
+    tar -cvf test.tar test.txt
+    #*.tar解压缩
+    tar -xvf test.tar
+    
+    #压缩为*.bz2
+    tar -jcvf test.tar.bz2 test.txt
+    #*bz2解压缩
+    tar -jxvf test.tar.bz2
+    ```
 
 ### zip和unzip
 

@@ -38,9 +38,11 @@ MyBatis-plus
 
 [Spring](Spring.md)
 
-## 项目相关
+## 项目管理
 
 [Maven](Maven.md)
+
+## 项目相关
 
 [秒杀系统](SeckillSystem.md)
 

@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 797 565" width="797" height="565" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <defs/>
+    <g transform="translate(-131.00,-114.48)">
+        <g transform="translate(394.67,115.48)" id="shape1">
+            <path fill="#ffffff" d="M.0,.0L253.1,.0L253.1,180.8L.0,180.8L.0,.0zM.0,99.9L253.1,99.9L.0,99.9z" fill-rule="nonzero"/>
+            <path stroke="#323232" fill="none" d="M.0,.0L253.1,.0L253.1,180.8L.0,180.8L.0,.0zM.0,99.9L253.1,99.9L.0,99.9z"/>
+            <text xml:space="preserve" style="fill:#191919;font-family:Microsoft YaHei;font-size:16.00pt">
+                <tspan x="49.8" y="43.5">&lt;&lt;interface>></tspan>
+                <tspan x="88.2" y="71.5">Subject</tspan>
+            </text>
+            <text xml:space="preserve" style="fill:#191919;font-family:Microsoft YaHei;font-size:16.00pt">
+                <tspan x="3.3" y="147.9">+    Operation A(): void</tspan>
+            </text>
+        </g>
+        <g transform="translate(132.00,465.94)" id="shape2">
+            <path fill="#ffffff" d="M.0,.0L253.1,.0L253.1,210.9L.0,210.9L.0,.0zM.0,70.5L253.1,70.5L.0,70.5zM.0,140.4L253.1,140.4L.0,140.4z" fill-rule="nonzero"/>
+            <path stroke="#323232" fill="none" d="M.0,.0L253.1,.0L253.1,210.9L.0,210.9L.0,.0zM.0,70.5L253.1,70.5L.0,70.5zM.0,140.4L253.1,140.4L.0,140.4z"/>
+            <text xml:space="preserve" style="fill:#191919;font-family:Microsoft YaHei;font-size:16.00pt">
+                <tspan x="66.2" y="42.9">RealSubject</tspan>
+            </text>
+            <text xml:space="preserve" style="fill:#191919;font-family:Microsoft YaHei;font-size:16.00pt">
+                <tspan x="3.3" y="183.3">+   Operation A() : void</tspan>
+            </text>
+        </g>
+        <g transform="translate(674.36,464.57)" id="shape3">
+            <path fill="#ffffff" d="M.0,.0L253.1,.0L253.1,213.7L.0,213.7L.0,.0zM.0,65.6L253.1,65.6L.0,65.6zM.0,148.1L253.1,148.1L.0,148.1z" fill-rule="nonzero"/>
+            <path stroke="#323232" fill="none" d="M.0,.0L253.1,.0L253.1,213.7L.0,213.7L.0,.0zM.0,65.6L253.1,65.6L.0,65.6zM.0,148.1L253.1,148.1L.0,148.1z"/>
+            <text xml:space="preserve" style="fill:#191919;font-family:Microsoft YaHei;font-size:16.00pt">
+                <tspan x="97.8" y="40.4">Proxy</tspan>
+            </text>
+            <text xml:space="preserve" style="fill:#191919;font-family:Microsoft YaHei;font-size:16.00pt">
+                <tspan x="3.3" y="121.9">-    subject : Subject</tspan>
+            </text>
+            <text xml:space="preserve" style="fill:#191919;font-family:Microsoft YaHei;font-size:16.00pt">
+                <tspan x="3.3" y="188.5">+   Operation A() : void</tspan>
+            </text>
+        </g>
+        <g transform="translate(259.27,465.94)" id="shape4">
+            <path stroke="#191919" fill="none" stroke-dasharray="6,4" d="M.0,.0L.0,-137.7L262.7,-137.7L262.7,-159.3"/>
+            <path stroke="#191919" stroke-linejoin="round" fill="none" stroke-width="1" stroke-linecap="round" d="M262.7,-169.7L256.7,-159.3L268.7,-159.3L262.7,-169.7"/>
+            <rect fill="#ffffff" width="43.2" height="28.0" x="159.9" y="-152.5"/>
+            <text xml:space="preserve" style="fill:#191919;font-family:Microsoft YaHei;font-size:16.00pt">
+                <tspan x="159.9" y="-130.1">实现</tspan>
+            </text>
+        </g>
+        <g transform="translate(801.64,464.57)" id="shape5">
+            <path stroke="#191919" fill="none" stroke-dasharray="6,4" d="M.0,.0L.0,-136.3L-279.7,-136.3L-279.7,-157.9"/>
+            <path stroke="#191919" stroke-linejoin="round" fill="none" stroke-width="1" stroke-linecap="round" d="M-279.7,-168.3L-285.7,-157.9L-273.7,-157.9L-279.7,-168.3"/>
+            <rect fill="#ffffff" width="43.2" height="28.0" x="-228.3" y="-151.1"/>
+            <text xml:space="preserve" style="fill:#191919;font-family:Microsoft YaHei;font-size:16.00pt">
+                <tspan x="-228.3" y="-128.7">实现</tspan>
+            </text>
+        </g>
+        <g transform="translate(674.36,571.39)" id="shape6">
+            <path stroke="#191919" fill="none" d="M.0,.0L-289.3,.0"/>
+            <path stroke="#191919" stroke-linejoin="round" fill="none" stroke-width="1" stroke-linecap="round" d="M-277.3,6.0L-289.3,.0L-277.3,-6.0"/>
+            <rect fill="#ffffff" width="43.2" height="28.0" x="-191.9" y="-14.8"/>
+            <text xml:space="preserve" style="fill:#191919;font-family:Microsoft YaHei;font-size:16.00pt">
+                <tspan x="-191.9" y="7.6">关联</tspan>
+            </text>
+        </g>
+    </g>
+</svg>
