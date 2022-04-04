@@ -116,6 +116,23 @@ public class Main {
 }
 ```
 
+创建对象四种方式
+
+#### new
+
+#### 反射机制
+
+```java
+Class clazz = Class.forName("yunche.test.Hello");
+Hello hello =(Hello) clazz.newInstance();
+```
+
+
+
+#### Clone
+
+#### 序列化
+
 ### String
 
 #### 常用API

@@ -36,8 +36,6 @@ HTTPS实质上是非对称加密传输对称密钥，对称加密传输报文，
 </div>
 
 
-
-
 ## 传输层
 
 ### 传输控制协议（Transmission Control Protocol，TCP）
@@ -215,7 +213,8 @@ CLOSE-WAIT是被动关闭形成的，当收到主动关闭链接方的FIN报文�
 	    <br/><br/>输出TCP段的校验和检测
 	</div>
 
-	
+
+​	
 
 - 序列号
 
