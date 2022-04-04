@@ -1,3 +1,7 @@
+[TOC]
+
+
+
 # Spring
 
 [代码地址](https://github.com/simple-jbx/SpringLearning)
@@ -1179,4 +1183,563 @@ Spring容器会维护bean对象的管理，可以指定bean对象的销毁所要
    ```
 
 # Spring AOP
+
+## 主要内容
+
+<div align='center'>
+    <img src='./imgs/Java/Spring/SpringAOP01.svg' width='800px'>
+    <br/><br/>Spring AOP主要内容
+</div>
+
+## 代理模式
+
+ 为某一对象（委托类）提供一个代理（代理类），用来控制对这个对象的访问。
+
+委托类和代理类有一个共同的父类或父接口。
+
+代理类会对请求做预处理、过滤，将请求分配给指定对象。
+
+生活中常见的代理模式：
+
+​	房东委托中介租房子，新人委托婚庆公司。
+
+代理模式的两个设计原则：
+
+1. 代理类与委托类具有相似的行为
+2. 代理类增强委托类的行为
+
+常见代理模式：
+
+1. 静态代理
+2. 动态代理
+
+<div align='center'>
+    <img src='./imgs/Java/Spring/SpringAOP02.svg' width='500px'>
+</div>
+
+## 静态代理
+
+某个对象提供一个代理，代理角色固定，以控制对这个对象的访问。代理类和委托类有共同的父类或父接口，这样在任何使用委托类的地方都可以用代理对象代替。代理类负责请求的预处理、过滤、将请求分派给委托类处理、以及委托类执行完请求后的后续处理。
+
+### 代理的三要素
+
+1. 有共同的行为（结婚）--接口
+2. 目标角色（新人）--实现行为
+3. 代理角色（婚庆公司）--实现行为 增强目标对象行为
+
+### 静态代理的特点
+
+1. 目标角色固定
+2. 在应用程序执行前就得到目标角色
+3. 代理对象会增强目标对象行为
+4. 有可能存在多个代理，产生“类爆炸”（缺点）
+
+## 动态代理
+
+相对于静态代理，动态代理在创建代理对象上更加灵活，动态代理类的字节码在程序运行时，由Java反射机制动态产生。它会根据需要，通过反射机制在程序运行期，动态的为目标对象创建代理对象，无需程序员手动编写它的源代码。动态代理不仅简化了编程工作，还提高了软件系统的可扩展性，因为反射机制可以生成任意类型的动态代理类。代理的行为可以代理多个方法，**即满足生产需要的同时又达到代码通用的目的。**
+
+动态代理的两种实现方式：
+
+1. JDK动态代理
+2. CGLIB动态代理
+
+### 动态代理的特点
+
+1. 目标对象不固定
+2. 在应用程序执行时动态创建目标对象
+3. 代理对象会增强目标对象的行为
+
+### JDK动态代理
+
+**注：JDK动态大力的目标对象必须有接口实现。**
+
+[Proxy类(Java8)](https://github.com/simple-jbx/SourceCode/blob/main/JAVA/JDK8Src/java/lang/reflect/Proxy.java)
+
+Proxy类是专门完成代理的操作类，可以通过此类为一个或多个接口动态地生成实现类，此类提供了如下操作方法：
+
+#### newProxyInstance
+
+```java
+public static Object newProxyInstance(ClassLoader loader,
+                                          Class<?>[] interfaces,
+                                          InvocationHandler h)
+```
+
+**IDEA中JDK动态代理文件的生成**
+
+JDK动态代理文件的生成有两个条件：
+
+1. 必须在main方法中执行，直接调用junit的test方法调用无法生成
+
+2. 在main方法最前面增加配置，这样会输出代理class文件
+
+   - ```java
+           System.getProperties().put("sun.misc.ProxyGenerator.saveGeneratedFiles", "true");
+     ```
+
+**IDEA中JDK动态代理文件的查看**
+
+1. 会在项目com.sum.proxy中
+
+### CGLIB动态代理
+
+JDK的动态代理机制只能代理实现了接口的类，而不能代理没有或不能实现接口的类，CGLIB是针对类来实现代理的，它的原理是对指定的目标类生成一个子类，并覆盖其中的方法实现增强，但这种方式采用继承实现代理，因此不能对final修饰的类进行代理。
+
+#### 添加依赖
+
+```xml
+<dependency>
+    <groupId>cglib</groupId>
+    <artifactId>cglib</artifactId>
+    <version>2.2.2</version>
+</dependency>
+```
+
+#### 实现
+
+```java
+package tech.snnukf.proxy;
+
+import net.sf.cglib.proxy.Enhancer;
+import net.sf.cglib.proxy.MethodInterceptor;
+import net.sf.cglib.proxy.MethodProxy;
+
+import java.lang.reflect.Method;
+
+/**
+ * @author simple.jbx
+ * @ClassName CglibInterceptor
+ * @description //TODO
+ * @email jb.xue@qq.com
+ * @github https://github.com/simple-jbx
+ * @date 2022/02/19/ 14:23
+ */
+public class CglibInterceptor implements MethodInterceptor {
+
+    //目标对象
+    private Object target;
+
+    public CglibInterceptor(Object target) {
+        this.target = target;
+    }
+
+    /**
+     * @author simple.jbx
+     * @description 获取代理对象
+     * @date 14:24 2022/2/19
+     * @param
+     * @return
+     **/
+    public Object getProxy() {
+        //通过Enhancer对象中的create()方法生成一个类，用于生成代理对象
+        Enhancer enhancer = new Enhancer();
+        enhancer.setSuperclass(target.getClass());
+
+        //设置拦截器  回调对象为自己
+        enhancer.setCallback(this);
+
+        //生成代理类对象，并返回给调用者
+        return enhancer.create();
+    }
+
+    /**
+     * @author simple.jbx
+     * @description 拦截器
+     * 1. 目标对象的方法调用
+     * 2. 行为增强
+     * @date 14:29 2022/2/19
+     * @param	o CGLIB动态生成的代理类实例
+     * @param	method 实体类中所调用的被代理的方法的引用
+     * @param	objects 参数列表
+     * @param	methodProxy 生成的代理类对方法的代理引用
+     * @return
+     **/
+    @Override
+    public Object intercept(Object o, Method method, Object[] objects, MethodProxy methodProxy) throws Throwable {
+
+        //增强行为
+        System.out.println("====after====");
+
+        //调用目标类中的方法
+        Object object = methodProxy.invoke(target, objects);
+
+        //增强行为
+        System.out.println("====before====");
+
+        return object;
+    }
+}
+```
+
+#### 测试
+
+```java
+package tech.snnukf.proxy;
+
+/**
+ * @author simple.jbx
+ * @ClassName CglibProxyTest
+ * @description //TODO
+ * @email jb.xue@qq.com
+ * @github https://github.com/simple-jbx
+ * @date 2022/02/19/ 14:34
+ */
+public class CglibProxyTest {
+    public static void main(String[] args) {
+        //目标对象
+        You you = new You();
+
+        //拦截器
+        CglibInterceptor cglibInterceptor = new CglibInterceptor(you);
+
+        //代理对象
+        Marry marry = (Marry) cglibInterceptor.getProxy();
+
+        marry.toMarry();
+
+        //没有接口实现的类
+        User user = new User();
+        CglibInterceptor cglibInterceptor2 = new CglibInterceptor(user);
+        User newUser = (User) cglibInterceptor2.getProxy();
+        newUser.test();
+    }
+}
+
+```
+
+### JDK代理与CGLIB代理的区别
+
+- JDK通过实现接口，CGLIB通过继承实现代理
+- JDK动态代理（目标对象存在接口时）执行效率高于CGLIB
+- 如果目标对象有接口实现，选择JDK代理，没有则选CGLIB代理
+
+## Spring AOP 
+
+### 什么是AOP
+
+Aspect Oriented Programing面向切面编程，相比较OOP(面向对象)来说，AOP关注的不再是程序代码中的某个类、某些方法，更多的是面到面的切入（切面）。
+
+### AOP能做什么
+
+主要应用于日志记录、性能统计、安全控制、事务处理等方面，实现公共功能的重复使用。
+
+### AOP特点
+
+1. 降低模块与模块之间的耦合度，提高业务代码的聚合度（高内聚，低耦合）。
+2. 提高了代码的复用性。
+3. 提高了系统的扩展性（高版本兼容低版本）。
+4. 可以在不影响原有功能基础上添加新的功能。
+
+### AOP底层实现
+
+动态代理（JDK+CGLIB）
+
+### AOP基本概念
+
+#### Joinpoint（连接点）
+
+被拦截到的每个点，Spring中指被拦截到的每个方法，Spring AOP一个连接点即代表一个方法的执行。
+
+#### Pointcut（切入点）
+
+对连接点进行拦截的定义（匹配规则定义 规定拦截哪些方法，对哪些方法进行处理），Spring有专门的表达式语言定义。
+
+#### Advice（通知）
+
+拦截到每一个连接点（每个方法）后所要做的操作
+
+1. 前置通知（前置增强）--before() 执行方法前的通知
+2. 返回通知（返回增强）--afterReturn() 方法正常结束返回后的通知
+3. 异常抛出通知（异常抛出增强）--afterThrow()
+4. 最终通知 --after() 无论是否发生异常，均会执行该通知
+5. 环绕通知 --around 包围一个连接点（join point）的通知，如方法调用。这是最强大的一种通知类型。环绕通知可以在方法调用前后完成自定义的行为。它也会选择是否继续执行连接点或直接返回它们自己的返回值或抛出异常来结束执行。
+
+#### Aspect（切面）
+
+切入点与通知的结合，切入点定义了要拦截哪些类的哪些方法，通知则定义了拦截方法后要做什么，切面则是横切关注点的抽象，与类相似，类是物体特征的抽象，切面则是横切关注点抽象。
+
+#### Target（目标对象）
+
+被代理的目标对象
+
+#### Weave（织入）
+
+将切面应用到目标对象并生成代理对象的过程
+
+#### Introduction（引入）
+
+在不修改原有应用程序代码的情况下，在程序运行期为类动态添加放阿飞或字段的过程。
+
+## Spring AOP的实现
+
+### 环境搭建
+
+#### 引入依赖
+
+```xml
+        <!-- https://mvnrepository.com/artifact/org.aspectj/aspectjweaver -->
+        <dependency>
+            <groupId>org.aspectj</groupId>
+            <artifactId>aspectjweaver</artifactId>
+            <version>1.8.9</version>
+        </dependency>
+```
+
+#### 命名空间
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context.xsd
+       http://www.springframework.org/schema/aop
+       http://www.springframework.org/schema/aop/spring-aop.xsd">
+</beans>
+```
+
+### 注解实现
+
+```java
+package tech.snnukf.aspect;
+
+import org.aspectj.lang.ProceedingJoinPoint;
+import org.aspectj.lang.annotation.*;
+import org.springframework.stereotype.Component;
+
+/**
+ * @author simple.jbx
+ * @ClassName LogAspect
+ * @description 切面
+ * 切入点和通知的抽象
+ *      切入点：定义要拦截哪些类和哪些方法
+ *      通知：定义了拦截之后方法要做什么
+ * @email jb.xue@qq.com
+ * @github https://github.com/simple-jbx
+ * @date 2022/02/21/ 14:27
+ */
+@Component //将对象交给IOC进行实例化
+@Aspect //声明当前类是一个切面
+public class LogAspect {
+
+    /**
+     * @author simple.jbx
+     * @description 切入点
+     *      定义要拦截哪些类的哪些方法
+     *      匹配规则，拦截什么方法
+     *      定义切入点
+     *      @Pointcut("匹配规则")
+     *
+     *      AOP切入点表达式
+     *          1.执行所有的公共方法
+     *              execution(public *(..))
+     *          2.执行任意的set方法
+     *              execution(* set*(..))
+     *          3.设置指定包下的任意类的任意方法（指定包tech.snnukf.service）
+     *              execution(* tech.snnukf.*.*(..))
+     *          4.设置指定包及子包下的任意类的任意方法（指定包tech.snnukf.service）
+     *              exectuion(* tech.snnukf.service..*.*(..))
+     *          5.第一个 * 表示修饰范围（public private protected *表示所有范围）
+     * @date 14:29 2022/2/21
+     * @param
+     * @return
+     **/
+    @Pointcut("execution(* *(..))")
+    public void cut() {
+
+    }
+
+    /**
+     * @author simple.jbx
+     * @description 声明前置同志，并将同志应用到指定的切入点上
+     *  目标类方法执行前，执行该通知
+     * @date 14:38 2022/2/21
+     * @param
+     * @return
+     **/
+    @Before(value = "cut()")
+    public void before() {
+        System.out.printf("before notification");
+    }
+
+    @AfterReturning(value = "cut()")
+    public void afterReturning() {
+        System.out.println("afterReturning notification");
+    }
+
+    /**
+     * @author simple.jbx
+     * @description 最终通知 有无异常都会执行该通知
+     * @date 14:40 2022/2/21
+     * @param
+     * @return
+     **/
+    @After(value = "cut()")
+    public void after() {
+        System.out.println("after notification");
+    }
+
+    /**
+     * @author simple.jbx
+     * @description 异常通知
+     * @date 14:42 2022/2/21
+     * @param
+     * @return
+     **/
+    @AfterThrowing(value = "cut()", throwing = "e")
+    public void afterThrow(Exception e) {
+        System.out.println("throw notification");
+        System.out.println("===== throw message =====");
+        System.out.println(e.getMessage());
+    }
+
+    /**
+     * @author simple.jbx
+     * @description 环绕通知，目标类方法执行前后，都可以使用（需要显示调用 pjp.processed()）
+     * @date 14:42 2022/2/21
+     * @param
+     * @return
+     **/
+    @Around(value = "cut()")
+    public Object around(ProceedingJoinPoint pjp) {
+        System.out.println("around after notification");
+        Object object = null;
+
+        try {
+            //显示调用对应的方法
+            object = pjp.proceed();
+            System.out.println(pjp.getTarget());
+        } catch (Throwable e) {
+            e.printStackTrace();
+            System.out.println("around-error notification");
+        } finally {
+            System.out.println("around-finally notification");
+        }
+
+        return object;
+    }
+}
+```
+
+### XML实现
+
+#### 定义切面
+
+```java
+package tech.snnukf.aspect;
+
+import org.aspectj.lang.ProceedingJoinPoint;
+import org.aspectj.lang.annotation.*;
+import org.springframework.stereotype.Component;
+
+@Component //将对象交给IOC进行实例化
+public class LogAspect02 {
+    public void cut(){}
+
+    public void before(){
+        System.out.println("before notification");
+    }
+
+    public void afterReturn(){
+        System.out.println("afterReturn notification");
+    }
+
+    public void after() {
+        System.out.println("after notification");
+    }
+
+    public void afterThrow(Exception e) {
+        System.out.println("=====Throw notification=====");
+        System.out.println(e.getMessage());
+    }
+
+
+    public Object around(ProceedingJoinPoint pjp) {
+        System.out.println("around after notification");
+        Object object = null;
+
+        try {
+            //显示调用对应的方法
+            object = pjp.proceed();
+            System.out.println(pjp.getTarget());
+        } catch (Throwable e) {
+            e.printStackTrace();
+            System.out.println("around-error notification");
+        } finally {
+            System.out.println("around-finally notification");
+        }
+
+        return object;
+    }
+}
+```
+
+#### 配置文件
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context.xsd
+       http://www.springframework.org/schema/aop
+       http://www.springframework.org/schema/aop/spring-aop.xsd">
+
+    <!--开启自动扫描-->
+    <context:component-scan base-package="tech.snnukf"/>
+
+    <aop:config>
+        <aop:aspect ref="logAspect02">
+            <aop:pointcut id="cut" expression="execution(* tech.snnukf.service..*.*(..))"/>
+            <aop:before method="before" pointcut-ref="cut"/>
+            <aop:after-returning method="afterReturn" pointcut-ref="cut"/>
+            <aop:after-throwing method="afterThrow" throwing="e" pointcut-ref="cut"/>
+            <aop:after method="after" pointcut-ref="cut"/>
+            <aop:around method="around" pointcut-ref="cut"/>
+        </aop:aspect>
+    </aop:config>
+</beans>
+```
+
+## Spring AOP总结
+
+### 代理模式实现三要素
+
+1. 接口定义
+2. 目标对象与代理对象必须实现统一接口
+3. 代理对象持有目标对象的引用，增强目标对象行为
+
+### 代理模式实现分类以及对应区别
+
+1. 静态代理：手动为目标对象制作代理对象，即在程序编译阶段完成代理对象的创建
+2. 动态代理：在程序运行期间动态创建目标对象对应代理对象
+3. jdk动态代理：被代理目标对象必须实现某一或某一组接口，通过回调创建代理对象
+4. cglib动态代理：被代理的目标对象可以不必实现接口，通过继承的方式实现
+5. **动态代理相比静态代理，提高开发效率，可以批量化创建代理，提高代码复用率**
+
+### AOP理解
+
+1. 面向切面，相比OOP关注的是代码中的层或面
+2. 解耦，提高系统扩展性
+3. 提高代码复用
+
+### AOP关键词
+
+1. 连接点：每一个方法
+2. 切入点：匹配的方法集合
+3. 切面：连接点与切入点的集合决定了切面，横切关注点的抽象
+4. 通知：before after afterReturn afterThrow around
+5. 目标对象：被代理的对象
+6. 织入：程序运行期将切面应用到目标对象，并生成代理对象的过程
+7. 引入：在不修改原始代码的情况下，在程序运行期为程序动态引入方法或字段的过程
+
+# Spring Task定时任务
 
