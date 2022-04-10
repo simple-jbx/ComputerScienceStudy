@@ -619,11 +619,59 @@ public long[][] multiply(long[][] a, long[][] b) {
 }
 ```
 
+## 素数
 
+[204. 计数质数](https://leetcode-cn.com/problems/count-primes/)
 
+### 埃氏筛
 
+```java
+class Solution {
+    public int countPrimes(int n) {
+        int[] isPrime = new int[n];
+        Arrays.fill(isPrime, 1);
+        int ans = 0;
+        for (int i = 2; i < n; ++i) {
+            if (isPrime[i] == 1) {
+                ans += 1;
+                if ((long) i * i < n) {
+                    for (int j = i * i; j < n; j += i) {
+                        isPrime[j] = 0;
+                    }
+                }
+            }
+        }
+        return ans;
+    }
+}
+```
 
-##  动态规划★★★★
+### 线性筛
+
+```java
+class Solution {
+    public int countPrimes(int n) {
+        List<Integer> primes = new ArrayList<Integer>();
+        int[] isPrime = new int[n];
+        Arrays.fill(isPrime, 1);
+        for (int i = 2; i < n; ++i) {
+            if (isPrime[i] == 1) {
+                primes.add(i);
+            }
+            for (int j = 0; j < primes.size() && i * primes.get(j) < n; ++j) {
+                isPrime[i * primes.get(j)] = 0;
+                //防止重复筛
+                if (i % primes.get(j) == 0) {
+                    break;
+                }
+            }
+        }
+        return primes.size();
+    }
+}
+```
+
+# 动态规划★★★★
 
 找准状态转移方程
 
@@ -642,6 +690,34 @@ public long[][] multiply(long[][] a, long[][] b) {
 # 贪心★★
 
 # 二分法★★★★★
+
+### [位1的个数](https://leetcode-cn.com/problems/number-of-1-bits/)
+
+```java
+//二进制中 n-1与n的区别是，n的最后一个1及后面的位取反也就是说 n与n-1在二进制位上1的个数始终差1
+public class Solution {
+    public int hammingWeight(int n) {
+        int ret = 0;
+        while (n != 0) {
+            n &= n - 1;
+            ret++;
+        }
+        return ret;
+    }
+}
+```
+
+```java
+//二分思想 这个算法是一种合并计数器的策略。把输入数的32Bit当作32个计数器，代表每一位的1个数。然后合并相邻的2个“计数器”，使i成为16个计数器，每个计数器的值就是这2个Bit的1的个数；继续合并相邻的2个“计数器“，使i成为8个计数器，每个计数器的值就是4个Bit的1的个数。依次类推，直到将i变成一个计数器，那么它的值就是32Bit的i中值为1的Bit的个数。最后低6位即为结果。
+public static int bitCount(int i) {
+        i = i - ((i >>> 1) & 0x55555555);
+        i = (i & 0x33333333) + ((i >>> 2) & 0x33333333);
+        i = (i + (i >>> 4)) & 0x0f0f0f0f;
+        i = i + (i >>> 8);
+        i = i + (i >>> 16);
+        return i & 0x3f;
+}
+```
 
 # 二叉查找（搜索、排序，BST）树★★★★★
 

@@ -16,6 +16,15 @@
 
 Linux分时操作系统，可以改成实时，例如UCOS
 
+## 进程
+
+<div align='center'>
+    <img src='./imgs/OS/ProcessState.png' width='800px'>
+    <br/><br/>进程状态转移图
+</div>
+
+
+
 ## 进程通信
 
 ### 管道
