@@ -649,6 +649,7 @@ class Solution {
 ### 线性筛
 
 ```java
+//线性筛 复杂度O(N)
 class Solution {
     public int countPrimes(int n) {
         List<Integer> primes = new ArrayList<Integer>();
@@ -675,6 +676,211 @@ class Solution {
 
 找准状态转移方程
 
+## 背包问题
+
+### 0-1背包
+
+#### 题目
+
+有N件物品和一个容量为V的背包。放入第i件物品费用是$C_i$，得到的价值是$V_i$。求解将哪些物品放入背包可以使得总价值最大。
+
+#### 基本思路
+
+每种物品仅有一件，可以选择放或者不放。
+
+用子问题定义状态：$F[i,v]$表示前$i$件物品放入一个容量为$v$的背包可以获得的最大价值。则状态转移方程是：
+$$
+F[i,v]=max\{F[i-1,v],F[i-1,v-C_i]+W_i\}
+$$
+
+$$
+F[0...V] \enspace \leftarrow \enspace 0
+\\
+for \enspace i \leftarrow \enspace1 \enspace to \enspace N
+\\
+\qquad for \enspace v \enspace \leftarrow {C_i} \enspace to \enspace V
+\\
+\qquad \qquad F[i,v] \leftarrow max\{F[i-1,v],F[i-1,v-C_i]+W_i\}
+$$
+
+#### 优化空间复杂度
+
+空间复杂度可以优化至O(V)。
+
+$$F[i,v]$$只与$$F[i-1,v],F[i-1,v-C_i]$$有关，可以用一维数组进行优化。第二个循环需要递减计算，这样才能够保证计算$F[v]$的时候$F[v-{C_i}]$保存的是状态$F[i-1,v-{C_i}]$的值。
+$$
+F[0...V] \enspace \leftarrow \enspace 0
+\\
+for \enspace i \leftarrow \enspace1 \enspace to \enspace N
+\\
+\qquad for \enspace v \enspace \leftarrow V \enspace to \enspace {C_i}
+\\
+\qquad \qquad F[v] \leftarrow max\{F[v],F[v-C_i]+W_i\}
+$$
+
+#### 初始化的细节问题
+
+0-1背包有两种不太相同的问法，一种是刚好装满下最大价值，另一种则不要求刚好装满。这两种问法的解决方案的区别在于初始化的时候有所不同。
+
+对于要求恰好装满的，则应令$F[0]=0$，$F[1...V]=-\infty$，对于不要求恰好装满的，则只需令$F[0...V]=0$。
+
+####  JAVA模板
+
+```java
+//时间复杂度：O(VN) 空间复杂度：O(VN)
+public class Main {
+    public static void main(String[] args) {
+        Scanner in = new Scanner(System.in);
+        //背包容量 value[0]表示物品数量
+        int capacity = Integer.parseInt(in.nextLine()); 
+        int[] value = Arrays.stream(in.nextLine().split(" ")).mapToInt(Integer::parseInt).toArray(); 
+        
+        //每个物品对应价值 weight[0]表示物品数量
+        int[] weight = Arrays.stream(in.nextLine().split(" ")).mapToInt(Integer::parseInt).toArray(); 
+
+        int[][] dp = new int[capacity + 1][value[0] + 1];
+        for (int i = 1; i <= value[0]; i++) {
+            int v = value[i];
+            int w = weight[i];
+            for (int j = 1; j <= capacity; j++) {
+                dp[j][i] = j < w ? dp[j][i - 1] : Math.max(dp[j][i - 1], dp[j - w][i - 1] + v);
+            }
+        }
+        System.out.println(dp[capacity][value[0]]);
+    }
+}
+```
+
+```java
+//时间复杂度：O(VN) 空间复杂度：O(V)
+public class Main {
+    public static void main(String[] args) {
+        Scanner in = new Scanner(System.in);
+        //背包容量 value[0]表示物品数量
+        int capacity = Integer.parseInt(in.nextLine()); 
+        int[] value = Arrays.stream(in.nextLine().split(" ")).mapToInt(Integer::parseInt).toArray(); 
+        
+        //每个物品对应价值 weight[0]表示物品数量
+        int[] weight = Arrays.stream(in.nextLine().split(" ")).mapToInt(Integer::parseInt).toArray(); 
+
+        int[] dp = new int[capacity + 1];
+        for (int i = 1; i <= value[0]; i++) {
+            int v = value[i];
+            int w = weight[i];
+            for (int j = capacity; j >= w; j--) {
+                dp[j] = Math.max(dp[j], dp[j - w] + v);
+            }
+        }
+        System.out.println(dp[capacity]);
+    }
+}
+```
+
+### 完全背包
+
+#### 题目
+
+有N中物品和一个容量为V的背包，每种物品都有无线件可以用。放入第$i$种物品的费用是${C_i}$，价值是${W_i}$。求解：将哪些物品装入背包，可以使得这些物品总重量不多于V的情况下价值最大。
+
+#### 基本思路
+
+与0-1背包不同的是物品有无限件。对于每种物品最多有$k=\lfloor  V/{C_i} \rfloor$种状态。按照0-1背包思路可得状态转移方程：
+$$
+F[i,v] = max\{F[i-1,v-k{C_i}] + k{W_i} \enspace | \enspace 0 \le k{W_i} \le v\}
+$$
+求解$F[i,v]$的时间是$O(\frac{v}{C_i})$，总体的时间复杂度是$O(NV\sum\frac{v}{C_i})$。
+
+#### 优化
+
+若两件物品$i$、$j$满足${C_i} \leq {C_j}$ 且${W_i} \geq {W_j}$，则可以将物品j直接去掉，不用考虑。这个优化可以$O(N^2)$实现。
+
+进一步的，可以将费用大于$V$的物品去掉，对于费用相同的物品选取价值最高的那个，采用HashMap一次遍历就可以完成。
+
+#### 转化为0-1背包问题求解
+
+基本思路中提到的转化方法效率低，时间复杂度高。高效的转化是二进制思想。把第$i$种物品拆分成费用${C_i}{2^k}$、价值为${W_i}{2^k}$的若干件物品，其中$k$取遍满足${C_i}{2^k} \leq V$的非负整数。
+
+不管最优策略选多少件第$i$种物品，都可以表示成二进制，这样就可以把每种物品拆分成$log {\lfloor V/{C_i} \rfloor}$件物品。
+
+#### $O(VN)$的算法
+
+$$
+F[0...V] \enspace \leftarrow \enspace 0
+\\
+for \enspace i \leftarrow \enspace1 \enspace to \enspace N
+\\
+\qquad for \enspace v \enspace \leftarrow {C_i} \enspace to \enspace V
+\\
+\qquad \qquad F[v] \leftarrow max\{F[v],F[v-C_i]+W_i\}
+$$
+
+与0-1背包不同的是$v \enspace \leftarrow {C_i} \enspace to \enspace V$，由于0-1背包只有选与不选两种状态，而在完全背包中，一件物品允许重复选，因此第二个for循环可以且必须这样设置。
+
+#### JAVA模板
+
+```java
+//HDU 1114 http://acm.hdu.edu.cn/showproblem.php?pid=1114
+//这个求的是恰好装满的最小值，因此初始化的时候将dp[0] = 0;其他设为无穷大 并且动态规划也是求的最小值
+public class Test
+{
+    public static void main(String[] args) {
+        Scanner in = new Scanner(System.in);
+        int T = Integer.parseInt(in.nextLine());
+        while (T-- > 0) {
+            int[] nums0 = Arrays.stream(in.nextLine().split(" ")).mapToInt(Integer::parseInt).toArray();
+            //背包容量
+            int capacity = nums0[1] - nums0[0];
+
+            //物品个数
+            int N = Integer.parseInt(in.nextLine());
+            //coins[i][0] 物品i的价值 conins[i][1]物品i的重量/消耗
+            int[][] coins = new int[N][N];
+            for (int i = 0; i < N; i++) {
+                coins[i] = Arrays.stream(in.nextLine().split(" ")).mapToInt(Integer::parseInt).toArray();
+            }
+
+            int[] dp = new int[capacity + 1];
+            //为了防止后续计算溢出选取Integer.MAX_VALUE >> 1 作为无穷大
+            Arrays.fill(dp, Integer.MAX_VALUE >> 1);
+            dp[0] = 0;
+            for (int i = 0; i < N; i++) {
+                for (int j = coins[i][1]; j <= capacity; j++) {
+                    dp[j] = Math.min(dp[j], dp[j - coins[i][1]] + coins[i][0]);
+                }
+            }
+
+            if(dp[capacity] != (Integer.MAX_VALUE >> 1)) {
+                System.out.println("The minimum amount of money in the piggy-bank is " + dp[capacity] + ".");
+            } else {
+                System.out.println("This is impossible.");
+            }
+        }
+    }
+}
+```
+
+### 多重背包
+
+#### 题目
+
+有N种物品和容量为V的背包。第i中物品最多有${M_i}$件可用，每件耗费空间是${C_i}$，价值是${W_i}$。求解将哪些物品装入背包可使这些物品耗费总空间不超过背包容量，且价值总和最大。
+
+#### 基本算法
+
+与完全背包类似，对于第$i$种物品有${M_i}+1$种策略：$[0...{M_i}]$。令$F[i,v]$表示前$i$种物品恰放入一个容量为$v$的背包的最大价值，则有状态转移方程：
+
+$$F[i,v]=max{F[i-1, v-k*{C_i}] + k * {W_i} | 0 \leq k \leq {M_i}}$$
+
+复杂度为$O(V\sum{M_i})$
+
+### 混合背包
+
+### 分组背包
+
+### 有依赖的背包
+
+## 典型的例题
+
 ### [LeetCode 552. 学生出勤记录 II](https://leetcode-cn.com/problems/student-attendance-record-ii/)
 
 ### [LeetCode 300. 最长递增子序列](https://leetcode-cn.com/problems/longest-increasing-subsequence/)
@@ -685,7 +891,9 @@ class Solution {
 
 ### [LeetCode 583. 两个字符串的删除操作](https://leetcode-cn.com/problems/delete-operation-for-two-strings/)
 
+### References
 
+[1] https://github.com/tianyicui/pack
 
 # 贪心★★
 
