@@ -20,7 +20,7 @@
 
 ## 应用层
 
-## Cookie和Session的区别
+### Cookie和Session的区别
 
 - **作用范围不同**，Cookie 保存在客户端，Session 保存在服务器端。
 - **有效期不同**，Cookie 可设置为长时间保持，比如我们经常使用的默认登录功能，Session 一般失效时间较短，客户端关闭或者 Session 超时都会失效。
@@ -41,7 +41,7 @@ Session 也是一种会话状态的跟踪技术，不同的是cookie将会话状
 
 session是一种机制，除了利用cookie来实现session机制，还可以通过在URL末尾那里附加ID来追踪session
 
-token
+### token
 
 特定时间有大量用户访问服务器的时候，服务器可能需要存储大量SessionID，但是如果有多台服务器，一台服务器存储了SessionID，又会面临需要分享SessionID给其他服务器的情况，因为可能出现这台服务器的超载，需要分配一些用户到其他服务器，其他服务器需要通用的SessionID才可以避免用户再次输入用户名和密码。但是服务器这样分享也不是办法（你这一台服务器上有这个sessionid，但是其他的服务器不一定有）
 
@@ -116,8 +116,6 @@ HTTPS实质上是非对称加密传输对称密钥，对称加密传输报文，
     <img src='./imgs/TCP01.png' width='1000px'>
     <br/><br/>TCP三次握手
 </div>
-
-
 ##### 为什么三次握手
 
 主要有两方面的原因：
