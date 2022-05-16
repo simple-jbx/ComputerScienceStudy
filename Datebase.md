@@ -172,3 +172,9 @@ B+树索引
 - 在使用like查询时以%开头（模糊查询）
 - 在索引上使用！、=、<>进行判断
 - 索引字段上使用 is null/is not null判断时
+
+# 保证数据库和缓存一致性
+
+## References
+
+1. https://mp.weixin.qq.com/s/olmqhogDIW1dE3_RwQ78Bg

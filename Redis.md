@@ -396,6 +396,24 @@ Redis单机版通过RDB或AOF持久化机制将数据持久化到硬盘上，但
 
 #### 虚拟槽
 
+# Redis应用
+
+## 分布式锁
+
+## 延时队列
+
+## 位图
+
+## HyperLogLog
+
+## 布隆过滤器
+
+## （漏斗）限流器
+
+## GeoHash
+
+## Scan
+
 # Reference
 
 1. [Redis面试八股文第一弹](https://mp.weixin.qq.com/s/CkGr-frY3gGnABs3ViTu_w)
