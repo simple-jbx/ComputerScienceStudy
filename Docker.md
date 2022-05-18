@@ -542,7 +542,7 @@ docker run -p host_port:container_port -e MYSQL_ROOT_PASSWORD=123456 -d mysql:5.
 
 ```shell
 #进阶版 将数据库数据挂载到宿主机上
-docker run -d -p host_port:container_port --privileged=true -v /home/simple/mysql5.7/log:/var/log/mysql -v /home/simple/mysql5.7/data:/var/lib/mysql -v /home/simple/mysql5.7/conf:/etc/msyql/conf.d -e MYSQL_ROOT_PASSWORD=123456 --name mysql5.7 mysql:5.7
+docker run -d -p host_port:container_port --privileged=true -v /home/simple/mysql5.7/log:/var/log/mysql -v /home/simple/mysql5.7/data:/var/lib/mysql -v /home/simple/mysql5.7/conf:/etc/mysql/conf.d -e MYSQL_ROOT_PASSWORD=123456 --name mysql5.7 mysql:5.7
 ```
 
 ### 安装Redis
@@ -562,3 +562,149 @@ docker run -d -p 63790:6379 --name=redis6.0.8 --privileged=true -v /home/simple/
 
 # 进阶
 
+## Docker复杂安装
+
+### 安装mysql主从复制
+
+#### 主从复制原理
+
+#### 主从搭建
+
+1. 新建主服务器容器实例 3307
+
+2. 进入/mydata/mysql-master/conf目录下新建my.cnf
+
+   1. ```conf
+      [mysqld]
+      ## 设置server_id，同一个局域网需要唯一
+      server_id=101
+      ## 指定不需要同步的数据库名称
+      binlog-ignore-db=mysql
+      ## 开启二进制日志功能
+      log-bin=mall-mysql-bin
+      ## 设置二进制日志使用内存大小（事务）
+      binlog_cache_size=1M
+      ## 设置使用二进制日志格式（mixed,statement,row）
+      binlog_format=mixed
+      ## 二进制日志过期清理时间。默认为0，表示不自动清理
+      expire_logs_days=7
+      ## 跳过主从复制中遇到的所有错误或指定类型的错误，避免slave端复制中断
+      ## 如L:1062错误是指一些主键重复，1032错误是因为主从数据库数据不一致
+      slave_skip_errors=1062
+      ```
+
+3. 修改完配置后重启master容器
+
+4. 进入mysql-master容器
+
+5. master容器内创建数据同步用户
+
+   1. ```shell
+      #创建用户并授权
+      create user 'slave'@'%' identified by '123456';
+      grant replication slave, replication client on *.* to 'slave'@'%';
+      ```
+
+6. 新建从服务器3308
+
+7. 进入/mydata/mysql-slave/conf目录下新建my.cnf
+
+   1. ```conf
+      [mysqld]
+      ## 设置server_id，同一个局域网需要唯一
+      server_id=102
+      ## 指定不需要同步的数据库名称
+      binlog-ignore-db=mysql
+      ## 开启二进制日志功能，以备slave作为其他数据库实例的master时使用
+      log-bin=mall-mysql-slave1-bin
+      ## 设置二进制日志使用内存大小（事务）
+      binlog_cache_size=1M
+      ## 设置使用二进制日志格式（mixed,statement,row）
+      binlog_format=mixed
+      ## 二进制日志过期清理时间。默认为0，表示不自动清理
+      expire_logs_days=7
+      ## 跳过主从复制中遇到的所有错误或指定类型的错误，避免slave端复制中断
+      ## 如L:1062错误是指一些主键重复，1032错误是因为主从数据库数据不一致
+      slave_skip_errors=1062
+      ## relay_log 配置中继日志
+      relay_log=mall-mysql-relay-bin
+      ##log_slave_updates 表示slave将复制事件写入自己的二进制日志
+      log_slave_updates=1
+      ## slave设置为只读（具有super权限的用户除外）
+      read_only=1
+      ```
+
+8. 重启slave实例
+
+9. 在主数据库中查看主从同步状态
+
+   1. ```
+      mysql> show master status;
+      +-----------------------+----------+--------------+------------------+-------------------+
+      | File                  | Position | Binlog_Do_DB | Binlog_Ignore_DB | Executed_Gtid_Set |
+      +-----------------------+----------+--------------+------------------+-------------------+
+      | mall-mysql-bin.000001 |      774 |              | mysql            |                   |
+      +-----------------------+----------+--------------+------------------+-------------------+
+      ```
+
+10. 进入mysql-slave容器
+
+11. 在从数据库中配置主从复制
+
+    1. ```
+       change master to master_host='tx.snnukf.tech', master_user='slave', master_password='123456', master_port=3307, master_log_file='mall-mysql-bin.000001', master_log_pos=774, master_connect_retry=30;
+       ```
+
+12. 在从数据库中查看主从同步状态
+
+    1. ```
+       show slave status \G;
+       
+       
+       mysql> show slave status \G;
+       *************************** 1. row ***************************
+                      Slave_IO_State:
+                         Master_Host: tx.snnukf.tech
+                         Master_User: slave
+                         Master_Port: 3307
+                       Connect_Retry: 30
+                     Master_Log_File: mall-mysql-bin.000001
+                 Read_Master_Log_Pos: 774
+                      Relay_Log_File: mall-mysql-relay-bin.000001
+                       Relay_Log_Pos: 4
+               Relay_Master_Log_File: mall-mysql-bin.000001
+                    Slave_IO_Running: No
+                   Slave_SQL_Running: No
+       ```
+
+13. 在从数据库中开启主从同步
+
+    1. ```
+       start slave;
+       ```
+
+14. 查看从数据库同步状态
+
+    1. ```
+       mysql> show slave status \G;
+       *************************** 1. row ***************************
+                      Slave_IO_State: Waiting for master to send event
+                         Master_Host: tx.snnukf.tech
+                         Master_User: slave
+                         Master_Port: 3307
+                       Connect_Retry: 30
+                     Master_Log_File: mall-mysql-bin.000001
+                 Read_Master_Log_Pos: 774
+                      Relay_Log_File: mall-mysql-relay-bin.000002
+                       Relay_Log_Pos: 325
+               Relay_Master_Log_File: mall-mysql-bin.000001
+                    Slave_IO_Running: Yes
+                   Slave_SQL_Running: Yes
+       ```
+
+15. 主从复制测试
+
+    1. 主机新建库-使用库-新建表-插入数据
+    2. 从机使用库-查看记录
+
+### 安装redis集群
