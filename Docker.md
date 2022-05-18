@@ -385,12 +385,180 @@ docker push registry.cn-hangzhou.aliyuncs.com/simple-xjb/simple:[镜像版本号
 Docker Registry是官方提供的工具，可以用于构建私有镜像仓库。-
 
 1. 下载镜像 Docker Registry
+
    1. docker pull registry
+
 2. 运行私有库，相当于本地有个私有Docker hub
+
    1.  docker run -d -p 5000:5000 -v /home/simple/myregistry/:/tmp/registry --privileged=true registry
+
 3. 创建新镜像
+
+   1. commit
+
 4. curl验证私服库上有什么镜像
+
+   1. curl -XGET http://127.0.0.1:5000/v2/_catalog
+
+   2. ```shell
+      (base) [root@simple ~]# curl -XGET http://127.0.0.1:5000/v2/_catalog
+      {"repositories":[]}
+      ```
+
 5. 将新镜像修改符合私服规范的Tag
+
+   1. docker tag simple/myubuntu:1.2 127.0.0.1:5000/myubuntu:1.2
+
+   2. ```shell
+      (base) [root@simple ~]# docker tag simple/myubuntu:1.2 127.0.0.1:5000/myubuntu:1.2
+      (base) [root@simple ~]# docker images
+      REPOSITORY                TAG       IMAGE ID       CREATED         SIZE
+      simple/myubuntu           1.2       d8fc33d70575   6 minutes ago   110MB
+      127.0.0.1:5000/myubuntu   1.2       d8fc33d70575   6 minutes ago   110MB
+      tomcat                    latest    fb5657adc892   4 months ago    680MB
+      registry                  latest    b8604a3fe854   6 months ago    26.2MB
+      ubuntu                    latest    ba6acccedd29   7 months ago    72.8MB
+      hello-world               latest    feb5d9fea6a5   7 months ago    13.3kB
+      centos                    latest    5d0da3dc9764   8 months ago    231MB
+      redis                     6.0.8     16ecd2772934   18 months ago   104MB
+      ```
+
 6. 修改配置文件使支持http
+
+   1. 修改配置文件 vi /etc/docker/daemon.json
+
+   2. ```json
+      {
+        "registry-mirrors": ["https://zufhy2tk.mirror.aliyuncs.com"],
+        "insecure-registries":["127.0.0.1:5000"]
+      }
+      ```
+
 7. push推送到私服库
+
+   1. ```shell
+      docker push 127.0.0.1:5000/myubuntu:1.2
+      ```
+
 8. curl再次验证私服库上有什么镜像
+
+   1. ```shell
+      (base) [root@simple ~]# curl -XGET http://127.0.0.1:5000/v2/_catalog
+      {"repositories":["myubuntu"]}
+      ```
+
+9. 
+
+   1. ```shell
+      docker pull 127.0.0.1:5000/myubuntu:1.2
+      ```
+
+## Docker容器数据卷
+
+### 简介
+
+docker挂载主机目录访问如果出现cannot open directory.:Permission denied
+
+解决方法：在挂载目录后加上 --privileged=true。
+
+CentOS安全模块问题，加上该参数扩大容器的权限，是container内的root拥有真正的root权限。
+
+卷就是目录或文件，存在于一个或多个容器中，由docker挂载到容器，但不属于联合文件系统，因此能够绕过UnionFS提供的一些用于持续存储或共享数据的特性。
+
+卷的设计目的就是==数据的持久化==，完全独立于容器的生存周期，因此Docker不会在容器删除时删除其挂载的数据卷。
+
+**运行一个带有容器卷的容器实例：**
+
+```shell
+docker run it --privileged=true -v /hostAbsDir:/containerDir imageName
+```
+
+**特点：**
+
+1. 数据卷可以在容器之间共享或重用数据 
+2. 卷中更改可直接实时生效
+3. 数据卷中的更改不会包含在镜像的更新中
+4. 数据卷的生命周期可持续到没有容器使用为止
+
+### 案例
+
+#### 卷的读写规则
+
+```shell
+#默认rw权限
+docker run -it --privileged=true -v /home/simple/ubuntu01_data:/tmp/docker_data --name=u1 ubuntu
+
+docker run -it --privileged=true -v /home/simple/ubuntu01_data:/tmp/docker_data:rw --name=u1 ubuntu
+
+#只读
+docker run -it --privileged=true -v /home/simple/ubuntu01_data:/tmp/docker_data:ro --name=u1 ubuntu
+
+
+```
+
+#### 卷的继承和共享
+
+```shell
+#volumes-from
+docker run -it --privileged=true --volumes-from u1 --name=u2 ubuntu
+```
+
+## Docker常规安装简介
+
+### 总体步骤
+
+1. 搜索镜像
+2. 拉取镜像
+3. 查看镜像
+4. 启动镜像
+   1. 端口映射
+   2. 设置容器卷
+5. 停止容器
+6. 移除容器
+
+### 安装Tomcat
+
+```
+docker search tomcat
+docker pull tomcat
+docker run -it -p 8080:8080 tomcat
+```
+
+访问首页404，是因为webapps目录为空
+
+```shell
+#将/usr/local/tomcat目录前 webapps.dist 改为 webapps即可
+rm -r webapps
+mv webapps.dist webapps
+```
+
+### 安装MySQL
+
+```shell
+#简单版 当容器被删除后，数据也被删除
+docker search mysql
+docker run -p host_port:container_port -e MYSQL_ROOT_PASSWORD=123456 -d mysql:5.7
+```
+
+```shell
+#进阶版 将数据库数据挂载到宿主机上
+docker run -d -p host_port:container_port --privileged=true -v /home/simple/mysql5.7/log:/var/log/mysql -v /home/simple/mysql5.7/data:/var/lib/mysql -v /home/simple/mysql5.7/conf:/etc/msyql/conf.d -e MYSQL_ROOT_PASSWORD=123456 --name mysql5.7 mysql:5.7
+```
+
+### 安装Redis
+
+```shell
+#入门版 容器被删除数据也会被删除
+docker pull redis:6.0.8
+docker run -d -p host_port:container_port redis:6.0.8
+```
+
+```shell
+#进阶版
+#安装与入门版一致
+#加容器卷 将配置文件复制到容器卷目录下
+docker run -d -p 63790:6379 --name=redis6.0.8 --privileged=true -v /home/simple/redis6.0.8/redis.conf:/etc/redis/redis.conf -v /home/simple/redis6.0.8/data:/data redis:6.0.8 redis-server /etc/redis/redis.conf
+```
+
+# 进阶
+
