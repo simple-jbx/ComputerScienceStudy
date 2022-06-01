@@ -418,5 +418,5 @@ Redis单机版通过RDB或AOF持久化机制将数据持久化到硬盘上，但
 
 1. [Redis面试八股文第一弹](https://mp.weixin.qq.com/s/CkGr-frY3gGnABs3ViTu_w)
 2. [Redis面试八股文第二弹](https://mp.weixin.qq.com/s/5tiqSuk9R3mMXP0rlmaVHw)
-3. 
+3. [如何保证数据库和缓存双写一致性](https://mp.weixin.qq.com/s/olmqhogDIW1dE3_RwQ78Bg)
 

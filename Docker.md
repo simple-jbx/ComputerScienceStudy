@@ -743,5 +743,450 @@ cluster（集群）模式-docker版 哈希槽分区进行亿级数据存储
 
 #### 3主3从redis集群扩缩容配置案例架构
 
+1. 新建6个docker容器实例
 
+	```shell
+	docker run -d --name redis6.0.8-node-6 --network host --privileged=true -v /home/simple/redis6.0.8-cluster/redis6.0.8-node-6:/data 16ecd2772934 --cluster-enabled yes --appendonly yes --port 6386
+	```
+
+2. 进入node1并为6台机器构建集群关系
+
+	```shell
+	redis-cli --cluster create 127.0.0.1:6381 127.0.0.1:6382 127.0.0.1:6383 127.0.0.1:6384 127.0.0.1:6385 127.0.0.1:6386 --cluster-replicas 1
+	
+	#--cluster-replicas 1 一主一副
+	```
+
+	<div align='center'>
+	    <img src='./imgs/Docker/001.png' width='800px'>
+	    <img src='./imgs/Docker/002.png' width='800px'>
+		</br></br>配置结果图
+	</div>
+
+3. 进入node1查看集群状态
+
+	<div align='center'>
+	    <img src='./imgs/Docker/003.png' width='1000px'>
+		</br></br>查看集群信息
+	</div>
+
+#### 3主3从Redis主从容错切换迁移案例
+
+**数据读写存储**
+
+1. 启动集群中的redis，并通过exec进入
+
+2. 为防止路由失效加参数-c并新增两个key（不能使用单机版命令，单机版命令有可能出错）
+
+	1. ```shell
+		redis-cli -p 6381 -c
+		```
+
+3. 查看集群信息
+    1. ```shell
+        redis-cli --cluster check 127.0.0.1:6381
+        ```
+
+    2. <div align='center'>
+            <img src='./imgs/Docker/004.png' width='800px'>
+        </div>
+
+
+**容错切换迁移**
+
+1. 主6381和从机切换，先停止主机6381（停之前6386从属于6381）
+
+2. 查看集群信息（停之后6386变为主）
+
+	<div align='center'>
+	    <img src='./imgs/Docker/005.png' width='800px'>
+	</div>
+
+3. 当6381恢复后（6386依然为主，6381为从）
+
+	<div align='center'>
+	    <img src='./imgs/Docker/006.png' width='800px'>
+	</div>
+
+#### 主从扩容案例
+
+新加入一主一从。
+
+1. 新建6387、6388两个节点、启动，查看是否启动成功
+
+2. 进入6387内部
+
+3. 将新增的6787节点（空槽号）作为master节点加入原集群
+
+	```shell
+	redis-cli --cluster add-node 127.0.0.1:6387 127.0.0.1:6381
+	```
+
+	<div align='center'>
+	    <img src='./imgs/Docker/007.png' width='400px'>
+	</div>
+
+4. 查看集群信息（新增主节点还没有分配槽位号）
+
+	<div align='center'>
+	    <img src='./imgs/Docker/008.png' width='400px'>
+	</div>
+
+5. 重新分配槽号
+
+	```shell
+	redis-cli --cluster reshard 127.0.0.1:6381
+	```
+
+6. 将6388加入集群并作为6387的从节点
+
+	```shell
+	# 98cbbeb982295b3b2ac32bc0937190c011761fd0 主节点id
+	redis-cli --cluster add-node 127.0.0.1:6388 127.0.0.1:6387 --cluster-slave --cluster-master-id 98cbbeb982295b3b2ac32bc0937190c011761fd0
+	```
+
+	<div align='center'>
+	    <img src='./imgs/Docker/009.png' width='400px'>
+	</div>
+
+7. 再次查看集群信息
+
+	<div align='center'>
+	    <img src='./imgs/Docker/010.png' width='400px'>
+	</div>
+
+#### 主从缩容案例
+
+1. 将从节点6388删除
+
+	```shell
+	redis-cli --cluster del-node 127.0.0.1:6388 c079049ff03ef0c313db405626b7db79d981ddb5
+	```
+
+	<div align='center'>
+	    <img src='./imgs/Docker/011.png' width='600px'>
+	</div>
+
+2. 查看集群信息
+
+	<div align='center'>
+	    <img src='./imgs/Docker/012.png' width='400px'>
+	</div>
+
+3. 重新分配槽号
+
+	```shell
+	#对整个集群 槽位进行重新分配
+	redis-cli --cluster reshard 127.0.0.1:6381
+	```
+
+4. 查看集群信息
+
+	<div align='center'>
+	    <img src='./imgs/Docker/013.png' width='400px'>
+	</div>
+
+5. 删除6387主节点
+
+	<div align='center'>
+	    <img src='./imgs/Docker/014.png' width='400px'>
+	</div>
+
+6. 查看集群信息
+
+	<div align='center'>
+	    <img src='./imgs/Docker/015.png' width='400px'>
+	</div>
+
+## DockerFile解析
+
+### 是什么
+
+用来构建Docker镜像的文本文件，是由一条条构建镜像所需的指令和参数构成的脚本。
+
+构建三步骤：
+
+1. 编写Dockerfile文件
+2. docker build构建镜像
+3. docker run image
+
+### DockerFile构建过程
+
+#### 基础知识
+
+1. 每条保留字指令都必须为大写字母且后面至少跟随一个参数
+2. 指令按照从上到下，顺序执行
+3. #表示注释
+4. 每条指令都会创建一个新的镜像层并对镜像进行提交
+
+#### Docker执行DockerFile大致流程
+
+1. 从基础镜像运行一个容器
+2. 执行一条指令并对容器做出修改
+3. 执行类似docker commit的操作提交一个新的镜像层
+4. docker再基于刚提交的镜像运行一个新容器
+5. 执行dockerfile中的下一条指令知道所有指令都执行完成
+
+#### 总结
+
+从应用软件的角度来看，DockerFile、Docker镜像和Docker容器分别代表软件的三个不同阶段。
+
+1. DockerFile是软件的原材料
+2. Docker镜像是软件的交付品
+3. Docker容器则可以认为是软件镜像的运行态，即依照镜像运行的容器实例
+
+DockerFile面向开发，Docker镜像成为交付标准，Docker容器则涉及部署与运维。
+
+### 常用保留字指令
+
+[tomcat的dockerfile](https://github.com/docker-library/tomcat)
+
+==FORM==基础镜像，当前新镜像是基于哪个镜像的，指定一个已经存在的镜像作为模板，第一条必须是from。
+
+==MAINTAINER==，镜像维护者的姓名和邮箱地址。
+
+RUN：
+
+1. 容器构建时需要运行的命令
+2. 两种格式
+	1. shell格式 RUN <命令行命令>
+	2. exec格式 RUN ["可执行文件", "参数1", "参数2"]
+3. 在docker build时运行
+
+EXPOSE：当前容器对外暴露的端口。
+
+WORKDIR：指定在创建容器后，终端默认登陆的进来工作目录，一个落脚点。
+
+USER：指定该镜像以什么样的用户去执行，如果都不指定，默认是root。
+
+ENV：用来在构建镜像过程中设置环境变量。
+
+- ENV MY_PATH /usr/mytest
+	这个环境变量可以在后续的任何RUN指令中使用，这就如同在命令前面指定了环境变量前缀一样；
+	也可以在其它指令中直接使用这些环境变量，
+
+	比如：WORKDIR $MY_PATH
+
+ADD：将宿主机目录下的文件拷贝进镜像且会自动处理URL和解压tar压缩包。
+
+COPY：
+
+- 类似ADD，拷贝文件和目录到镜像中。
+- 将从构建上下文目录中<源路径>的文件/目录 复制到新的一层镜像没的 <目标路径>位置。
+	- COPY src dest
+	- COPY ["src", "dest"]
+	- <src源路径>:源文件或者源目录
+	- <dest目标路径>：容器内的指定路径，该路径不用事先创建好，路径不存在会自动创建。
+
+VOLUME：容器数据卷，用于数据保存和持久化工作。
+
+CMD：
+
+- 指定容器启动后要干的事情
+	- shell格式 CMD <命令>
+	- exec格式 CMD ["可执行文件", "参数1", "参数2" …]
+	- 参数列表格式 CMD ["参数1", "参数1" …]，在指定了ENTRYPOINT指令后，用CMD指定具体的参数
+- Dockerfile中可以有多个CMD命令，但只有最后一个生效，CMD会被docker run 之后的参数替换。
+- 与RUN区别
+	- RUN是在docker build时运行
+	- CMD是在docker run时运行
+
+ENTRYPOINT：
+
+- 用来指定一个容器启动时要运行的命令
+- 类似CMD，但是不会被docker run后面的命令覆盖，而且这些命令行参数会被当做参数送给ENTRYPOINT指令指定的程序，一般CMD中是变参，可以传递给ENTRYPOINT
+- ENTRYPOINT ["<executeable>", "<param1>", "<param2>",  …]
+- 在执行docker run的时候可以指定 ENTRYPOINT运行所需要的参数
+- 如果dockerfile中存在多个ENTRYPOINT指令，仅最后一个生效
+
+总结：
+
+<div align='center'>
+    <img src='./imgs/Docker/016.png' width='500px'>
+</div>
+
+### 案例
+
+#### 自定义centos+java9镜像
+
+1. 要求
+
+	1. Centos7镜像具备 vim+ifconfig+jdk8
+	2. [jdk下载地址](https://jdk.java.net/archive/)
+
+2. 编写dockerfile文件
+
+	```dockerfile
+	#java8
+	FROM centos:7
+	MAINTAINER simple<jb.xue@qq.com>
+	
+	ENV MYPATH /usr/local
+	WORKDIR $MYPATH
+	
+	#安装vim
+	RUN yum -y install vim
+	#安装net-tools
+	RUN yum -y install net-tools
+	#安装java8的lib库
+	RUN yum -y install glibc.i686
+	RUN mkdir /usr/local/java
+	#ADD 是相对路径jar 把 jdk压缩包添加到容器中，安装包必须要和Dockerfile文件放在同一位置
+	ADD jdk-8u311-linux-x64.tar.gz /usr/local/java/
+	#配置java环境变量
+	ENV JAVA_HOME /usr/local/java/jdk1.8.0_311
+	
+	ENV JRE_HOME $JAVA_HOME/jre
+	ENV CLASSPATH $JAVA_HOME/lib/dt.jar:$JAVA_HOME/lib/tools.jar:$JRE_HOME/lib:$CLASSPATH
+	ENV PATH $JAVA_HOME/bin:$PATH
+	
+	EXPOSE 80
+	
+	CMD echo $MYPATH
+	CMD echo "success ---------------- ok"
+	CMD /bin/bash
+	```
+
+	```dockerfile
+	#java9
+	FROM centos:7
+	MAINTAINER simple<jb.xue@qq.com>
+	
+	ENV MYPATH /usr/local
+	WORKDIR $MYPATH
+	
+	#安装vim
+	RUN yum -y install vim
+	#安装net-tools
+	RUN yum -y install net-tools
+	#安装java的lib库 这里不确定java9是否需要
+	RUN yum -y install glibc.i686
+	RUN mkdir /usr/local/java
+	#ADD 是相对路径jar 把 jdk压缩包添加到容器中，安装包必须要和Dockerfile文件放在同一位置
+	ADD openjdk-9_linux-x64_bin.tar.gz /usr/local/java/
+	#配置java环境变量
+	ENV JAVA_HOME /usr/local/java/jdk-9
+	
+	ENV CLASSPATH $JAVA_HOME/lib/jrt-fs.jar:$CLASSPATH
+	ENV PATH $JAVA_HOME/bin:$PATH
+	
+	EXPOSE 80
+	
+	CMD echo $MYPATH
+	CMD echo "success ---------------- ok"
+	CMD /bin/bash
+	```
+
+	```dockerfile
+	#java11 使用yum安装不用配环境变量
+	FROM centos:7
+	MAINTAINER simple<jb.xue@qq.com>
+	
+	ENV MYPATH /usr/local
+	WORKDIR $MYPATH
+	
+	#安装vim
+	RUN yum -y install vim
+	#安装net-tools
+	RUN yum -y install net-tools
+	#安装java11的lib库 没必要后面安装还会再将这些库安装一遍
+	# RUN yum -y install java-11-openjdk-static-libs.x86_64
+	
+	#安装java11
+	RUN yum -y install java-11-openjdk-devel.x86_64
+	
+	EXPOSE 80
+	
+	CMD echo $MYPATH
+	CMD echo "success ---------------- ok"
+	CMD /bin/bash
+	```
+
+	
+
+3. 构建
+
+	```shell
+	#docker build -t newImageName:TAG .
+	docker build -t centosjava9:1.0 .
+	```
+
+4. 运行
+
+	```shell
+	docker run -it imageID /bin/bash
+	```
+
+#### 虚悬镜像
+
+仓库名、标签都是<none>的镜像，也称为dangling image。
+
+一般是build出现错误等原因会出现。
+
+查看虚悬镜像：
+
+- ```shell
+	docker images ls -f dangling=true
+	```
+
+删除虚悬镜像：
+
+- ```shell
+	docker image prune
+	```
+
+### 总结
+
+<div align='center'>
+    <img src='./imgs/Docker/017.png' width='500px'>
+</div>
+
+## Docker微服务实战
+
+通过dockerfile发布微服务部署到docker容器。
+
+1. IDEA中创建项目并打包好jar包。
+
+2. 编写Dockerfile，并将jar包和Dockerfile放入同一个目录下。
+
+	```dockerfile
+	# 基础镜像使用java
+	FROM java:8
+	# 作者
+	MAINTAINER simple<jb.xue@qq.com>
+	# VOLUME 指定临时文件目录为/tmp，在主机/var/lib/docker目录下创建了一个临时文件并链接到容器的/tmp
+	VOLUME /tmp
+	# 将jar包添加到容器中
+	ADD docker_boot-1.0.jar docker_boot-1.0.jar
+	# 运行jar包
+	RUN bash -c 'touch /docker_boot-1.0.jar.jar'
+	ENTRYPOINT ["java","-jar","/docker_boot-1.0.jar"]
+	#暴露10022端口作为微服务
+	EXPOSE 10022
+	```
+
+3. 构建镜像
+
+	```shell
+	docker build -t docker_boot:1.0 .
+	```
+
+4. 运行容器
+
+	```shell
+	docker run -d -p 10022:10022 docker_boot:1.0 --name docker-boot
+	```
+
+5. 访问测试
+
+	<div align='center'>
+	    <img src='./imgs/Docker/018.png' width='500px'>
+	</div>
+
+## Docker网络
+
+<div align='center'>
+    <img src='./imgs/Docker/019.png' width='500px'>
+    <br/><br/>安装docker后会创建的网络
+</div>
 
