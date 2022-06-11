@@ -1185,8 +1185,111 @@ ENTRYPOINT：
 
 ## Docker网络
 
+容器间的互联和通信以及端口映射。
+
+
+
 <div align='center'>
     <img src='./imgs/Docker/019.png' width='500px'>
     <br/><br/>安装docker后会创建的网络
 </div>
+### 常用命令
+
+<div align='center'>
+    <img src='./imgs/Docker/020.png' width='500px'>
+    <br/><br/>--help查看所有命令
+</div>
+
+1. 查看网络
+
+	```
+	docker network ls
+	```
+
+2. 查看网络源数据
+
+	```
+	docker network inspect networkName
+	```
+
+3. 删除网络
+
+	```scala
+	docker network rm networkName
+	```
+
+### 网络模式
+
+
+
+| 网络模式  | 简介                                                         | 使用                |
+| --------- | ------------------------------------------------------------ | ------------------- |
+| bridge    | 为每个容器分配、设置IP等，并将容器连接到一个docker0的虚拟网桥，默认为该模式 | --network bridge    |
+| host      | 容器直接使用宿主机的IP和端口                                 | --network host      |
+| none      | 容器有独立的Network namespace，但并没有对其进行任何网络设置（相当于只有回环地址） | --network none      |
+| container | 和一个指定的容器共享IP、端口范围等（两个容器除了网络其他的还是隔离的，并且被共享的那个如果被删除了，后面那个就不能正常使用了） | --network container |
+| 自定义网络| 新建一个自定义网络，然后该网络内的容器都可以互相通信，并且自定义网络本身就维护好了主机名和IP的对应关系（网络内的容器可以通过主机名或者IP相互ping通） | docker network create networkName |
+
+### Docker整体架构
+
+<div align='center'>
+    <img src='./imgs/Docker/021.png' width='800px'>
+    <br/><br/>Docker整体架构
+</div>
+
+## Docker-compose容器编排
+
+Docker官方的开源项目，负责对Docker容器集群的快速编排。
+
+Compose允许用户通过一个单独的docker-compose.yml模板文件（YAML 格式）来定义一组相关联的应用容器为一个项目（project）。
+
+可以很容易地用一个配置文件定义一个多容器的应用，然后使用一条指令安装这个应用的所有依赖，完成构建。Docker-Compose 解决了容器与容器之间如何管理编排的问题。
+
+[官网](https://docs.docker.com/compose/install/)
+
+[下载](https://github.com/docker/compose/releases/)
+
+```shell
+#安装
+curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+chmod +x /usr/local/bin/docker-compose
+docker-compose --version
+
+#卸载 直接删除就好
+```
+
+### 核心概念
+
+1. 一个文件 docker-compose.yml
+2. 两要素
+	1. 服务 一个应用容器实例对应一个服务
+	2. 工程 由一组服务（容器）构成，在docker-compose.yml文件中定义。
+
+### 如何使用
+
+1. 编写Dockerfile定义各个微服务应用并构建出响应的镜像文件
+2. 使用docker-compose.yml定义一个完整业务单元，安排好整体应用中的各个容器服务
+3. 执行docker-compose up命令启动并运行整个应用程序，完成一键部署上线
+
+### 常用命令
+
+```shell
+Compose常用命令
+docker-compose -h                           # 查看帮助
+docker-compose up                           # 启动所有docker-compose服务
+docker-compose up -d                        # 启动所有docker-compose服务并后台运行
+docker-compose down                         # 停止并删除容器、网络、卷、镜像。
+docker-compose exec  yml里面的服务id                 # 进入容器实例内部  docker-compose exec docker-compose.yml文件中写的服务id /bin/bash
+docker-compose ps                      # 展示当前docker-compose编排过的运行的所有容器
+docker-compose top                     # 展示当前docker-compose编排过的容器进程
+ 
+docker-compose logs  yml里面的服务id     # 查看容器输出日志
+docker-compose config     # 检查配置
+docker-compose config -q  # 检查配置，有问题才有输出
+docker-compose restart   # 重启服务
+docker-compose start     # 启动服务
+docker-compose stop      # 停止服务
+```
+
+### Compose编排微服务案例
 
