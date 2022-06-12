@@ -1293,3 +1293,219 @@ docker-compose stop      # 停止服务
 
 ### Compose编排微服务案例
 
+```yml
+#需要注意的是 定义在同一网络下的服务相当于在同一个局域网  可直接使用服务名:端口号访问
+#例如在微服务中访问mysql jdbc:mysql://mysql:3306/db2022?useUnicode=true&characterEncoding=utf-8&useSSL=false
+version: "3"
+
+services:
+  microService:
+    image: my_docker:1.6
+    container_name: my_docker1.6
+    ports:
+      - "10022:10022"
+    volumes:
+      - /app/microService:/data
+    networks:
+      - simple_net
+    depends_on:
+      - redis
+      - mysql
+  redis:
+    image: redis:6.0.8
+    ports:
+      - "6378:6379"
+    volumes:
+      - /app/redis/redis.conf:/etc/redis/redis.conf
+      - /app/redis/data:/data
+    networks:
+      - simple_net
+    command: redis-server /etc/redis/redis.conf
+
+  mysql:
+    image: mysql:5.7
+    environment:
+      MYSQL_ROOT_PASSWORD: '123456'
+      MYSQL_ALLOW_EMPTY_PASSWORD: 'no'
+      MYSQL_DATABASE: 'db2022'
+      MYSQL_USER: 'simple'
+      MYSQL_PASSWORD: '123456'
+    ports:
+       - "33061:3306"
+    volumes:
+       - /app/mysql/db:/var/lib/mysql
+       - /app/mysql/conf/my.cnf:/etc/my.cnf
+       - /app/mysql/init:/docker-entrypoint-initdb.d
+    networks:
+      - simple_net
+    command: --default-authentication-plugin=mysql_native_password #解决外部无法访问
+
+networks:
+   simple_net:
+```
+
+## Docker轻量级可视化工具Portainer
+
+Portainer是一款轻量级的应用，它提供了图形化界面，用于方便地管理Docker环境，包括单机环境和集群环境。
+
+[官网](https://www.portainer.io/)
+
+安装
+
+```shell
+#--restart docker启动 该容器也随之启动，相当于自启动
+docker run -d -p 8000:8000 -p 9000:9000 --name portainer --restart=always -v /var/run/docker.sock:/var/run/docker.sock -v /home/simple/portainer_data:/data portainer/portainer-ce:latest
+```
+
+<div align='center'>
+    <img src='./imgs/Docker/022.png' width='800px'>
+    <br/><br/>Docker Portainer
+</div>
+
+## Docker容器监控之CAdvisor+InfluxDB+Granfana
+
+原生命令，docker stats可以很方便的查看当前宿主机上所有容器CPU占用率、内存占用等信息，但这个是实时的，不方便统计。
+
+<div align='center'>
+    <img src='./imgs/Docker/023.png' width='600px'>
+    <br/><br/>docker stats
+</div>
+
+### 容器监控三剑客
+
+CAdvisor监控收集+InfluxDB存储数据+Granfana展示图表。
+
+#### CAdvisor
+
+一个容器资源监控工具，包括容器的内存、CPU、网络IO、磁盘IO等监控，同时提供了一个Web页面用于查看容器的实时运行状态。CAdvisor默认存储2分钟的数据，而且只是针对单物理机。不过，CAdivisor提供了许多数据集成接口，支持InfluxDB、Redis、Kafka、Elasticsearch等集成，可以加上对应配置将监控数据发往这些数据库存储起来。
+
+主要功能：
+
+1. 展示Host和容器两个层次的监控数据。
+2. 展示历史变化数据。
+
+#### InfluxDB
+
+Go语言编写的一个开源分布式时序、时间和指标数据库，无需外部依赖。
+
+InfluxDB是一个时序数据库，专门存储时序相关数据，很适合存储CAdvisor的数据，而且CAdivisor本身提供了InfluxDB的集成方法，只需指定配置即可。
+
+主要功能：
+
+1. 基于时间序列，支持与时间有关的相关函数（如最大、最小、求和等）。
+2. 可度量性：可以实时对大量数据进行计算。
+3. 基于事件：支持任意的事件数据。
+
+#### Granfana
+
+开源的数据监控分析可视化平台，支持多种数据源的配置（包括InfluxDB、MySQL、Elasticsearch、OpenTSDB、Graphite等）和丰富的插件及模板功能，支持图表权限控制和报警。
+
+主要特性：
+
+1. 灵活丰富的图形化选择。
+2. 可以混合多种风格。
+3. 支持白天&夜间模式。
+4. 多个数据源。
+
+#### 测试
+
+```yml
+# CAdvisor InfluxDB Granfana
+version: '3.1'
+ 
+volumes:
+  grafana_data: {}
+ 
+services:
+ influxdb:
+  image: tutum/influxdb:0.9
+  restart: always
+  environment:
+    - PRE_CREATE_DB=cadvisor
+  ports:
+    - "8083:8083"
+    - "8086:8086"
+  volumes:
+    - ./data/influxdb:/data
+ 
+ cadvisor:
+  image: google/cadvisor
+  links:
+    - influxdb:influxsrv
+  command: -storage_driver=influxdb -storage_driver_db=cadvisor -storage_driver_host=influxsrv:8086
+  restart: always
+  ports:
+    - "8080:8080"
+  volumes:
+    - /:/rootfs:ro
+    - /var/run:/var/run:rw
+    - /sys:/sys:ro
+    - /var/lib/docker/:/var/lib/docker:ro
+ 
+ grafana:
+  user: "104"
+  image: grafana/grafana
+  user: "104"
+  restart: always
+  links:
+    - influxdb:influxsrv
+  ports:
+    - "3000:3000"
+  volumes:
+    - grafana_data:/var/lib/grafana
+  environment:
+    - HTTP_USER=admin
+    - HTTP_PASS=admin
+    - INFLUXDB_HOST=influxsrv
+    - INFLUXDB_PORT=8086
+    - INFLUXDB_NAME=cadvisor
+    - INFLUXDB_USER=root
+    - INFLUXDB_PASS=root
+```
+
+```
+# 浏览CAdvisor收集服务
+http://ip:8080
+
+# 浏览InfluxDB存储服务
+http://ip:8083
+
+# 浏览Grafana展现服务 
+http://ip:3000
+```
+
+**Granfana配置**
+
+1. 配置数据源
+
+	<div align='center'>
+	    <img src='./imgs/Docker/024.png' width='600px'>
+	</div>
+
+2. 选择influxdb数据源
+
+	<div align='center'>
+	    <img src='./imgs/Docker/025.png' width='600px'>
+	</div>
+
+3. 配置细节
+
+	<div align='center'>
+	    <img src='./imgs/Docker/026.png' width='600px'>
+	    <img src='./imgs/Docker/027.png' width='600px'>
+	    <img src='./imgs/Docker/028.png' width='600px'>
+	</div>
+
+4. 配置面板Panel
+
+	<div align='center'>
+	    <img src='./imgs/Docker/029.png' width='600px'>
+	    <img src='./imgs/Docker/030.png' width='600px'>
+	    <img src='./imgs/Docker/031.png' width='600px'>
+	    <img src='./imgs/Docker/032.png' width='600px'>
+	    <img src='./imgs/Docker/033.png' width='600px'>
+	    <img src='./imgs/Docker/034.png' width='600px'>
+	</div>
+
+	
+
