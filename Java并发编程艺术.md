@@ -552,3 +552,155 @@ JMM不保证未同步程序的执行结果与该程序在顺序一致性模型�
 
 ### volatile的特性
 
+一个 volatile变量的单个读/写操作，与一个普通变量的读/写操作都是使用同一个锁来同步，它们之间的执行效果相同。
+
+```java
+//两个程序语义上等价
+class VolatileFeaturesExample {
+	volatile long vl = 0L; // 使用 volatile 声明 64 位的 long 型变量
+ 	public void set(long l) {
+ 		vl = l; // 单个 volatile 变量的写
+ 	}
+ 
+    public void getAndIncrement() {
+ 		vl++; // 复合（多个）volatile 变量的读/写
+ 	}
+ 
+    public long get() {
+ 		return vl; // 单个 volatile 变量的读
+ 	}
+}
+
+class VolatileFeaturesExample {
+    long vl = 0L; // 64 位的 long 型普通变量
+ 
+    public synchronized void set(long l) { // 对单个的普通变量的写用同一个锁同步
+		vl = l;
+ 	}
+ 
+    public void getAndIncrement() { // 普通方法调用
+ 		long temp = get(); // 调用已同步的读方法
+ 		temp += 1L; // 普通写操作
+ 		set(temp); // 调用已同步的写方法
+ 	}
+ 
+    public synchronized long get() { // 对单个的普通变量的读用同一个锁同步
+ 		return vl;
+ 	}
+}
+```
+
+锁的 happens-before 规则保证释放锁和获取锁的两个线程之间的内存可见性，这意味着对一个 volatile 变量的读，总是能看到（任意线程）对这个volatile 变量最后的写 入。锁的语义决定了临界区代码的执行具有原子性。这意味着，即使是 64 位的 long 型和 double 型变量，只要它是 volatile 变量，对该变量的读/写就具有原子性。如果是多个 volatile 操作或类似于 volatile++这种复合操作，这些操作整体上不具有原子性。
+
+volatile 变量自身具有下列特性：
+
+- 可见性。对一个 volatile 变量的读，总是能看到（任意线程）对这个 volatile 变量最后的写入。
+- 原子性：对任意单个 volatile 变量的读/写具有原子性，但类似于 volatile++这种复合操作不具有原子性。
+
+### volatile写-读建立的happens-before关系
+
+从 JSR-133 开始（即从 JDK5 开始），volatile 变量的写-读可以实现线程之间的通信。从内存语义的角度来说，volatile 的写-读与锁的释放-获取有相同的内存效果： volatile 写和锁的释放有相同的内存语义；volatile 读与锁的获取有相同的内存语义。
+
+```java
+class VolatileExample {
+	int a = 0;
+ 	volatile boolean flag = false;
+ 	
+    public void writer() {
+ 		a = 1; // 1
+ 		flag = true; // 2
+ 	}
+ 
+    public void reader() {
+ 		if (flag) { // 3
+ 			int i = a; // 4
+ 			……
+ 		}
+ 	}
+}
+```
+
+- 根据程序次序规则，1 happens-before 2;3 happens-before 4。 
+- 根据 volatile 规则，2 happens-before 3。
+- 根据 happens-before 的传递性规则，1 happens-before 4。
+
+<div align='center'>
+    <img src='./imgs/JavaPA/021.png' width='400px'>
+    <br/><br/>happens-before关系
+</div>
+
+### Volatile写-读的内存语义
+
+如果把 volatile 写和 volatile 读两个步骤综合起来看的话，在读线程 B 读一个 volatile 变量后，写线程 A 在写这个 volatile 变量之前所有可见的共享变量的值都将立即变得对读线程 B 可见。
+
+volatile 写和 volatile 读的内存语义：
+
+- 线程 A 写一个 volatile 变量，实质上是线程 A 向接下来将要读这个 volatile 变量 的某个线程发出了（其对共享变量所做修改的）消息。
+- 线程 B 读一个 volatile 变量，实质上是线程 B 接收了之前某个线程发出的（在写 这个 volatile 变量之前对共享变量所做修改的）消息。
+- 线程 A 写一个 volatile 变量，随后线程 B 读这个 volatile 变量，这个过程实质上 是线程 A 通过主内存向线程 B 发送消息。
+
+### volatile内存语义的实现
+
+<div align='center'>
+    <img src='./imgs/JavaPA/022.png' width='600px'>
+    <br/><br/>volatile重排序规则表
+</div> 
+
+为了实现 volatile 的内存语义，编译器在生成字节码时，会在指令序列中插入内存屏障来禁止特定类型的处理器重排序。对于编译器来说，发现一个最优布置来最小化插入 屏障的总数几乎不可能。为此，JMM 采取保守策略。下面是基于保守策略的 JMM 内存屏障插入策略。
+
+- 在每个 volatile 写操作的前面插入一个 StoreStore 屏障。
+- 在每个 volatile 写操作的后面插入一个 StoreLoad 屏障。
+- 在每个 volatile 读操作的后面插入一个 LoadLoad 屏障。
+- 在每个 volatile 读操作的后面插入一个 LoadStore 屏障。
+
+上述内存屏障插入策略非常保守，但它可以保证在任意处理器平台，任意的程序中都能得到正确的 volatile 内存语义。
+
+<div align='center'>
+    <img src='./imgs/JavaPA/023.png' width='600px'>
+    <br/><br/>
+    <img src='./imgs/JavaPA/024.png' width='600px'>
+    <br/><br/>指令重排序示意图
+</div> 
+
+上述 volatile 写和 volatile 读的内存屏障插入策略非常保守。在实际执行时，只要不改变 volatile 写-读的内存语义，编译器可以根据具体情况省略不必要的屏障。
+
+```java
+class VolatileBarrierExample {
+	int a;
+ 	volatile int v1 = 1;
+ 	volatile int v2 = 2;
+ 
+    void readAndWrite() {
+ 		int i = v1; // 第一个 volatile 读
+ 		int j = v2; // 第二个 volatile 读
+ 		a = i + j; // 普通写
+ 		v1 = i + 1; // 第一个 volatile 写
+ 		v2 = j * 2; // 第二个 volatile 写
+ 	}
+ 
+    … // 其他方法
+} 
+```
+
+针对 readAndWrite()方法，编译器在生成字节码时可以做如下的优化。
+
+<div align='center'>
+    <img src='./imgs/JavaPA/025.png' width='600px'>
+    <br/><br/>指令重排序示意图
+</div>
+
+注意，最后的 StoreLoad 屏障不能省略。因为第二个 volatile 写之后，方法立即 return。此时编译器可能无法准确断定后面是否会有 volatile 读或写，为了安全起见，编 译器通常会在这里插入一个 StoreLoad 屏障。
+
+上面的优化针对任意处理器平台，由于不同的处理器有不同“松紧度”的处理器内存 模型，内存屏障的插入还可以根据具体的处理器内存模型继续优化。以 X86 处理器为 例，上图中除最后的 StoreLoad 屏障外，其他的屏障都会被省略。前面保守策略下的 volatile 读和写，在 X86 处理器平台可以优化成下图所示。
+
+X86 处理器仅会对写-读操作做重排序。X86 不会对读-读、读-写和写-写操作做重排序，因此在 X86 处理器中会省略掉这 3 种操作类型对应的内存屏障。在 X86 中，JMM 仅需在 volatile 写后面插入一个 StoreLoad 屏障即可正确实现 volatile 写-读 的内存语义。这意味着在 X86 处理器中，volatile 写的开销比 volatile 读的开销会大很多 （因为执行 StoreLoad 屏障开销会比较大）。
+
+<div align='center'>
+    <img src='./imgs/JavaPA/026.png' width='600px'>
+    <br/><br/>指令重排序示意图
+</div>
+
+## 锁的内存语义
+
+### 锁的释放-获取建立的happens-before关系
+

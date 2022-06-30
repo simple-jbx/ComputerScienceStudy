@@ -112,7 +112,11 @@ Docker 仓库官网: https://hub.docker.com/
 6. 安装docker ce
 
    1. ```shell
+      #安装最新版
       yum -y install docker-ce docker-ce-cli containerd.io
+      
+      #安装指定版本
+      yum -y install docker-ce-19.03.8-3.el7 docker-ce-cli-19.03.8-3.el7 containerd.io
       ```
 
 7. 启动docker
@@ -142,6 +146,17 @@ Docker 仓库官网: https://hub.docker.com/
 阿里云个人账号下有一个专属的加速器地址
 
 https://cr.console.aliyun.com/cn-hangzhou/instances/mirrors
+
+```shell
+sudo mkdir -p /etc/docker
+sudo tee /etc/docker/daemon.json <<-'EOF'
+{
+  "registry-mirrors": ["https://zufhy2tk.mirror.aliyuncs.com"]
+}
+EOF
+sudo systemctl daemon-reload
+sudo systemctl restart docker
+```
 
 ### Hello World
 
@@ -542,7 +557,7 @@ docker run -p host_port:container_port -e MYSQL_ROOT_PASSWORD=123456 -d mysql:5.
 
 ```shell
 #进阶版 将数据库数据挂载到宿主机上
-docker run -d -p host_port:container_port --privileged=true -v /home/simple/mysql5.7/log:/var/log/mysql -v /home/simple/mysql5.7/data:/var/lib/mysql -v /home/simple/mysql5.7/conf:/etc/mysql/conf.d -e MYSQL_ROOT_PASSWORD=123456 --name mysql5.7 mysql:5.7
+docker run -d -p 33060:3306 --privileged=true -v /home/simple/docker-data/mysql5.7/log:/var/log/mysql -v /home/simple/docker-data/mysql5.7/data:/var/lib/mysql -v /home/simple/docker-data/mysql5.7/conf:/etc/mysql/conf.d -e MYSQL_ROOT_PASSWORD=123456 --name mysql5.7 mysql:5.7
 ```
 
 ### 安装Redis
@@ -557,7 +572,7 @@ docker run -d -p host_port:container_port redis:6.0.8
 #进阶版
 #安装与入门版一致
 #加容器卷 将配置文件复制到容器卷目录下
-docker run -d -p 63790:6379 --name=redis6.0.8 --privileged=true -v /home/simple/redis6.0.8/redis.conf:/etc/redis/redis.conf -v /home/simple/redis6.0.8/data:/data redis:6.0.8 redis-server /etc/redis/redis.conf
+docker run -d -p 63790:6379 --name=redis6.0.8 --privileged=true -v /home/simple/docker-data/redis6.0.8/redis.conf:/etc/redis/redis.conf -v /home/simple/docker-data/redis6.0.8/data:/data redis:6.0.8 redis-server /etc/redis/redis.conf
 ```
 
 # 进阶

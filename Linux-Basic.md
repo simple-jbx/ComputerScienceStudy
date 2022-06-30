@@ -248,10 +248,44 @@ chown 更改文件所有者和用户组
 vim /etc/sysconfig/network-scripts/ifcfg-ens33
 ```
 
-### 关闭防火墙
+### 防火墙
 
 ```shell
+# 开启
+systemctl start firewalld
+
+# 关闭
 systemctl stop firewalld
+
+# 查看防火墙配置
+firewall-cmd --state
+firewall-cmd --list-all
+
+# 开放80端口 tcp协议
+firewall-cmd --permanent --add-port=80/tcp
+firewall-cmd --reload    #重新加载防火墙配置才会起作用 每次操作后都需要reload
+
+# 移除80端口
+firewall-cmd --permanent --remove-port=80/tcp
+
+# 开放某个段的端口
+firewall-cmd --permanent --zone=public --add-port=1000-2000/tcp
+
+# 开放某个IP访问 默认允许
+firewall-cmd --permanent --add-rich-rule='rule family=ipv4 source address=192.168.1.169 accept'
+
+# 禁止某个IP访问
+firewall-cmd --permanent --add-rich-rule='rule family=ipv4 source address=10.0.0.42 drop'
+
+# 开放某个IP的某个端口
+firewall-cmd --permanent --add-rich-rule='rule family=ipv4 source address=192.168.1.169 port protocol=tcp port=6379 accept'
+
+# 移除某个IP的某个端口
+firewall-cmd --permanent --remove-rich-rule='rule family="ipv4" source address="192.168.1.169" port port="6379" protocol="tcp" accept'
+
+# 开放某个IP段 
+firewall-cmd --permanent --add-rich-rule='rule family=ipv4 source address=10.0.0.0/24 accept'
+
 ```
 
 ### ping
@@ -826,7 +860,7 @@ systemctl status xxx.service
   - useradd newuser
   - 会创建同名的组合家目录
 - 设置密码
-  - passwd password
+  - passwd user password
 - 删除用户
   - userdel -r deluser
   - 递归删除家目录和组
