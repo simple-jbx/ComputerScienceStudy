@@ -25,8 +25,9 @@ MyBatis-Plus（简称 MP）是一个MyBatis的增强工具，在MyBatis的基础
 ## 框架结构
 
 <div align='center'>
-    <img src='./imgs/MyBatis-Plus/001.png' width='600px'>
+    <img src='./imgs/MyBatisPlus/Springboot/003.png' width='600px'>
 </div>
+
 
 ## 代码及文档地址
 
@@ -1137,6 +1138,39 @@ private Integer isDeleted;
 ```
 
 # 条件构造器和常用接口
+
+## wapper介绍
+
+<div align='center'>
+    <img src='./imgs/MybatisPlus/Springboot/002.png' width='600px'>
+</div>
+
+- Wrapper ： 条件构造抽象类，最顶端父类 
+  - AbstractWrapper ： 用于查询条件封装，生成 sql 的 where 条件 
+    - QueryWrapper ： 查询条件封装 
+    - UpdateWrapper ： Update 条件封装 
+    - AbstractLambdaWrapper ： 使用Lambda 语法 
+      - LambdaQueryWrapper ：用于Lambda语法使用的查询Wrapper 
+      - LambdaUpdateWrapper ： Lambda 更新封装Wrapper
+
+## QueryWrapper
+
+###  组装查询条件
+
+```java
+    @Test
+    public void test01() {
+
+        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+        queryWrapper.like("name", "bo")
+                        .between("age", 20, 25)
+                                .isNotNull("email");
+        List<User> list = userMapper.selectList(queryWrapper);
+        list.forEach(System.out::println);
+    }
+```
+
+
 
 # Reference
 
