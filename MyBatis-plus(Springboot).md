@@ -434,9 +434,38 @@ UPDATE product SET price=price+50, `version`=`version_old` + 1 WHERE id=1 AND `v
 
 # 代码生成器
 
+## 引入依赖
+
+```xml
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-generator</artifactId>
+            <version>3.5.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.freemarker</groupId>
+            <artifactId>freemarker</artifactId>
+            <version>2.3.31</version>
+        </dependency>
+```
+
+[Code](https://github.com/simple-jbx/Mybatis-Plus-Springboot-Study/blob/main/src/test/java/tech/snnukf/mybatisplusspringboot/FastAutoGeneratorTest.java)
+
+[代码生成文件](https://github.com/simple-jbx/Mybatis-Plus-Springboot-Study/tree/main/mybatis-plus-auto-generator)
+
+# 多数据源
+
+适用于多种场景：纯粹多库、 读写分离、 一主多从、 混合模式等。
+
+# MyBatisX插件
+
+MyBatisX插件用法：https://baomidou.com/pages/ba5b24/
+
 # Reference
 
+- [学习视频地址](https://www.bilibili.com/video/BV1VP4y1c7j7)
 
-
-[学习视频地址](https://www.bilibili.com/video/BV1VP4y1c7j7)
-
+- 官方地址: http://mp.baomidou.com 
+- 代码发布地址: Github: https://github.com/baomidou/mybatis-plus 
+- Gitee: https://gitee.com/baomidou/mybatis-plus 
+- 文档发布地址: https://baomidou.com/pages/24112f
