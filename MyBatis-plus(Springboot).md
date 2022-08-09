@@ -457,9 +457,49 @@ UPDATE product SET price=price+50, `version`=`version_old` + 1 WHERE id=1 AND `v
 
 适用于多种场景：纯粹多库、 读写分离、 一主多从、 混合模式等。
 
+配置多数据源
+
+```yml
+  datasource:
+    dynamic:
+      # 设置默认的数据源或者数据源组,默认值即为master
+      primary: master
+      # 严格匹配数据源,默认false.true未匹配到指定数据源时抛异常,false使用默认数据源
+      strict: false
+      datasource:
+        master:
+          url: jdbc:mysql://192.168.182.129:3306/mybatis_plus?characterEncoding=utf8&useSSL=false
+          driver-class-name: com.mysql.cj.jdbc.Driver
+          username: root
+          password: 123456
+        slave_1:
+          url: jdbc:mysql://192.168.182.129:3306/mybatis_plus_1?characterEncoding=utf8&useSSL=false
+          driver-class-name: com.mysql.cj.jdbc.Driver
+          username: root
+          password: 123456
+```
+
+## 在Service中指定所操作的数据源
+
+```java
+ @DS("master")//指定所操作的数据源
+ @Service
+ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IUserService {}
+```
+
+//TODO 如何实现读写分离
+
 # MyBatisX插件
 
+实际开发中仅仅依靠Mybatis-plus还不够（例如一些复杂的sql或者多表联查等等），可以借助MyBatisX插件（IDEA）。
+
 MyBatisX插件用法：https://baomidou.com/pages/ba5b24/
+
+
+
+
+
+
 
 # Reference
 
