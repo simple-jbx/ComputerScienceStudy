@@ -1338,6 +1338,31 @@ java8中Collection接口被扩展，提供了两个获取流的方法：
 - `default Stream<E> stream():返回一个顺序流`
 - `default Stream<E> parallelStream():返回一个并行流`
 
+### 通过数组
+
+```java
+Arrays.stream()
+```
+
+### 通过Stream of
+
+```java
+Stream.of()
+```
+
+### 创建无限流
+
+```java
+ 	//迭代
+    //遍历前10个偶数
+    Stream.iterate(0, t -> t + 2).limit(10).forEach(System.out::println);
+
+    //生成
+    Stream.generate(Math::random).limit(10).forEach(System.out::println);
+```
+
+
+
 ## 操作三个步骤
 
 1. 创建Stream
