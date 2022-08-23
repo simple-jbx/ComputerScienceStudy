@@ -1327,30 +1327,39 @@ Stream（面向CPU计算）和Collection集合（面向内存存储）的区别�
 - Stream不会改变源对象。它会返回一个持有结果的新Stream。
 - Stream操作是延迟执行的，这意味着会等到需要结果的时候才执行。
 
+### 操作三个步骤
+
+1. 创建Stream
+    - 一个数据源（集合、数组），获取一个流。
+2. 中间操作
+    - 一个中间操作链，对数据源的数据进行处理。
+3. 终止操作（终端操作）
+    - 一旦执行终止操作，就==执行中间操作链==，并产生结果。之后，不会再被使用。
+
 ## Stream使用
 
 ### Stream实例化
 
-### 通过集合
+#### 通过集合
 
 java8中Collection接口被扩展，提供了两个获取流的方法：
 
 - `default Stream<E> stream():返回一个顺序流`
 - `default Stream<E> parallelStream():返回一个并行流`
 
-### 通过数组
+#### 通过数组
 
 ```java
 Arrays.stream()
 ```
 
-### 通过Stream of
+#### 通过Stream of
 
 ```java
 Stream.of()
 ```
 
-### 创建无限流
+#### 创建无限流
 
 ```java
  	//迭代
@@ -1361,16 +1370,51 @@ Stream.of()
     Stream.generate(Math::random).limit(10).forEach(System.out::println);
 ```
 
+### Stream的中间操作
 
+#### 筛选与切片
 
-## 操作三个步骤
+```java
+ int[] arr = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1};
+        //filter(Predicate p) 接受Lambada 过滤流中不符合条件的元素
+        Arrays
+            .stream(arr)
+            .filter(t -> t % 2 == 0)
+            .forEach(System.out::println);
+        System.out.println();
 
-1. 创建Stream
-    - 一个数据源（集合、数组），获取一个流。
-2. 中间操作
-    - 一个中间操作链，对数据源的数据进行处理。
-3. 终止操作（终端操作）
-    - 一旦执行终止操作，就==执行中间操作链==，并产生结果。之后，不会再被使用。
+        //limit(n) 截断流，使元素不超过给定数量
+        Arrays
+            .stream(arr)
+            .limit(5)
+            .forEach(System.out::println);
+        System.out.println();
+
+        //skip(n) 跳过元素，返回一个跳过了前n个元素的流。若流中元素不足n个，则返回一个空的流
+        Arrays
+            .stream(arr)
+            .skip(2)
+            .forEach(System.out::println);
+        System.out.println();
+
+        //distinct() 筛选 通过元素的hashCode()和equals()去除重复元素
+        Arrays
+            .stream(arr)
+            .distinct()
+            .forEach(System.out::println);
+```
+
+#### 映射
+
+#### 排序
+
+### Stream的终止操作
+
+#### 匹配与查找
+
+#### 规约
+
+#### 收集
 
 # 大数据与分布式
 
