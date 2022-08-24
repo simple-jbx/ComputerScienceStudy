@@ -1406,6 +1406,41 @@ Stream.of()
 
 #### 映射
 
+```java
+    //映射
+    @Test
+    public void test2() {
+        //map(Function f) 接收一个函数作为参数，将元素转换成其他形式或提取信息，该函数会被应用到每个元素上，并将其映射成一个新的元素
+        List<String> strings = Arrays.asList("aa", "bb", "cc", "dd");
+        strings
+                .stream()
+                .map(str -> str.toUpperCase(Locale.ROOT))
+                .forEach(System.out::println);
+
+        Stream<Stream<Character>> streamStream = strings.stream().map(StreamAPITest2::fromStreinToStream);
+        streamStream.forEach(
+                s -> {
+                    s.forEach(System.out::println);
+                }
+        );
+        System.out.println();
+
+        //flatMap(Function f) 接收一个函数作为参数，将流中的每个值都换成另一个流，然后把所有流连接成一个流
+        Stream<Character> characterStream = strings.stream().flatMap(StreamAPITest2::fromStreinToStream);
+        characterStream.forEach(System.out::println);
+    }
+
+    public static Stream<Character> fromStreinToStream(String str) {
+        ArrayList<Character> list = new ArrayList<>();
+        for (Character c : str.toCharArray()) {
+            list.add(c);
+        }
+        return list.stream();
+    }
+```
+
+
+
 #### 排序
 
 ### Stream的终止操作
