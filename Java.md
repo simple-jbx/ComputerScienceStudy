@@ -1439,17 +1439,177 @@ Stream.of()
     }
 ```
 
-
-
 #### 排序
+
+```java
+//排序
+    @Test
+    public void test4() {
+        // sorted() 自然排序
+        List<Integer> integers = Arrays.asList(1, 6, 15, 99, -36, -60, 50, 66, 2);
+        integers.stream().sorted().forEach(System.out::println);
+
+        // sorted(Comparator com) 定制排序
+        List<User> users = new LinkedList<>();
+        for (int i = 0; i < 10; i++) {
+            User user = User
+                    .builder()
+                    .name("simple" + i)
+                    .age((int) (Math.random() * 50  + i))
+                    .build();
+            users.add(user);
+        }
+
+        users
+                .stream()
+                .sorted((u1, u2) -> u2.getAge() - u1.getAge())
+                .forEach(System.out::println);
+    }
+```
+
+
 
 ### Stream的终止操作
 
 #### 匹配与查找
 
+```java
+ //匹配与查找
+    @Test
+    public void test1() {
+        List<User> users = new LinkedList<>();
+        for (int i = 0; i < 10; i++) {
+            User user = User
+                    .builder()
+                    .name("simple" + i)
+                    .age((int) (Math.random() * 50  + i))
+                    .build();
+            users.add(user);
+        }
+
+        // allMatch(Predicate p) 检查所有元素是否匹配条件
+        boolean allMatch = users
+                .stream()
+                .allMatch(u -> u.getAge() > 20);
+        System.out.println(allMatch);
+
+        // 是否有元素匹配
+        boolean anyMatch = users
+                .stream()
+                .anyMatch(u -> u.getAge() > 20);
+        System.out.println(anyMatch);
+
+        //所有都不匹配
+        boolean noneMatch = users
+                .stream()
+                .noneMatch(u -> u.getAge() > 100);
+        System.out.println(noneMatch);
+
+        //返回第一个元素
+        Optional<User> first = users
+                .stream()
+                .findFirst();
+        System.out.println(first);
+
+        //返回任意一个元素
+        Optional<User> any = users
+                .stream()
+                .findAny();
+        System.out.println(any);
+    }
+
+    @Test
+    public void test2() {
+        List<User> users = new LinkedList<>();
+        for (int i = 0; i < 10; i++) {
+            User user = User
+                    .builder()
+                    .name("simple" + i)
+                    .age((int) (Math.random() * 50  + i))
+                    .build();
+            users.add(user);
+        }
+
+        // 返回流中元素的个数
+        long count = users
+                .stream()
+                .filter(u -> u.getAge() > 20)
+                .count();
+        System.out.println(count);
+
+        // max(Comparator c) 返回流中最大值
+        Optional<Integer> max = users
+                .stream()
+                .map(User::getAge)
+                .max(Integer::compareTo);
+        System.out.println(max);
+
+        // min(Comparator c) 返回流中最小值
+        Optional<User> min = users
+                .stream()
+                .min(Comparator.comparingInt(u -> u.getAge()));
+        System.out.println(min);
+
+        // forEach(Consumer c) 内部迭代
+        users
+                .stream()
+                .forEach(System.out::println);
+    }
+```
+
 #### 规约
 
+```java
+// 规约
+@Test
+public void test1() {
+    // reduce(T identity, BinaryOperator) 将流中元素反复结合起来，得到一个值。返回Optional<T>
+    List<Integer> integerList = Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
+    Integer reduce = integerList
+            .stream()
+            .reduce(0, Integer::sum);
+    System.out.println(reduce);
+
+    // reduce(BinaryOperator) 将流中元素反复结合起来，得到一个值。返回Optional<T>
+    Optional<Integer> reduce1 = integerList
+            .stream()
+            .reduce(Integer::sum);
+    System.out.println(reduce1);
+}
+```
+
 #### 收集
+
+```java
+    // 收集
+    @Test
+    public void test2() {
+        // collect(Collect c) 将流转换为其他形式。接收一个Collector接口实现，用于给Stream中元素做汇总的方法
+        List<User> users = new LinkedList<>();
+        for (int i = 0; i < 10; i++) {
+            User user = User
+                    .builder()
+                    .name("simple" + i)
+                    .age((int) (Math.random() * 50  + i))
+                    .build();
+            users.add(user);
+        }
+
+        List<User> userList = users
+                .stream()
+                .filter(u -> u.getAge() > 30)
+                .collect(Collectors.toList());
+        System.out.println(userList);
+
+        Set<User> userSet = users
+                .stream()
+                .filter(u -> u.getAge() > 30)
+                .collect(Collectors.toSet());
+        System.out.println(userSet);
+    }
+```
+
+
 
 # 大数据与分布式
 
