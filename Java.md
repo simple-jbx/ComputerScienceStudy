@@ -518,354 +518,6 @@ AIO适用于连接数目多且连接比较长（重操作）的架构，比如�
     <img src='./imgs/JAVAThrowable.svg' width='1200px'>
     </br></br>JAVA异常
 </div>
-
-### 集合
-
-[JAVA集合源码](https://github.com/simple-jbx/SourceCode/tree/main/JAVA/JDK8Src/java/util/Collection.java)
-
-<div align='center'>
-    <img src='./imgs/Collection01.png' width='1200px'>
-    <img src='./imgs/Collection02.png' width='1200px'>
-    </br></br>JAVA集合
-</div>
-
-
-
-#### List、Set、Map三者区别
-
-- List：有序集合（存入与取出顺序相同），可存储重复元素，可存储多个null
-
-- Set：无序集合（存入和取出顺序不一定相同），不可存储重复元素，只能存储一个null
-
-- Map：使用键值对的方式对元素进行存储，key是无序的，且是唯一的。value值不唯一。不同的key值可以对应相同的value值。
-
-#### List
-
-#### Set
-
-##### HashSet
-
-底层是HashMap，默认构造函数是构建一个初始容量为16，负载因子为0.75的HashMap。HashSet的值存放于HashMap的key上，HashMap的value统一为PRESENT。
-
-HashSet如何保证数据的不可重复？
-
-通过HashCode()和equals()两个方法
-
-#### Map
-
-##### [HashMap](https://github.com/simple-jbx/SourceCode/tree/main/JAVA/JDK8Src/java/util/HashMap.java)
-
-```java
-//初始容量 16
-static final int DEFAULT_INITIAL_CAPACITY = 1 << 4;
-//最大容量 1 << 30
-static final int MAXIMUM_CAPACITY = 1 << 30;
-//默认加载因子 0.75
-static final float DEFAULT_LOAD_FACTOR = 0.75f;
-//转红黑树的链表阈值
-static final int TREEIFY_THRESHOLD = 8;
-//转链表时候红黑树节点个数阈值
-static final int UNTREEIFY_THRESHOLD = 6;
-//数组最小容量
-static final int MIN_TREEIFY_CAPACITY = 64;
-
-
-/* ---------------- Fields -------------- */
-
-/**
-* The table, initialized on first use, and resized as
-* necessary. When allocated, length is always a power of two.
-* (We also tolerate length zero in some operations to allow
-* bootstrapping mechanics that are currently not needed.)
-*/
-transient Node<K,V>[] table;
-
-//扩容门限值 capacity * load factor 当前容量到达这个值的时候进行resize()
-int threshold;
-
-/**
-* The number of key-value mappings contained in this map.
-*/
-transient int size;
-
-/**
-* The number of times this HashMap has been structurally modified
-* Structural modifications are those that change the number of mappings in
-* the HashMap or otherwise modify its internal structure (e.g.,
-* rehash).  This field is used to make iterators on Collection-views of
-* the HashMap fail-fast.  (See ConcurrentModificationException).
-*/
-transient int modCount;
-
-
-//Node节点 实际上还是实现了Map.Entry接口 部分代码
-static class Node<K,V> implements Map.Entry<K,V> {
-    //判断两个节点值是否相等
-    //先判断引用是否相等  然后判断是否为Map.Entry类型 在调用Map.Entry equals方法
-    public final boolean equals(Object o) {
-            if (o == this)
-                return true;
-            if (o instanceof Map.Entry) {
-                Map.Entry<?,?> e = (Map.Entry<?,?>)o;
-                if (Objects.equals(key, e.getKey()) &&
-                    Objects.equals(value, e.getValue()))
-                    return true;
-            }
-            return false;
-    }
-    
-    //计算key的hash值 如果key为null则hash值为0放在数组索引为0的位置上
-    static final int hash(Object key) {
-        int h;
-        return (key == null) ? 0 : (h = key.hashCode()) ^ (h >>> 16);
-    }
-}
-```
-
-
-
-###### **HashMap底层实现**
-
-1.7之前数组+链表，1.8之后数组+链表+红黑树
-
-###### HashMap扩容
-
-<div align='center'>
-    <img src='./imgs/HashMapResize.png' width='1400px'>
-    <br/><br/>HashMap扩容
-</div>
-
-
-
-```java
-    final Node<K,V>[] resize() {
-        Node<K,V>[] oldTab = table;
-        int oldCap = (oldTab == null) ? 0 : oldTab.length;
-        int oldThr = threshold;
-        int newCap, newThr = 0;
-        if (oldCap > 0) {
-            if (oldCap >= MAXIMUM_CAPACITY) {
-                threshold = Integer.MAX_VALUE;
-                return oldTab;
-            }
-            else if ((newCap = oldCap << 1) < MAXIMUM_CAPACITY &&
-                     oldCap >= DEFAULT_INITIAL_CAPACITY)
-                newThr = oldThr << 1; // double threshold
-        }
-        else if (oldThr > 0) // initial capacity was placed in threshold
-            newCap = oldThr;
-        else {               // zero initial threshold signifies using defaults
-            newCap = DEFAULT_INITIAL_CAPACITY;
-            newThr = (int)(DEFAULT_LOAD_FACTOR * DEFAULT_INITIAL_CAPACITY);
-        }
-        if (newThr == 0) {
-            float ft = (float)newCap * loadFactor;
-            newThr = (newCap < MAXIMUM_CAPACITY && ft < (float)MAXIMUM_CAPACITY ?
-                      (int)ft : Integer.MAX_VALUE);
-        }
-        threshold = newThr;
-        @SuppressWarnings({"rawtypes","unchecked"})
-        Node<K,V>[] newTab = (Node<K,V>[])new Node[newCap];
-        table = newTab;
-        if (oldTab != null) {
-            for (int j = 0; j < oldCap; ++j) {
-                Node<K,V> e;
-                if ((e = oldTab[j]) != null) {
-                    oldTab[j] = null;
-                    if (e.next == null)
-                        newTab[e.hash & (newCap - 1)] = e;
-                    else if (e instanceof TreeNode)
-                        ((TreeNode<K,V>)e).split(this, newTab, j, oldCap);
-                    else { // preserve order
-                        Node<K,V> loHead = null, loTail = null;
-                        Node<K,V> hiHead = null, hiTail = null;
-                        Node<K,V> next;
-                        do {
-                            next = e.next;
-                            if ((e.hash & oldCap) == 0) {
-                                if (loTail == null)
-                                    loHead = e;
-                                else
-                                    loTail.next = e;
-                                loTail = e;
-                            }
-                            else {
-                                if (hiTail == null)
-                                    hiHead = e;
-                                else
-                                    hiTail.next = e;
-                                hiTail = e;
-                            }
-                        } while ((e = next) != null);
-                        if (loTail != null) {
-                            loTail.next = null;
-                            newTab[j] = loHead;
-                        }
-                        if (hiTail != null) {
-                            hiTail.next = null;
-                            newTab[j + oldCap] = hiHead;
-                        }
-                    }
-                }
-            }
-        }
-        return newTab;
-    }
-```
-
-###### HashMap Put
-
-<div align='center'>
-    <img src='./imgs/HashMapPut.svg' width='1800px'>
-    <br/><br/>HashMap Put
-</div>
-
-
-
-```java
-    /**
-     * Associates the specified value with the specified key in this map.
-     * If the map previously contained a mapping for the key, the old
-     * value is replaced.
-     *
-     * @param key key with which the specified value is to be associated
-     * @param value value to be associated with the specified key
-     * @return the previous value associated with <tt>key</tt>, or
-     *         <tt>null</tt> if there was no mapping for <tt>key</tt>.
-     *         (A <tt>null</tt> return can also indicate that the map
-     *         previously associated <tt>null</tt> with <tt>key</tt>.)
-     */
-    public V put(K key, V value) {
-        return putVal(hash(key), key, value, false, true);
-    }
-
-    /**
-     * Implements Map.put and related methods.
-     *
-     * @param hash hash for key
-     * @param key the key
-     * @param value the value to put
-     * @param onlyIfAbsent if true, don't change existing value
-     * @param evict if false, the table is in creation mode.
-     * @return previous value, or null if none
-     */
-    final V putVal(int hash, K key, V value, boolean onlyIfAbsent,
-                   boolean evict) {
-        Node<K,V>[] tab; Node<K,V> p; int n, i;
-        if ((tab = table) == null || (n = tab.length) == 0)
-            n = (tab = resize()).length;
-        if ((p = tab[i = (n - 1) & hash]) == null)
-            tab[i] = newNode(hash, key, value, null);
-        else {
-            Node<K,V> e; K k;
-            if (p.hash == hash &&
-                ((k = p.key) == key || (key != null && key.equals(k))))
-                e = p;
-            else if (p instanceof TreeNode)
-                e = ((TreeNode<K,V>)p).putTreeVal(this, tab, hash, key, value);
-            else {
-                for (int binCount = 0; ; ++binCount) {
-                    if ((e = p.next) == null) {
-                        p.next = newNode(hash, key, value, null);
-                        if (binCount >= TREEIFY_THRESHOLD - 1) // -1 for 1st
-                            treeifyBin(tab, hash);
-                        break;
-                    }
-                    if (e.hash == hash &&
-                        ((k = e.key) == key || (key != null && key.equals(k))))
-                        break;
-                    p = e;
-                }
-            }
-            if (e != null) { // existing mapping for key
-                V oldValue = e.value;
-                if (!onlyIfAbsent || oldValue == null)
-                    e.value = value;
-                afterNodeAccess(e);
-                return oldValue;
-            }
-        }
-        ++modCount;
-        if (++size > threshold)
-            resize();
-        afterNodeInsertion(evict);
-        return null;
-    }
-
-    /**
-     * Replaces all linked nodes in bin at index for given hash unless
-     * table is too small, in which case resizes instead.
-     */
-    final void treeifyBin(Node<K,V>[] tab, int hash) {
-        int n, index; Node<K,V> e;
-        if (tab == null || (n = tab.length) < MIN_TREEIFY_CAPACITY)
-            resize();
-        else if ((e = tab[index = (n - 1) & hash]) != null) {
-            TreeNode<K,V> hd = null, tl = null;
-            do {
-                TreeNode<K,V> p = replacementTreeNode(e, null);
-                if (tl == null)
-                    hd = p;
-                else {
-                    p.prev = tl;
-                    tl.next = p;
-                }
-                tl = p;
-            } while ((e = e.next) != null);
-            if ((tab[index] = hd) != null)
-                hd.treeify(tab);
-        }
-    }
-```
-
-**HashMap与HashSet的区别**
-
-| HashMap                     | HashSet                             |
-| --------------------------- | ----------------------------------- |
-| 实现了Map接口               | 实现了Set接口                       |
-| 存储键值对                  | 存储对象                            |
-| key唯一，value不唯一        | 存储对象唯一                        |
-| HashMap使用键值计算Hashcode | HashSet使用成员对象来计算hashcode值 |
-| 速度相对较快                | 速度相对较慢                        |
-
-###### ConcurrentHashMap
-
-- JDK1.7
-
-	Segment数组+HashEntry数组方式实现，Segment实现了ReentrantLock，所以Segment有锁的性质，HashEntry用于存储键值对。
-
-- JDK1.8
-
-	类似HashMap，Node数组+链表/红黑树，采用CAS+synchronized来保证线程安全。synchronized只锁链表或红黑树的头结点，锁的粒度更细，竞争变小，效率提高。
-
-<div align='center'>
-    <img src='./imgs/20210921163557.png' width='1200px'>
-    </br></br>JDK1.7 ConcurrentHashMap
-    <img src='./imgs/20210921163736.png' width='1200px'>
-    </br></br>JDK1.8 ConcurrentHashMap
-</div>
-
-###### HashTable
-
-数组+链表，链表解决哈希冲突，整个数组都是synchronized修饰的，线程安全，锁的粒度太大，竞争激烈，效率低
-
-<div align='center'>
-    <img src='./imgs/20210921164630.png' width='1200px'>
-    </br></br>HashTable
-</div>
-
-###### HashMap、ConcurrentHashMap、HashMap的区别
-
-|                              | HashMap（JDK1.8）                 | ConcurrentHashMap（JDK1.8）      | Hashtable                      |
-| ---------------------------- | --------------------------------- | -------------------------------- | ------------------------------ |
-| 底层实现                     | 数组+链表/红黑树                  | 数组+链表/红黑树                 | 数组+链表                      |
-| 线程安全                     | 不安全                            | 安全（synchronized修饰Node节点） | 安全（synchronized修饰整个表） |
-| 效率                         | 高                                | 较高                             | 低                             |
-| 扩容                         | 初始16，每次扩容为原来的2倍       | 初始16，每次扩容为原来的2倍      | 初始                           |
-| 是否支持null key和null value | 可以有一个null key 多个null value | 不支持                           | 不支持                         |
-
-
-
 ### 线程
 
 [JDK1.8 Thread.java](https://github.com/simple-jbx/SourceCode/tree/main/JAVA/JDK8Src/java/lang/Thread.java)
@@ -1305,6 +957,364 @@ CAS的原理是拿期望的值和原本的一个值作比较，如果相同则�
     <img src='./imgs/JAVALock.svg' width='1000px'>
     </br></br><a href='https://zhuanlan.zhihu.com/p/56512421'>JAVA锁</a>
 </div>
+# 集合
+
+[JAVA集合源码](https://github.com/simple-jbx/SourceCode/tree/main/JAVA/JDK8Src/java/util/Collection.java)
+
+<div align='center'>
+    <img src='./imgs/Collection01.png' width='1200px'>
+    <img src='./imgs/Collection02.png' width='1200px'>
+    </br></br>JAVA集合
+</div>
+
+
+
+## List、Set、Map三者区别
+
+- List：有序集合（存入与取出顺序相同），可存储重复元素，可存储多个null
+
+- Set：无序集合（存入和取出顺序不一定相同），不可存储重复元素，只能存储一个null
+
+- Map：使用键值对的方式对元素进行存储，key是无序的，且是唯一的。value值不唯一。不同的key值可以对应相同的value值。
+
+## List
+
+## Set
+
+### HashSet
+
+底层是HashMap，默认构造函数是构建一个初始容量为16，负载因子为0.75的HashMap。HashSet的值存放于HashMap的key上，HashMap的value统一为PRESENT。
+
+HashSet如何保证数据的不可重复？
+
+通过HashCode()和equals()两个方法
+
+## Map
+
+### [HashMap](https://github.com/simple-jbx/SourceCode/tree/main/JAVA/JDK8Src/java/util/HashMap.java)
+
+```java
+//初始容量 16
+static final int DEFAULT_INITIAL_CAPACITY = 1 << 4;
+//最大容量 1 << 30
+static final int MAXIMUM_CAPACITY = 1 << 30;
+//默认加载因子 0.75
+static final float DEFAULT_LOAD_FACTOR = 0.75f;
+//转红黑树的链表阈值
+static final int TREEIFY_THRESHOLD = 8;
+//转链表时候红黑树节点个数阈值
+static final int UNTREEIFY_THRESHOLD = 6;
+//数组最小容量
+static final int MIN_TREEIFY_CAPACITY = 64;
+
+
+/* ---------------- Fields -------------- */
+
+/**
+* The table, initialized on first use, and resized as
+* necessary. When allocated, length is always a power of two.
+* (We also tolerate length zero in some operations to allow
+* bootstrapping mechanics that are currently not needed.)
+*/
+transient Node<K,V>[] table;
+
+//扩容门限值 capacity * load factor 当前容量到达这个值的时候进行resize()
+int threshold;
+
+/**
+* The number of key-value mappings contained in this map.
+*/
+transient int size;
+
+/**
+* The number of times this HashMap has been structurally modified
+* Structural modifications are those that change the number of mappings in
+* the HashMap or otherwise modify its internal structure (e.g.,
+* rehash).  This field is used to make iterators on Collection-views of
+* the HashMap fail-fast.  (See ConcurrentModificationException).
+*/
+transient int modCount;
+
+
+//Node节点 实际上还是实现了Map.Entry接口 部分代码
+static class Node<K,V> implements Map.Entry<K,V> {
+    //判断两个节点值是否相等
+    //先判断引用是否相等  然后判断是否为Map.Entry类型 在调用Map.Entry equals方法
+    public final boolean equals(Object o) {
+            if (o == this)
+                return true;
+            if (o instanceof Map.Entry) {
+                Map.Entry<?,?> e = (Map.Entry<?,?>)o;
+                if (Objects.equals(key, e.getKey()) &&
+                    Objects.equals(value, e.getValue()))
+                    return true;
+            }
+            return false;
+    }
+    
+    //计算key的hash值 如果key为null则hash值为0放在数组索引为0的位置上
+    static final int hash(Object key) {
+        int h;
+        return (key == null) ? 0 : (h = key.hashCode()) ^ (h >>> 16);
+    }
+}
+```
+
+
+
+#### **HashMap底层实现**
+
+1.7之前数组+链表，1.8之后数组+链表+红黑树
+
+#### HashMap扩容
+
+<div align='center'>
+    <img src='./imgs/HashMapResize.png' width='1400px'>
+    <br/><br/>HashMap扩容
+</div>
+
+
+
+
+```java
+    final Node<K,V>[] resize() {
+        Node<K,V>[] oldTab = table;
+        int oldCap = (oldTab == null) ? 0 : oldTab.length;
+        int oldThr = threshold;
+        int newCap, newThr = 0;
+        if (oldCap > 0) {
+            if (oldCap >= MAXIMUM_CAPACITY) {
+                threshold = Integer.MAX_VALUE;
+                return oldTab;
+            }
+            else if ((newCap = oldCap << 1) < MAXIMUM_CAPACITY &&
+                     oldCap >= DEFAULT_INITIAL_CAPACITY)
+                newThr = oldThr << 1; // double threshold
+        }
+        else if (oldThr > 0) // initial capacity was placed in threshold
+            newCap = oldThr;
+        else {               // zero initial threshold signifies using defaults
+            newCap = DEFAULT_INITIAL_CAPACITY;
+            newThr = (int)(DEFAULT_LOAD_FACTOR * DEFAULT_INITIAL_CAPACITY);
+        }
+        if (newThr == 0) {
+            float ft = (float)newCap * loadFactor;
+            newThr = (newCap < MAXIMUM_CAPACITY && ft < (float)MAXIMUM_CAPACITY ?
+                      (int)ft : Integer.MAX_VALUE);
+        }
+        threshold = newThr;
+        @SuppressWarnings({"rawtypes","unchecked"})
+        Node<K,V>[] newTab = (Node<K,V>[])new Node[newCap];
+        table = newTab;
+        if (oldTab != null) {
+            for (int j = 0; j < oldCap; ++j) {
+                Node<K,V> e;
+                if ((e = oldTab[j]) != null) {
+                    oldTab[j] = null;
+                    if (e.next == null)
+                        newTab[e.hash & (newCap - 1)] = e;
+                    else if (e instanceof TreeNode)
+                        ((TreeNode<K,V>)e).split(this, newTab, j, oldCap);
+                    else { // preserve order
+                        Node<K,V> loHead = null, loTail = null;
+                        Node<K,V> hiHead = null, hiTail = null;
+                        Node<K,V> next;
+                        do {
+                            next = e.next;
+                            if ((e.hash & oldCap) == 0) {
+                                if (loTail == null)
+                                    loHead = e;
+                                else
+                                    loTail.next = e;
+                                loTail = e;
+                            }
+                            else {
+                                if (hiTail == null)
+                                    hiHead = e;
+                                else
+                                    hiTail.next = e;
+                                hiTail = e;
+                            }
+                        } while ((e = next) != null);
+                        if (loTail != null) {
+                            loTail.next = null;
+                            newTab[j] = loHead;
+                        }
+                        if (hiTail != null) {
+                            hiTail.next = null;
+                            newTab[j + oldCap] = hiHead;
+                        }
+                    }
+                }
+            }
+        }
+        return newTab;
+    }
+```
+
+#### HashMap Put
+
+<div align='center'>
+    <img src='./imgs/HashMapPut.svg' width='1800px'>
+    <br/><br/>HashMap Put
+</div>
+
+
+
+
+```java
+    /**
+     * Associates the specified value with the specified key in this map.
+     * If the map previously contained a mapping for the key, the old
+     * value is replaced.
+     *
+     * @param key key with which the specified value is to be associated
+     * @param value value to be associated with the specified key
+     * @return the previous value associated with <tt>key</tt>, or
+     *         <tt>null</tt> if there was no mapping for <tt>key</tt>.
+     *         (A <tt>null</tt> return can also indicate that the map
+     *         previously associated <tt>null</tt> with <tt>key</tt>.)
+     */
+    public V put(K key, V value) {
+        return putVal(hash(key), key, value, false, true);
+    }
+
+    /**
+     * Implements Map.put and related methods.
+     *
+     * @param hash hash for key
+     * @param key the key
+     * @param value the value to put
+     * @param onlyIfAbsent if true, don't change existing value
+     * @param evict if false, the table is in creation mode.
+     * @return previous value, or null if none
+     */
+    final V putVal(int hash, K key, V value, boolean onlyIfAbsent,
+                   boolean evict) {
+        Node<K,V>[] tab; Node<K,V> p; int n, i;
+        if ((tab = table) == null || (n = tab.length) == 0)
+            n = (tab = resize()).length;
+        if ((p = tab[i = (n - 1) & hash]) == null)
+            tab[i] = newNode(hash, key, value, null);
+        else {
+            Node<K,V> e; K k;
+            if (p.hash == hash &&
+                ((k = p.key) == key || (key != null && key.equals(k))))
+                e = p;
+            else if (p instanceof TreeNode)
+                e = ((TreeNode<K,V>)p).putTreeVal(this, tab, hash, key, value);
+            else {
+                for (int binCount = 0; ; ++binCount) {
+                    if ((e = p.next) == null) {
+                        p.next = newNode(hash, key, value, null);
+                        if (binCount >= TREEIFY_THRESHOLD - 1) // -1 for 1st
+                            treeifyBin(tab, hash);
+                        break;
+                    }
+                    if (e.hash == hash &&
+                        ((k = e.key) == key || (key != null && key.equals(k))))
+                        break;
+                    p = e;
+                }
+            }
+            if (e != null) { // existing mapping for key
+                V oldValue = e.value;
+                if (!onlyIfAbsent || oldValue == null)
+                    e.value = value;
+                afterNodeAccess(e);
+                return oldValue;
+            }
+        }
+        ++modCount;
+        if (++size > threshold)
+            resize();
+        afterNodeInsertion(evict);
+        return null;
+    }
+
+    /**
+     * Replaces all linked nodes in bin at index for given hash unless
+     * table is too small, in which case resizes instead.
+     */
+    final void treeifyBin(Node<K,V>[] tab, int hash) {
+        int n, index; Node<K,V> e;
+        if (tab == null || (n = tab.length) < MIN_TREEIFY_CAPACITY)
+            resize();
+        else if ((e = tab[index = (n - 1) & hash]) != null) {
+            TreeNode<K,V> hd = null, tl = null;
+            do {
+                TreeNode<K,V> p = replacementTreeNode(e, null);
+                if (tl == null)
+                    hd = p;
+                else {
+                    p.prev = tl;
+                    tl.next = p;
+                }
+                tl = p;
+            } while ((e = e.next) != null);
+            if ((tab[index] = hd) != null)
+                hd.treeify(tab);
+        }
+    }
+```
+
+**HashMap与HashSet的区别**
+
+| HashMap                     | HashSet                             |
+| --------------------------- | ----------------------------------- |
+| 实现了Map接口               | 实现了Set接口                       |
+| 存储键值对                  | 存储对象                            |
+| key唯一，value不唯一        | 存储对象唯一                        |
+| HashMap使用键值计算Hashcode | HashSet使用成员对象来计算hashcode值 |
+| 速度相对较快                | 速度相对较慢                        |
+
+#### ConcurrentHashMap
+
+- JDK1.7
+
+    Segment数组+HashEntry数组方式实现，Segment实现了ReentrantLock，所以Segment有锁的性质，HashEntry用于存储键值对。
+
+- JDK1.8
+
+    类似HashMap，Node数组+链表/红黑树，采用CAS+synchronized来保证线程安全。synchronized只锁链表或红黑树的头结点，锁的粒度更细，竞争变小，效率提高。
+
+<div align='center'>
+    <img src='./imgs/20210921163557.png' width='1200px'>
+    </br></br>JDK1.7 ConcurrentHashMap
+    <img src='./imgs/20210921163736.png' width='1200px'>
+    </br></br>JDK1.8 ConcurrentHashMap
+</div>
+
+#### HashTable
+
+数组+链表，链表解决哈希冲突，整个数组都是synchronized修饰的，线程安全，锁的粒度太大，竞争激烈，效率低
+
+<div align='center'>
+    <img src='./imgs/20210921164630.png' width='1200px'>
+    </br></br>HashTable
+</div>
+
+#### HashMap、ConcurrentHashMap、HashMap的区别
+
+|                              | HashMap（JDK1.8）                 | ConcurrentHashMap（JDK1.8）      | Hashtable                      |
+| ---------------------------- | --------------------------------- | -------------------------------- | ------------------------------ |
+| 底层实现                     | 数组+链表/红黑树                  | 数组+链表/红黑树                 | 数组+链表                      |
+| 线程安全                     | 不安全                            | 安全（synchronized修饰Node节点） | 安全（synchronized修饰整个表） |
+| 效率                         | 高                                | 较高                             | 低                             |
+| 扩容                         | 初始16，每次扩容为原来的2倍       | 初始16，每次扩容为原来的2倍      | 初始                           |
+| 是否支持null key和null value | 可以有一个null key 多个null value | 不支持                           | 不支持                         |
+
+## Collections 工具类
+
+- Collections是一个操作Set、List和Map等集合的工具类
+- Collections中提供了一些列静态的方法对集合元素进行排序、查询和修改等操作，还提供了对集合对象设置不可变、同步控制等方法
+- 排序操作（均为static方法）
+    - **reverse(List):**反转List中元素的顺序
+    - **shuffle(List):**对List集合元素进行随机排序
+    - **sort(List):**根据元素的自然顺序对指定List集合元素按升序排序
+    - **sort(List, Comparator):**根据指定的Comparator产生的顺序对List集合元素进行排序
+    - **swap(List, int, int):**将指定list集合中的i处元素和j处元素进行交换
+
 # Java Stream
 
 ## 简介
