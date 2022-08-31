@@ -1308,12 +1308,28 @@ static class Node<K,V> implements Map.Entry<K,V> {
 
 - Collections是一个操作Set、List和Map等集合的工具类
 - Collections中提供了一些列静态的方法对集合元素进行排序、查询和修改等操作，还提供了对集合对象设置不可变、同步控制等方法
-- 排序操作（均为static方法）
+- 常用操作（均为static方法）
     - **reverse(List):**反转List中元素的顺序
     - **shuffle(List):**对List集合元素进行随机排序
     - **sort(List):**根据元素的自然顺序对指定List集合元素按升序排序
     - **sort(List, Comparator):**根据指定的Comparator产生的顺序对List集合元素进行排序
     - **swap(List, int, int):**将指定list集合中的i处元素和j处元素进行交换
+    - **Object max(Collection)**:根据元素自然排序，返回给定集合中的最大元素
+    - **Object max(Collection, Comparator)**:根据Comparator指定的顺序，返回给定集合中的最大元素
+    - **Object min(Collection)**
+    - **Object min(Collection, Comparator)**
+    - **int frequency(Collection, Object)**:返回指定集合中指定元素的出现次数
+    -  **void copy(List dest, List src)**:将src中内容复制到dest中
+    - **boolean replaceAll(List list, Object oldVal, Object newVal)**:用newVal替换所有的oldVal
+    - 将指定集合包装成线程同步的集合
+        - **synchronizedCollection(Collection<T> c)**
+        - **synchronizedList(List<T> list)**
+        - **synchronizedMap(Map<K,V> m)**
+        - **synchronizedSet(Set<T> s)**
+        - **synchronizedNavigableMap(NavigableMap<K,V> m)**
+        - **synchronizedNavigableSet(NavigableSet<T> s)**
+        - **synchronizedSortedMap(SortedMap<K,V> m)**
+        - **synchronizedSortedSet(SortedSet<T> s)**
 
 # Java Stream
 
