@@ -1,6 +1,6 @@
 # 注释
 
-所有涉及Linux源码的，均基于Linux kernel v5.15
+[Code](https://github.com/simple-jbx/Java8Study)
 
 # JAVA
 
@@ -1635,6 +1635,79 @@ public void test1() {
     }
 ```
 
+# [Optional类](https://github.com/simple-jbx/SourceCode/blob/main/JAVA/JDK8Src/java/util/Optional.java)
+
+空指针异常是导致Java应用程序失败的最常见原因。
+
+`Optional<T>`类`java.util.Optional`是一个容器类，可以保存类型T的值，代表这个值存在。或者仅仅保存null，表示这个值不存在。可以有效避免空指针异常。
+
+Optional类的Javadoc描述：这是一个可以为null的容器对象。如果值存在则isPresent()方法会返回true，调用get()方法会返回该对象。
+
+## 方法
+
+### 创建Optional类对象的方法
+
+```java
+    public static <T> Optional<T> of(T value) {
+        //value必须为非空 详见源码
+        return new Optional<>(value);
+    }
+	
+	//value可以为null
+    public static <T> Optional<T> of(T value) {
+        return new Optional<>(value);
+    }
+
+	//创建一个空的Optional实例
+    public static<T> Optional<T> empty() {
+        @SuppressWarnings("unchecked")
+        Optional<T> t = (Optional<T>) EMPTY;
+        return t;
+    }	
+```
+
+### 判断Optional容器中是否包含对象
+
+```java
+    //判断对象是否为null
+	public boolean isPresent() {
+        return value != null;
+    }
+	
+	//如果value！=null 则将value传给consumer，执行Consumer接口方法
+    public void ifPresent(Consumer<? super T> consumer) {
+        if (value != null)
+            consumer.accept(value);
+    }
+```
+
+### 获取Optional容器的对象
+
+```java
+	public T get() {
+        if (value == null) {
+            throw new NoSuchElementException("No value present");
+        }
+        return value;
+    }
+
+    public T orElse(T other) {
+        return value != null ? value : other;
+    }
+
+    public T orElseGet(Supplier<? extends T> other) {
+        return value != null ? value : other.get();
+    }
+
+    public <X extends Throwable> T orElseThrow(Supplier<? extends X> exceptionSupplier) throws X {
+        if (value != null) {
+            return value;
+        } else {
+            throw exceptionSupplier.get();
+        }
+    }
+```
+
 
 
 # 大数据与分布式
@@ -1733,3 +1806,4 @@ LeetCode刷题
 
 #### AiXcoder Code Completer
 
+ 
