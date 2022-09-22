@@ -1,12 +1,12 @@
 # 注释
 
-[Code](https://github.com/simple-jbx/Java8Study)
+[项目Code](https://github.com/simple-jbx/Java8Study)
 
-# JAVA
+[Jdk8SrcCode](https://github.com/simple-jbx/SourceCode/tree/main/JAVA/JDK8Src)
 
-## JAVA基础
+# JAVA基础
 
-### 关键字及其作用
+## 关键字及其作用
 
 |                      |          |            |          |              |            |           |        |       |
 | -------------------- | -------- | ---------- | -------- | ------------ | ---------- | --------- | ------ | ----- |
@@ -25,7 +25,7 @@
 
 
 
-### 拆装箱
+## 拆装箱
 
 ```java
         //自动拆装箱 实质（字节码）也是调用方法拆装箱
@@ -72,7 +72,7 @@ package.png
 
 
 
-### 常量池
+## 常量池
 
 Byte, Short, Integer, Long, Character, Boolean实现了常量池技术
 
@@ -118,9 +118,9 @@ public class Main {
 
 创建对象四种方式
 
-#### new
+### new
 
-#### 反射机制
+### 反射机制
 
 ```java
 Class clazz = Class.forName("yunche.test.Hello");
@@ -129,13 +129,13 @@ Hello hello =(Hello) clazz.newInstance();
 
 
 
-#### Clone
+### Clone
 
-#### 序列化
+### 序列化
 
-### String
+## String
 
-#### 常用API
+### 常用API
 
 - **char charAt(int index)**
 
@@ -227,7 +227,7 @@ Hello hello =(Hello) clazz.newInstance();
 
 	返回一个新字符串， 用给定的定界符连接所有元素。
 
-#### String、StringBuilder和StringBuffer区别
+### String、StringBuilder和StringBuffer区别
 
 JDK1.9之前为char[]，JDK1.9之后为byte[]
 
@@ -237,7 +237,7 @@ JDK1.9之前为char[]，JDK1.9之后为byte[]
 | 效率         | 低     | 高            | 中           |
 | 是否线程安全 | 是     | 否            | 是           |
 
-#### String
+### String
 
 ```java
 public final class String
@@ -246,7 +246,7 @@ public final class String
 }
 ```
 
-#### StringBuilder & StringBuffer
+### StringBuilder & StringBuffer
 
 ```java
 abstract class AbstractStringBuilder implements Appendable, CharSequence {
@@ -319,7 +319,7 @@ public final class StringBuilder
 
 
 
-### 重载与重写的区别
+## 重载与重写的区别
 
 重载：发生在同一个类中，方法名相同参数列表不同（参数类型不同、个数、顺序（类型也不同）不同），与方法返回值和访问修饰符无关，即重载的方法不能根据返回类型进行区分。
 
@@ -329,15 +329,15 @@ public final class StringBuilder
 
 重载的方法不能根据返回类型进行区分，函数调用时不能指定返回类型，编译器不知道要调用哪个函数。
 
-### 面向对象三大特征
+## 面向对象三大特征
 
 封装、继承、多态
 
-#### 封装
+### 封装
 
 封装是指把一个对象的状态信息（也就是属性）隐藏在对象内部，不允许外部对象直接访问对象的内部信息。但是可以提供一些可以被外界访问的方法来操作属性。
 
-#### 继承
+### 继承
 
 不同类型的对象，相互之间经常有一定数量的共同点。每一个对象还定义了额外的特性使得他们与众不同。继承是使用已存在的类的定义作为基础建立新类的技术，新类的定义可以增加新的数据或新的功能，也可以用父类的功能，但不能选择性地继承父类。通过使用继承，可以快速地创建新的类，可以提高代码的重用，程序的可维护性，节省大量创建新类的时间 ，提高我们的开发效率。
 
@@ -345,11 +345,11 @@ public final class StringBuilder
 - 子类可以拥有自己属性和方法，即子类可以对父类进行扩展。
 - 子类可以用自己的方式实现父类的方法。
 
-#### 多态
+### 多态
 
 表示一个对象具有多种的状态。具体表现为父类的引用指向子类的实例。
 
-### JAVA反射
+## JAVA反射
 
 反射机制是在运行状态中，对于任意一个类，都能够知道这个类的所有属性和方法；对于任意一个对象，都能够调用它的任意一个方法和属性；这种动态获取的信息以及动态调用对象的方法的功能成为反射机制。
 
@@ -359,7 +359,7 @@ public final class StringBuilder
 
 应用场景：Spring中的xml的配置模式、动态代理设计模式也采用了反射机制
 
-### 泛型
+## 泛型
 
 参数化类型，所操作的数据类型被指定为一个参数。
 
@@ -367,7 +367,7 @@ Java 的泛型是伪泛型，这是因为 Java 在运行期间，所有的泛型
 
 Java中泛型一般有三种：泛型类、泛型接口、泛型方法。
 
-#### 常用通配符
+### 常用通配符
 
 T，E，K，V，?
 
@@ -376,7 +376,7 @@ T，E，K，V，?
 - K V代表键值对 key value
 - ？表示不确定的java类型
 
-#### 泛型类
+### 泛型类
 
 ```java
 //此处T可以随便写为任意标识，常见的如T、E、K、V等形式的参数常用于表示泛型
@@ -397,7 +397,7 @@ public class Generic<T> {
 Generic<Integer> genericInteger = new Generic<Integer>(123456);
 ```
 
-#### 泛型接口
+### 泛型接口
 
 ```java
 public interface Generator<T> {
@@ -421,7 +421,7 @@ class GeneratorImpl implements Generator<String>{
 }
 ```
 
-#### 泛型方法
+### 泛型方法
 
 ```java
 public static <E> void printArray(E[] inputArray) {
@@ -438,15 +438,15 @@ printArray(intArray);
 printArray(stringArray);
 ```
 
-### IO流
+## IO流
 
-#### BIO、NIO、AIO
+### BIO、NIO、AIO
 
 [BIO、NIO和AIO的区别、三种IO的原理与用法](https://blog.csdn.net/u010541670/article/details/91890649)
 
 [Java中BIO，NIO，AIO总结](https://zhuanlan.zhihu.com/p/159276195)
 
-##### BIO(blocking I/O)
+#### BIO(blocking I/O)
 
 同步阻塞，一个连接为一个线程，连接一个客户端就需要启动一个线程进行处理，如果连接未断开且未做任何事，会造成不必要的开销。可通过线程池优化。相关类在java.io包中。
 
@@ -463,7 +463,7 @@ printArray(stringArray);
 - 当并发量大的时候，需要创建大量的线程，占用系统资源
 - 连接建立后，如果当前线程暂时没有数据刻度，则线程就阻塞在Read操作上，造成资源浪费
 
-##### NIO(non-blocking IO)
+#### NIO(non-blocking IO)
 
 JDK1.4开始,Java提供了一系列改进的输入/输出的新特性，统称为NIO(New IO)，同步非阻塞。
 
@@ -487,7 +487,7 @@ NIO可以用一个线程处理多个操作，并发能力远远大于BIO。
 - 线程切换到哪个Channel是由事件决定的
 - 数据读取、写入通过Buffer，可以双向，需要flip方法切换
 
-##### AIO
+#### AIO
 
 异步非阻塞，无需线程主动切换，在相应的状态改变后，系统会同志对应的线程处理。
 
@@ -502,7 +502,7 @@ BIO、NIO、AIO对比
 | 可靠性   | 差       | 好                     | 好         |
 | 吞吐量   | 低       | 高                     | 高         |
 
-##### 各自应用场景
+#### 各自应用场景
 
 BIO适用于连接数目比较小且固定的架构，对服务器资源要求比较高，并发局限于应用中。
 
@@ -510,19 +510,17 @@ NIO适用于连接数目多且连接比较短（轻操作）的架构，比如�
 
 AIO适用于连接数目多且连接比较长（重操作）的架构，比如相册服务器，充分调用OS参与并发操作，编程比较复杂。
 
-### 异常
-
-
-
+## 异常
 <div align='center'>
     <img src='./imgs/JAVAThrowable.svg' width='1200px'>
     </br></br>JAVA异常
 </div>
-### 线程
+
+## 线程与线程池
 
 [JDK1.8 Thread.java](https://github.com/simple-jbx/SourceCode/tree/main/JAVA/JDK8Src/java/lang/Thread.java)
 
-##### 线程状态
+### 线程状态
 
 - New（新创建）
 
@@ -551,9 +549,9 @@ AIO适用于连接数目多且连接比较长（重操作）的架构，比如�
     </br></br>线程状态
 </div>
 
-##### 线程同步
+### 线程同步
 
-###### synchronized(内置锁/互斥锁、可重入)
+#### synchronized(内置锁/互斥锁、可重入)
 
 ```java
 package simple.jbx.java.com.singleton;
@@ -638,7 +636,7 @@ synchronized修饰的方法实现使用的是ACC_SYNCHRONIZED表示，该标识�
 
 两者的本质都是对对象监视器monitor的获取。
 
-###### voliate
+#### voliate
 
 稍弱的同步机制，用来确保将变量的更新操作通知到其他线程。当把变量声明为volatile类型后，编译器与运行时都会注意到这个变量是共享的，因此不会将该变量上的操作与其他内存操作一起重排序。voliate变量不会被缓存在寄存器或者对其他处理器不可见的地方，因此在读取voliate类型的变量时总会返回最新写入的值。
 
@@ -657,13 +655,13 @@ while(!asleep) {
 }
 ```
 
-###### wait和notify
+#### wait和notify
 
-###### 局部变量（ThreadLocal）
+#### 局部变量（ThreadLocal）
 
 
 
-###### 原子变量
+#### 原子变量
 
 ```java
 import java.util.concurrent.atomic
@@ -712,21 +710,21 @@ public class HelloServlet implements Servlet {
 
 
 
-###### 阻塞队列
+#### 阻塞队列
 
-##### 线程封闭
+### 线程封闭
 
 避免使用同步的方式就是不共享数据。如果仅在单线程内访问数据，就不需要同步。这种技术被称为线程封闭（Thread Confinement），是实现线程安全性的最简单方式之一。当某个对象封闭在一个线程中时，这种用法将自动实现线程安全性，即使被封闭的对象本身不是线程安全的。
 
-###### Ad-hoc 线程封闭
+#### Ad-hoc 线程封闭
 
 维护线程封闭性的职责完全由程序实现来承担。非常脆弱。因此应当尽量少使用它，应该使用更强的线程封闭技术（栈封闭或ThreadLocal类）。
 
-###### 栈封闭
+#### 栈封闭
 
 只有局部变量才能访问对象。局部变量的固有属性之一就是封闭在执行线程中。它们位于执行线程的栈中，其他线程无法访问这个栈。栈封闭（也被成为线程内部使用或者线程局部使用，不要与核心类库中的ThreadLocal混淆）比Ad-hoc线程封闭更容易维护，也更加健壮。
 
-###### ThreadLocal
+#### ThreadLocal
 
 更规范的方法。能使线程中的某个值与保存值的对象关联起来。ThreadLocal提供了get与set等访问接口或方法，这些方法为每个使用该变量的线程都存有一份独立的副本，因此get总是返回由当前执行线程在调用set时设置的最新值。
 
@@ -734,7 +732,7 @@ ThreadLocal对象通常用于防止对可变的单实例变量（Singleton）或
 
 当某个频繁执行的操作需要一个临时对象，例如一个缓冲区，而同时又希望避免在每次执行时都重新分配该临时对象，就可以使用这项技术。（JDK1.5之前，Integer.toString()方法使用ThreadLocal对象保存一个12B大小的缓冲区，用于对结果进行格式化，而不是使用共享的静态缓冲区），或每次调用的时候分配一个新的
 
-#### 线程池
+## 线程池
 
 Exectuors:工具类、线程池的工厂类，用于创建并返回不同类型的线程池。
 
@@ -804,7 +802,7 @@ public ThreadPoolExecutor(int corePoolSize,
 	- maximumPoolSize：最大线程数
 	- keepAliveTime：线程没有任务时最多保持多长时间后会终止
 
-##### 创建线程池
+### 创建线程池
 
 使用Executor静态工厂
 
@@ -816,11 +814,11 @@ public ThreadPoolExecutor(int corePoolSize,
 | newScheduledThreadPool           | 用于预定执行而构建的固定线程池，替代java.util.Timer          |
 | newSingleThreadScheduledExecutor | 用于预定执行而构建的单线程“池”                               |
 
-##### 线程池常用方法
+### 线程池常用方法
 
 - int getLargestPoolSize() 返回线程池在该执行器生命周期中的最大尺寸
 
-##### 生命周期
+### 生命周期
 
 ExecutorService的声明周期有三种状态：运行、关闭、已停止。
 
@@ -828,7 +826,7 @@ ExecutorService的声明周期有三种状态：运行、关闭、已停止。
 
 在ExecutorService关闭后提交的任务将由“拒绝执行处理器（Rejected Execution Handle）来处理”，它会抛弃任务，或者使得execute方法抛出一个未检查的Rejected-ExecutionException。等所有任务完成后，ExecutorService到达终止状态。可以调用awaitTermination来等待ExecutorService到达终止状态，或者通过调用isTerminated来轮询ExecutorService是否已经终止。通常在调用awaitTermination之后会立即调用shutdown，从而产生同步地关闭ExecutorService的效果。
 
-##### 管理线程池队列任务
+### 管理线程池队列任务
 
 ThreadPoolExcutor允许提供一个BlockingQueue（阻塞队列）来保存等待执行的任务。基本的任务排队方法有3种：无解队列、有届队列和同步移交（Synchronous Handoff）。队列的选择与其他配置参数有关，例如线程池大小等。
 
@@ -838,27 +836,27 @@ newFixedThreadPool和newSingleThreadExecutor在默认情况会使用一个无界
 
 对于非常大的或者无界的线程池，可以通过使用SynchronousQueue来避免任务排队，以及直接将任务从生产者转移交给工作线程。SynchronousQueue不是真正意义上的队列，而是一种移交机制。要将一个任务放到SynchronousQueue中，必须有另一个空闲线程在等待接收任务。如果没有，并且线程池当前大小小于最大值，则创建一个新的线程，否则根据饱和策略，这个任务会被拒绝。只有当线程池是无界的或者可以拒绝任务的时候，SynchronousQueue才有实际价值。newCachedTHreadPool工厂方法中就使用了SynchronousQueue。
 
-##### 饱和策略
+### 饱和策略
 
-###### AbortPolicy
+#### AbortPolicy
 
 Abort（中止）策略是默认的饱和策略，该策略将抛出未检查的RejectedExecutionException。调用者可以捕获这个异常，并根据需求编写处理代码。
 
-###### CallerRunsPolicy
+#### CallerRunsPolicy
 
 调用者运行策略实现了一种调节机制，该策略既不会抛弃任务，也不会抛出异常，而是将某些任务回退到调用者，从而降低新任务的流量。它不会在线程池中的某个线程执行新提交的任务，而是在一个调用了execute的主线程中执行该任务。由于执行该任务需要一定时间，因此在这段时间内主线程不会调用accept，从而到达的请求被保存在TCP的缓存队列而不是在应用程序。
 
-###### DiscardPolicy
+#### DiscardPolicy
 
 当新提交的任务无法保存到队列等待执行时，抛弃（Discard）策略会抛弃该任务。
 
-###### DiscardOldestPolicy
+#### DiscardOldestPolicy
 
 抛弃最旧的策略会抛弃下一个将被执行的任务，然后尝试重新提交新的任务。如果工作队列是一个优先队列，则该策略会抛弃优先级最高的任务，因此最好不要将该策略与优先级队列放在一起使用。
 
-## 并发、锁
+# 并发、锁
 
-### Atomic原子类型
+## Atomic原子类型
 
 具有原子/原子特征的类。
 
@@ -869,13 +867,13 @@ Abort（中止）策略是默认的饱和策略，该策略将抛出未检查的
 
 根据操作的类型可以将JUC包中的原子类分为4类。
 
-#### 基本类型
+### 基本类型
 
 使用原子方式更新基本类型
 
-##### [AtomicInteger 整型原子类]
+#### [AtomicInteger 整型原子类]
 
-###### 常用方法
+##### 常用方法
 
 ```java
 public final int get() //获取当前的值
@@ -906,41 +904,41 @@ AtomicInteger 类主要利用 CAS (compare and swap) + volatile 和 native 方�
 
 CAS的原理是拿期望的值和原本的一个值作比较，如果相同则更新成新的值。UnSafe 类的 objectFieldOffset() 方法是一个本地方法，这个方法是用来拿到“原来的值”的内存地址。另外 value 是一个volatile变量，在内存中可见，因此 JVM 可以保证任何时刻任何线程总能拿到该变量的最新值。
 
-##### AtomicLong 长整型原子类
+#### AtomicLong 长整型原子类
 
-##### AtomicBoolean 布尔型原子类
+#### AtomicBoolean 布尔型原子类
 
-#### 数组类型
+### 数组类型
 
 使用原子方式更新数组中的某个元素
 
-##### AtomicIntegerArray 整型数组原子类
+#### AtomicIntegerArray 整型数组原子类
 
-##### AtomicLongArray 长整型数组原子类
+#### AtomicLongArray 长整型数组原子类
 
-##### AtomicReferenceArray  引用类型数组原子类
+#### AtomicReferenceArray  引用类型数组原子类
 
-#### 引用类型
+### 引用类型
 
-##### AtomicReference：引用类型原子类
+#### AtomicReference：引用类型原子类
 
-##### AtomicMarkableReference：原子更新带有标记的引用类型。该类将 boolean 标记与引用关联起来。
+#### AtomicMarkableReference：原子更新带有标记的引用类型。该类将 boolean 标记与引用关联起来。
 
-##### AtomicStampedReference ：原子更新带有版本号的引用类型。该类将整数值与引用关联起来，可用于解决原子的更新数据和数据的版本号，可以解决使用 CAS 进行原子更新时可能出现的 ABA 问题。
+#### AtomicStampedReference ：原子更新带有版本号的引用类型。该类将整数值与引用关联起来，可用于解决原子的更新数据和数据的版本号，可以解决使用 CAS 进行原子更新时可能出现的 ABA 问题。
 
-#### 对象的属性修改类型
+### 对象的属性修改类型
 
-##### AtomicIntegerFieldUpdater:原子更新整型字段的更新器
+#### AtomicIntegerFieldUpdater:原子更新整型字段的更新器
 
-##### AtomicLongFieldUpdater：原子更新长整型字段的更新器
+#### AtomicLongFieldUpdater：原子更新长整型字段的更新器
 
-##### AtomicReferenceFieldUpdater：原子更新引用类型里的字段
+#### AtomicReferenceFieldUpdater：原子更新引用类型里的字段
 
 
 
-### 锁
+## 锁
 
-#### [锁的级别](https://www.cnblogs.com/wuqinglong/p/9945618.html)
+### [锁的级别](https://www.cnblogs.com/wuqinglong/p/9945618.html)
 
 - 无锁状态
 - 偏向锁状态
@@ -949,7 +947,7 @@ CAS的原理是拿期望的值和原本的一个值作比较，如果相同则�
 
 锁可以升级，但不能降级
 
-#### 重入锁
+### 重入锁
 
 当某个线程请求一个由其他线程持有的锁时，发出请求的线程就会阻塞。然而，由于内置锁是可重入的，因此如果某个线程视图获得一个已经由它自己所持有的锁，那么这个请求就会成功。“重入”意味着获取锁的操作粒度是“线程”，而不是“调用”。重入的一种实现方法是，为每个锁关联一个获取计数值和一个所有者线程。当计数值为0时，这个锁就认为是没有被任何线程持有。当线程请求一个未被持有的锁时，JVM将记下锁的持有者，并且将获取计数值置为1.如果同一个线程再次获取这个锁，计数值将递增，而当线程退出同步代码块时，计数器会相应递减。当计数值为0时，这个锁将被释放。
 
@@ -1331,6 +1329,126 @@ static class Node<K,V> implements Map.Entry<K,V> {
         - **synchronizedSortedMap(SortedMap<K,V> m)**
         - **synchronizedSortedSet(SortedSet<T> s)**
 
+
+
+# 泛型
+
+## 简介
+
+### 概念
+
+允许在定义类、接口时通过一个标识表示类中某个属性的类型或者是某个方法的返回值及参数类型。这个类型参数将在使用时（例如继承或实现这个接口，用这个类型声明变量、创建对象时）确定（传入实际的类型参数，也称为类型实参）。
+
+### 为什么要有泛型，直接使用Object也可以存储？
+
+- 解决元素存储的安全性问题（类似食品、药品标签）。
+- 获取元素时不用类型强制转换（不用每次都辨别类型）。
+
+## 泛型类
+
+1. 泛型类可能有多个参数，此时应将多个参数放在一个`<>`内，例如：`<E1,E2,E3>`。
+2. 泛型类构造器与普通类一样。
+3. 实例化后，操作原来泛型文职的结构必须与指定的泛型类型一致。
+4. 泛型不同的引用不能相互赋值。
+5. 泛型如不指定，将被擦除，当做Object处理，但不等价于Object。
+6. 如果泛型类是一个接口或抽象类，则不可创建泛型类的对象。
+7. 泛型的指定中不能使用基本数据类型，可以使用包装类替换。
+8. 在静态方法中不能使用类的泛型。
+9. 异常类不能是泛型的。
+10. 不能使用 new E[]。但可以：`E[] elements = (E[]) new Object[capacity];`。
+11. 父类有泛型，子类可以选择保留（部分保留或全部保留）也可指定泛型（不指定，泛型擦除，认为是Object）。
+
+## 泛型方法
+
+`<T> T[] toArray(T[] a)`
+
+## 通配符
+
+`?`
+
+```java
+    public void print(List<?> list) {
+        Iterator<?> iterator = list.listIterator();
+        while (iterator.hasNext()) {
+            Object obj = iterator.next();
+            System.out.println(obj);
+        }
+    }
+```
+
+### 数据读取和写入要求
+
+不允许添加（除了null），允许读，读取的数据类型为Object。
+
+### 有限制条件的通配符
+
+- 通配符指定上限
+    - 上限extends：使用时指定的类型必须是继承某个类，或实现某个接口，即 `<=`
+- 通配符指定下限
+    - 下限super：使用时指定的类型不能小于操作的类，即 `>=`
+- 例如
+    - `<? extends Number>` (无穷小, Number]
+        - 只允许泛型问Number及Number子类的引用调用
+    - `<? extends Number>` [Number, 无穷大)
+        - 只允许泛型为Number及Number父类的引用调用
+    - <? extends Comparable>
+        - 只允许泛型为实现Comparable接口的实现类的引用调用
+
+# IO流
+
+
+
+# Lambada
+
+一个匿名函数，可以理解为一段可以传递的代码，使java语言表达能力得到了提升。
+
+本质：作为接口的实例。
+
+##  Lambada表达式的使用
+
+例：`(o1, o2) -> Integer.compare(o1,o2);`
+
+格式：
+
+​	lambada操作符或箭头操作符
+
+​	左边：lambada形参列表（接口中的抽象方法的形参列表）
+
+​	右边：lambada体（重写的抽象方法的方法体）
+
+使用：
+
+1. 无参，无返回值
+
+    - `Runnable r1 = () -> {System.out.println("Hello Lambad!")};`
+
+2. 有一个参数，无返回值
+
+    - `Consumer<String> con = (String str) -> {System.out.println(str);};`
+
+3. 数据类型可以省略，可由编译器推断出，称为“类型推断”
+
+    - `Consumer<String> con = (str) -> {System.out.println(str);};`
+
+4. 只有一个参数时，参数的小括号可以省略
+
+    - `Consumer<String> con = str -> {System.out.println(str);};`
+
+5. 有两个或两个以上的参数，多条执行语句，并且可以有返回值
+
+    - ```java
+        Comparator<Integer> com = (x, y) -> {
+        	System.out.pringln("实现函数式接口方法！");
+        	return Integer.compare(x, y);
+        }
+        ```
+
+6. 当只有一条语句时，return与大括号可以省略
+
+    - `Comparator<Integer> com = (x, y) -> Integer.compare(x, y)`;
+
+# 函数式（Functional）接口
+
 # Java Stream
 
 ## 简介
@@ -1710,56 +1828,7 @@ Optional类的Javadoc描述：这是一个可以为null的容器对象。如果�
 
 
 
-# 大数据与分布式
 
-## 常用的分布式协议与理论
-
-## Kubernetes
-
-### 入门
-
-
-
-<div align='center'>
-    <img src='./imgs/k8s001.png' width='800px'>
-    <img src='./imgs/k8s002.png' width='800px'>
-    <img src='./imgs/k8s003.png' width='800px'>
-    </br></br>k8s基础知识
-</div>
-
-## 分布式操作系统
-
-### 概述
-
-#### 什么是分布式操作系统
-
-是一些独立的计算机的组合，但是对于该系统的用户来说，系统就像一台计算机一样
-
-##### 分布式操作系统相对于集中式操作系统的优点
-
-| 项目         | 描述                                       |
-| ------------ | ------------------------------------------ |
-| 经济         | 微处理机提供了比大型主机更好的性价比       |
-| 速度         | 分布式系统总的计算能力比单个大型主机的更强 |
-| 固有的分布性 | 一些应用设计到空间上分散的机器             |
-| 可靠性       | 如果一台机器崩溃，整个系统还可以运转       |
-| 渐增         | 计算能力可以逐渐有所增加                   |
-
-##### 分布式系统相对于孤立的（个人）计算机的优点
-
-| 项目     | 描述                                           |
-| -------- | ---------------------------------------------- |
-| 数据共享 | 允许多个用户访问一个公共的数据库               |
-| 设备共享 | 允许多个用户共享昂贵的外围设备（如彩色打印机） |
-| 通信     | 使得人们之间的通信更加容易，如通过电子邮件     |
-| 灵活性   | 用最有效的方式将工作负荷分配到可用的机器上     |
-
-
-
-<div align='center'>
-    <img src='./imgs/20210918201800.png' width='800px'>
-    </br></br>并行及分布式计算机系统分类法
-</div>
 # 生产力
 
 ## Java命令行调试

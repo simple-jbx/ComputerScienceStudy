@@ -1741,5 +1741,62 @@ public class LogAspect02 {
 6. 织入：程序运行期将切面应用到目标对象，并生成代理对象的过程
 7. 引入：在不修改原始代码的情况下，在程序运行期为程序动态引入方法或字段的过程
 
-# Spring Task定时任务
+# [Spring Task定时任务](https://github.com/simple-jbx/SpringLearning/tree/main/Spring05)
 
+## 主要内容
+
+<div align='center'>
+    <img src='./imgs/Java/Spring/Spring Task.svg' width='600px'>
+    <br/><br/>Spring Task
+</div>
+
+## 概述
+
+定时任务是常见的需求，在java开发中主要有三种解决方案：
+
+1. JDK自带的Timer
+    - 简单易用，无法满足复杂场景
+2. 第三方组件Quartz
+    - 功能强大，使用起来相对笨重
+3. Spring Task
+    - 功能强大，简单易用，除Spring相关包无需额外的包，支持注解和配置文件两种形式
+
+## 使用Spring Task实现定时任务
+
+两种配置方式：xml配置、注解配置。
+
+### 使用XML配置实现定时任务
+
+#### [引入依赖](https://github.com/simple-jbx/SpringLearning/blob/main/Spring06/pom.xml)
+
+#### [添加配置文件spring.xml](https://github.com/simple-jbx/SpringLearning/blob/main/Spring06/src/main/resources/spring.xml)
+
+#### [定义定时任务方法](https://github.com/simple-jbx/SpringLearning/tree/main/Spring06/src/main/java/tech/snnukf/task/TaskJob.java)
+
+#### 定时任务命名空间的添加
+
+```xml
+       xmlns:task="http://www.springframework.org/schema/task"
+       http://www.springframework.org/schema/task
+       http://www.springframework.org/schema/task/spring-task.xsd
+```
+
+#### 定时任务配置
+
+```xml
+<!--
+	配置定时规则
+		ref:指定的类（任务类）
+		method: 指定需要运行的方法
+		cron: cronExpression表达式
+-->
+
+<task:scheduled-tasks>
+    <!--每隔2s执行一次任务 可配置多个定时任务-->
+	<task:scheduled ref="taskJob" method="job1" cron="0/2 * * * * ?" />
+</task:scheduled-tasks>
+```
+
+#### 测试定时任务
+
+### 使用注解配置实现定时任务
