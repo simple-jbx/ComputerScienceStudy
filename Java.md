@@ -1396,7 +1396,125 @@ static class Node<K,V> implements Map.Entry<K,V> {
 
 # IO流
 
+涉及的源码在[java.io](https://github.com/simple-jbx/SourceCode/tree/main/JAVA/JDK8Src/java/io)包下
 
+## File
+
+[java.io.File](https://github.com/simple-jbx/SourceCode/blob/main/JAVA/JDK8Src/java/io/File.java)
+
+### 创建
+
+```java
+public File(String pathname);
+public File(URI uri);
+public File(String parent, String child);
+public File(File parent, String child);  
+```
+
+### 获取
+
+```java
+//获取name
+public String getName();
+//获取上层文件目录路径。若无，返回null。
+public String getParent();
+//获取上层文件目录File，若无，则返回null。
+public File getParentFile();
+//获取路径（new的时候的路径）
+public String getPath();
+//获取绝对路径
+public String getAbsolutePath();
+public File getAbsoluteFile();
+//获取该平台下标准绝对路径
+public String getCanonicalPath();
+public File getCanonicalFile();
+//最后一次修改的时间，ms
+public long lastModified();
+//获取文件的长度（B）
+public long length();
+//获取指定目录下的所有文件或文件目录的名称数组
+public String[] list();
+public File[] listFiles();
+```
+
+### 重命名
+
+```java
+//把文件重命名到指定路径 oriFile需存在，destFile不存在
+public boolean renameTo(File dest);
+```
+
+### 判断
+
+```java
+public boolean canRead();
+public boolean canWrite();
+public boolean exists();
+public boolean isDirectory();
+public boolean isFile();
+public boolean isHidden();
+```
+
+### 创建
+
+```java
+public boolean createNewFile();
+//创建文件目录，已存在或上层不存在则不创建
+public boolean mkdir();
+//上层目录不存在也一并创建
+public boolean mkdirs();
+//创建临时文件
+public static File createTempFile(String prefix, String suffix,
+                                      File directory);
+public static File createTempFile(String prefix, String suffix);
+```
+
+### 删除
+
+```java
+//删除文件或文件夹，不走回收站，要删除一个文件目录，则该目录只能为空
+public boolean delete();
+//be deleted when the virtual machine terminates
+public void deleteOnExit();
+```
+
+## 流原理及流的分类
+
+- 用于处理设备之间的数据传输；
+- java程序中对于数据的输入/输出操作以“流（Stream）”的方式进行；
+- java.io包下提供了各种“流”类和接口，用以获取不同种类的数据，并通过标准的方法输入或输出数据。
+
+#### 流的分类
+
+- 按照操作==数据单位==不同：字节流（B，8bit），字符流（2B，16bit）
+
+- 按照数据流的==流向==不同：输入/输出流
+
+- 按照流的==角色==不同：节点流，处理流
+
+- | （抽象基类） | 字节流       | 字符流 |
+    | ------------ | ------------ | ------ |
+    | 输入流       | InputStream  | Reader |
+    | 输出流       | OutputStream | Writer |
+
+#### IO流体系
+
+| 分类       | 字节输入流              | 字节输出流               | 字符输入流            | 字符输出流             |
+| ---------- | ----------------------- | ------------------------ | --------------------- | ---------------------- |
+| 抽象基类   | **InputStream**         | **OutputStream**         | **Reader**            | **Writer**             |
+| 访问文件   | **FileInputStream**     | **FileOutputStream**     | **FileReader**        | **FileWriter**         |
+| 访问数组   | ByteArryInputStream     | ByteArryOutputStream     | CharArrayReader       | CharArrayWriter        |
+| 访问管道   | PipedInputStream        | PipedOutputStream        | PipedReader           | PipedWriter            |
+| 访问字符串 |                         |                          | StringReader          | StringWriter           |
+| 缓冲流     | **BufferedInputStream** | **BufferedOutputStream** | **BufferedReader**    | **BufferedWriter**     |
+| 转换流     |                         |                          | **InputStreamReader** | **OutputStreamWriter** |
+| 对象流     | **ObjectInputStream**   | **ObjectOutputStream**   |                       |                        |
+|            | FileInputStream         | FileOutputStream         | FilterReader          | FilterWriter           |
+| 打印流     |                         | PrintStream              |                       | PrintWriter            |
+| 推回流     | PushbackInputStream     |                          | PushbackReader        |                        |
+| 特殊流     | DataInputStream         | DataOutputStream         |                       |                        |
+
+对于文本类型的数据需要使用字符流来处理，对于图片等数据需要使用字节流来处理。
 
 # Lambada
 
