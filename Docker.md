@@ -328,6 +328,22 @@ docker export containerID > fileName.tar
 cat fileName.tar | docker import - imageUser/imageName:TAG
 ```
 
+### 容器自动重启
+
+```shell
+docker update --restart=策略 容器ID(或者容器名)
+#no 默认策略，在容器退出时不重启容器
+#on-failure 在容器非正常退出时（退出状态非0），才会重启容器
+#on-failure:3 在容器非正常退出时重启容器，最多重启3次
+#always 在容器退出时总是重启容器
+#unless-stopped 在容器退出时总是重启容器，但是不考虑在Docker守护进程启动时就已经停止了的容器
+
+#创建容器的时候设置容器为自动重启 命令行中加参数 --restart=always
+docker run -d --restart=策略 --name 设置容器名 使用的镜像
+```
+
+
+
 ## Docker镜像
 
 ### 镜像
