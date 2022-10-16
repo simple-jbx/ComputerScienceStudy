@@ -438,78 +438,6 @@ printArray(intArray);
 printArray(stringArray);
 ```
 
-## IO流
-
-### BIO、NIO、AIO
-
-[BIO、NIO和AIO的区别、三种IO的原理与用法](https://blog.csdn.net/u010541670/article/details/91890649)
-
-[Java中BIO，NIO，AIO总结](https://zhuanlan.zhihu.com/p/159276195)
-
-#### BIO(blocking I/O)
-
-同步阻塞，一个连接为一个线程，连接一个客户端就需要启动一个线程进行处理，如果连接未断开且未做任何事，会造成不必要的开销。可通过线程池优化。相关类在java.io包中。
-
-适用于连接数目比较小且相对固定的架构，对服务器的要求比较高，对并发有局限性。JDK1.4之前唯一的选择。
-
-<div align='center'>
-    <img src='./imgs/BIO.jpg' width='500px'>
-    </br></br>BIO
-</div>
-
-**缺点**：
-
-- 每个请求都需要创建独立的线程
-- 当并发量大的时候，需要创建大量的线程，占用系统资源
-- 连接建立后，如果当前线程暂时没有数据刻度，则线程就阻塞在Read操作上，造成资源浪费
-
-#### NIO(non-blocking IO)
-
-JDK1.4开始,Java提供了一系列改进的输入/输出的新特性，统称为NIO(New IO)，同步非阻塞。
-
-相关类在java.nio包及子包下，并对原java.io包中的很多类进行了改写。
-
-NIO有三大核心部分：Channel，Buffer，Selector。
-
-NIO面向缓冲区，数据读到一个它稍后处理的缓冲区中。
-
-非阻塞模式，使一个线程从某通道发送请求或者读取数据，但是它仅能得到目前可用的数据，如果目前没有数据可用，就什么都不获取，会继续保持线程阻塞，直至数据变的可以读取之前，该线程可以继续做其他的事情。非阻塞写也是如此，一个线程请求写入一些数据到某通道，但不需要等待它完全写入，这个线程同时可以去做别的事情。
-
-NIO可以用一个线程处理多个操作，并发能力远远大于BIO。
-
-<div align='center'>
-    <img src='./imgs/NIO.jpg' width='300px'>
-    </br></br>NIO Selector、Channel、Buffer关系图
-</div>
-
-- 每个Channel都会对应一个Buffer
-- Selector对应一个线程，一个线程对应多个Channel
-- 线程切换到哪个Channel是由事件决定的
-- 数据读取、写入通过Buffer，可以双向，需要flip方法切换
-
-#### AIO
-
-异步非阻塞，无需线程主动切换，在相应的状态改变后，系统会同志对应的线程处理。
-
-BIO、NIO、AIO对比
-
-
-
-|          | BIO      | NIO                    | AIO        |
-| -------- | -------- | ---------------------- | ---------- |
-| IO模型   | 同步阻塞 | 同步非阻塞（多路复用） | 异步非阻塞 |
-| 编程难度 | 简单     | 复杂                   | 复杂       |
-| 可靠性   | 差       | 好                     | 好         |
-| 吞吐量   | 低       | 高                     | 高         |
-
-#### 各自应用场景
-
-BIO适用于连接数目比较小且固定的架构，对服务器资源要求比较高，并发局限于应用中。
-
-NIO适用于连接数目多且连接比较短（轻操作）的架构，比如聊天服务器，并发局限于应用中，编程较复杂。
-
-AIO适用于连接数目多且连接比较长（重操作）的架构，比如相册服务器，充分调用OS参与并发操作，编程比较复杂。
-
 ## 异常
 <div align='center'>
     <img src='./imgs/JAVAThrowable.svg' width='1200px'>
@@ -1478,13 +1406,13 @@ public boolean delete();
 public void deleteOnExit();
 ```
 
-## 流原理及流的分类
+## 标准IO流原理及流的分类
 
 - 用于处理设备之间的数据传输；
 - java程序中对于数据的输入/输出操作以“流（Stream）”的方式进行；
 - java.io包下提供了各种“流”类和接口，用以获取不同种类的数据，并通过标准的方法输入或输出数据。
 
-#### 流的分类
+### 流的分类
 
 - 按照操作==数据单位==不同：字节流（B，8bit），字符流（2B，16bit）
 
@@ -1497,7 +1425,7 @@ public void deleteOnExit();
     | 输入流       | InputStream  | Reader |
     | 输出流       | OutputStream | Writer |
 
-#### IO流体系
+### IO流体系
 
 | 分类       | 字节输入流              | 字节输出流               | 字符输入流            | 字符输出流             |
 | ---------- | ----------------------- | ------------------------ | --------------------- | ---------------------- |
@@ -1515,6 +1443,148 @@ public void deleteOnExit();
 | 特殊流     | DataInputStream         | DataOutputStream         |                       |                        |
 
 对于文本类型的数据需要使用字符流来处理，对于图片等数据需要使用字节流来处理。
+
+#### 转换流
+
+**InputStreamReader：**将一个字节的输入流转换为字符的输入流
+
+**OutputStreamWriter：**将一个字符的输出流转换为字节的输出流
+
+作用：提供字节流与字符流之间的转换
+
+解码：字节、字节数组 --> 字符数组、字符串
+
+编码：字符数组、字符串 --> 字节、字节数组
+
+#### 标准输入输出流
+
+- System.in（InputStream）和System.out（类型是PrintStream，FilterOutputStream的子类）分别代表系统标准的输入和输出设备
+
+- 默认输入设备：键盘，默认输出设备：显示器
+
+- 重定向：通过System类的setIn、setOut方法对默认设备进行改变。
+
+    - ```java
+        public static void setIn(InputStream in)
+        public static void setOut(PrintStream out)
+        ```
+
+#### 打印流
+
+- 将基本数据类型的数据格式化为字符串输出
+- PrintStream和PrintWriter
+    - 提供了一系列print()和println()方法，用于多种数据类型的输出
+    - 输出不会爆出IOException异常
+    - 有自动flush功能
+    - PringStream打印的所有字符都使用平台的默认字符编码转换为字节。在需要写入字符而不是写入字节的情况下，应该使用PrintWriter类。
+    - System.out返回的是PringStream的实例
+
+#### 数据流
+
+- 方便操作Java的基本数据类型和String数据，可以使用数据流。
+- DataInputStream和DataOutputStream、分别“套接”在InputStream和OutputStream子类的流上
+
+#### 对象流
+
+- ObjectInputStream和ObjectOutPutStream
+- 用于存储和读取基本数据类型数据或对象的处理流。可以把Java中的对象写入到数据源中，也能从数据源中换源对象。
+- 序列化：用ObjectOutPutStream类保存基本类型数据或对象的机制
+    - serialVersionUID用来说明类的不同版本之间的兼容性。目的是对序列化对象进行版本控制。
+- 反序列化：用ObjectInputStream类读取基本类型数据或对象的机制
+- 不能序列化static和transient修饰的成员变量
+
+#### 随机存取文件流(RandomAccessFile)
+
+- RandomAccessFile（java.io）,并且实现了DataInput和DataOutput这两个接口，意味着这个类既可以读也可以写。
+- 支持随机访问，程序可以直接跳到文件的任意位置来读、写文件
+    - 支持只访问文件的部分内容
+    - 可以像已存在的文件后追加部分内容
+- 包含一个记录指针，用以标示当前读写处的位置，可自由移动记录指针
+    - long getFilePointer()：获取文件记录指针的当前位置
+    - void seek(long pos)：将文件记录指针定位到pos位置
+- 创建类的时候需要指定mode（访问方式）：
+    - r：只读（文件不存在抛异常）
+    - rw：读写（文件不存在创建文件）
+    - rwd：读写，同步文件内容更新（立即保存到硬盘）
+    - rws：读写，同步文件内容和元数据
+
+## BIO、NIO、AIO
+
+[BIO、NIO和AIO的区别、三种IO的原理与用法](https://blog.csdn.net/u010541670/article/details/91890649)
+
+[Java中BIO，NIO，AIO总结](https://zhuanlan.zhihu.com/p/159276195)
+
+### BIO(blocking I/O)
+
+同步阻塞，一个连接为一个线程，连接一个客户端就需要启动一个线程进行处理，如果连接未断开且未做任何事，会造成不必要的开销。可通过线程池优化。相关类在java.io包中。
+
+适用于连接数目比较小且相对固定的架构，对服务器的要求比较高，对并发有局限性。JDK1.4之前唯一的选择。
+
+<div align='center'>
+    <img src='./imgs/BIO.jpg' width='500px'>
+    </br></br>BIO
+</div>
+
+
+**缺点**：
+
+- 每个请求都需要创建独立的线程
+- 当并发量大的时候，需要创建大量的线程，占用系统资源
+- 连接建立后，如果当前线程暂时没有数据刻度，则线程就阻塞在Read操作上，造成资源浪费
+
+### NIO(non-blocking IO)
+
+JDK1.4开始，Java提供了一系列改进的输入/输出的新特性，统称为NIO(New IO)，同步非阻塞。
+
+JDK7，NIO.2。
+
+相关类在java.nio包及子包下，并对原java.io包中的很多类进行了改写。
+
+NIO有三大核心部分：Channel，Buffer，Selector。
+
+NIO面向缓冲区，数据读到一个它稍后处理的缓冲区中。
+
+非阻塞模式，使一个线程从某通道发送请求或者读取数据，但是它仅能得到目前可用的数据，如果目前没有数据可用，就什么都不获取，会继续保持线程阻塞，直至数据变的可以读取之前，该线程可以继续做其他的事情。非阻塞写也是如此，一个线程请求写入一些数据到某通道，但不需要等待它完全写入，这个线程同时可以去做别的事情。
+
+NIO可以用一个线程处理多个操作，并发能力远远大于BIO。
+
+<div align='center'>
+    <img src='./imgs/NIO.jpg' width='300px'>
+    </br></br>NIO Selector、Channel、Buffer关系图
+</div>
+
+
+- 每个Channel都会对应一个Buffer
+- Selector对应一个线程，一个线程对应多个Channel
+- 线程切换到哪个Channel是由事件决定的
+- 数据读取、写入通过Buffer，可以双向，需要flip方法切换
+
+#### NIO.2
+
+Path、Paths、Files
+
+### AIO
+
+异步非阻塞，无需线程主动切换，在相应的状态改变后，系统会同志对应的线程处理。
+
+BIO、NIO、AIO对比
+
+
+
+|          | BIO      | NIO                    | AIO        |
+| -------- | -------- | ---------------------- | ---------- |
+| IO模型   | 同步阻塞 | 同步非阻塞（多路复用） | 异步非阻塞 |
+| 编程难度 | 简单     | 复杂                   | 复杂       |
+| 可靠性   | 差       | 好                     | 好         |
+| 吞吐量   | 低       | 高                     | 高         |
+
+### 各自应用场景
+
+BIO适用于连接数目比较小且固定的架构，对服务器资源要求比较高，并发局限于应用中。
+
+NIO适用于连接数目多且连接比较短（轻操作）的架构，比如聊天服务器，并发局限于应用中，编程较复杂。
+
+AIO适用于连接数目多且连接比较长（重操作）的架构，比如相册服务器，充分调用OS参与并发操作，编程比较复杂。
 
 # Lambada
 
