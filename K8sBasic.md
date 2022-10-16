@@ -534,7 +534,7 @@ kubeadm token create --print-join-command
 
 # 实战
 
-## 资源创建方式
+## 资源创建、删除方式
 
 - 命令行
 - yaml
@@ -562,3 +562,159 @@ metadata:
 <div align='center'>
     <img src='./imgs/k8s/008.png' width='600px'>
 </div>
+
+```bash
+kubectl run mynginx --image=nginx
+
+# 查看default名称空间的Pod
+kubectl get pod 
+# 描述
+kubectl describe pod 你自己的Pod名字
+# 删除
+kubectl delete pod Pod名字
+# 查看Pod的运行日志
+kubectl logs Pod名字
+
+# 每个Pod - k8s都会分配一个ip
+kubectl get pod -owide
+# 使用Pod的ip+pod里面运行容器的端口
+curl 192.168.169.136
+# 集群中的任意一个机器以及任意的应用都能通过Pod分配的ip来访问这个Pod
+```
+
+```yaml
+#yaml 创建pod kubectl apply -f pod.yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    run: myapp
+  name: myapp
+spec:
+  containers:
+  - image: nginx
+    name: nginx
+  - image: tomcat:8.5.68
+    name: tomcat
+```
+
+同一个Pod内的容器共享网络空间。
+
+## Deployment
+
+控制Pod，使Pod拥有**多副本，自愈，扩缩容**等能力。
+
+### 多副本
+
+```bash
+kubectl create deployment mytomcat --image=tomcat:8.5.68
+```
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: my-dep
+  name: my-dep
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: my-dep
+  template:
+    metadata:
+      labels:
+        app: my-dep
+    spec:
+      containers:
+      - image: nginx
+        name: nginx
+```
+
+### 扩缩容
+
+```bash
+kubectl scale --replicas=5 deployment/my-dep
+
+kubectl edit deployment my-dep
+```
+
+### 自愈&故障转移
+
+- 停机
+- 删除Pod
+- 容器崩溃
+- ....
+
+### 滚动更新
+
+```bash
+kubectl set image deployment/my-dep nginx=nginx:1.16.1 --record
+kubectl rollout status deployment/my-dep
+```
+
+### 版本回退
+
+```bash
+#历史记录
+kubectl rollout history deployment/my-dep
+
+#查看某个历史详情
+kubectl rollout history deployment/my-dep --revision=2
+
+#回滚(回到上次)
+kubectl rollout undo deployment/my-dep
+
+#回滚(回到指定版本)
+kubectl rollout undo deployment/my-dep --to-revision=2
+```
+
+### More
+
+除了`Deployment`，k8s还有 `StatefulSet` 、`DaemonSet` 、`Job`  等 类型资源。我们都称为 `工作负载`。
+
+有状态应用使用  `StatefulSet`  部署，无状态应用使用 `Deployment` 部署
+
+https://kubernetes.io/zh/docs/concepts/workloads/controllers/
+
+- Deployment： 无状态应用部署，例如微服务，提供多副本功能等
+- StatefuSet：有状态应用部署，例如Redis，提供稳定的存储、网络等功能
+- DaemonSet：守护型应用部署，例如日志收集组件，在每个机器都运行一份
+- Job/CronJob：定时任务部署，比如垃圾清理组件，可以在指定时间运行
+
+## Service
+
+将一组 [Pods](https://kubernetes.io/docs/concepts/workloads/pods/pod-overview/) 公开为网络服务的抽象方法。
+
+```bash
+#暴露Deploy
+kubectl expose deployment my-dep --port=8000 --target-port=80
+
+#使用标签检索Pod
+kubectl get pod -l app=my-dep
+```
+
+```yaml
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: my-dep
+  name: my-dep
+spec:
+  selector:
+    app: my-dep
+  ports:
+  - port: 8000
+    protocol: TCP
+    targetPort: 80
+```
+
+### ClusterIP
+
+```bash
+# 等同于没有--type的
+kubectl expose deployment my-dep --port=8000 --target-port=80 --type=ClusterIP
+```
+
