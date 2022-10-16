@@ -116,22 +116,20 @@ public class Main {
 }
 ```
 
-创建对象四种方式
+## 创建对象四种方式
 
-### new
+- new
 
-### 反射机制
+- clone
 
-```java
-Class clazz = Class.forName("yunche.test.Hello");
-Hello hello =(Hello) clazz.newInstance();
-```
+- 反射
 
+    - ```java
+        Class clazz = Class.forName("yunche.test.Hello");
+        Hello hello =(Hello) clazz.newInstance();
+        ```
 
-
-### Clone
-
-### 序列化
+- 序列化
 
 ## String
 
@@ -359,96 +357,17 @@ public final class StringBuilder
 
 应用场景：Spring中的xml的配置模式、动态代理设计模式也采用了反射机制
 
-## 泛型
-
-参数化类型，所操作的数据类型被指定为一个参数。
-
-Java 的泛型是伪泛型，这是因为 Java 在运行期间，所有的泛型信息都会被擦掉，这也就是通常所说类型擦除 。
-
-Java中泛型一般有三种：泛型类、泛型接口、泛型方法。
-
-### 常用通配符
-
-T，E，K，V，?
-
-- T 表示具体的一个java类型
-- E表示Element
-- K V代表键值对 key value
-- ？表示不确定的java类型
-
-### 泛型类
-
-```java
-//此处T可以随便写为任意标识，常见的如T、E、K、V等形式的参数常用于表示泛型
-//在实例化泛型类时，必须指定T的具体类型
-public class Generic<T> {
-
-    private T key;
-
-    public Generic(T key) {
-        this.key = key;
-    }
-
-    public T getKey() {
-        return key;
-    }
-}
-
-Generic<Integer> genericInteger = new Generic<Integer>(123456);
-```
-
-### 泛型接口
-
-```java
-public interface Generator<T> {
-    public T method();
-}
-
-//实现泛型接口不指定类型
-class GeneratorImpl<T> implements Generator<T>{
-    @Override
-    public T method() {
-        return null;
-    }
-}
-
-//实现泛型接口指定类型
-class GeneratorImpl implements Generator<String>{
-    @Override
-    public String method() {
-        return "hello";
-    }
-}
-```
-
-### 泛型方法
-
-```java
-public static <E> void printArray(E[] inputArray) {
-    for (E element : inputArray) {
-        System.out.printf("%s ", element);
-    }
-    System.out.println();
-}
-
-// 创建不同类型数组： Integer, Double 和 Character
-Integer[] intArray = { 1, 2, 3 };
-String[] stringArray = { "Hello", "World" };
-printArray(intArray);
-printArray(stringArray);
-```
-
 ## 异常
+
 <div align='center'>
     <img src='./imgs/JAVAThrowable.svg' width='1200px'>
     </br></br>JAVA异常
 </div>
-
-## 线程与线程池
+# 线程与线程池
 
 [JDK1.8 Thread.java](https://github.com/simple-jbx/SourceCode/tree/main/JAVA/JDK8Src/java/lang/Thread.java)
 
-### 线程状态
+## 线程状态
 
 - New（新创建）
 
@@ -476,10 +395,9 @@ printArray(stringArray);
     <img src='./imgs/ThreadState.jpg' width='800px'>
     </br></br>线程状态
 </div>
+## 线程同步
 
-### 线程同步
-
-#### synchronized(内置锁/互斥锁、可重入)
+### synchronized(内置锁/互斥锁、可重入)
 
 ```java
 package simple.jbx.java.com.singleton;
@@ -564,7 +482,7 @@ synchronized修饰的方法实现使用的是ACC_SYNCHRONIZED表示，该标识�
 
 两者的本质都是对对象监视器monitor的获取。
 
-#### voliate
+### voliate
 
 稍弱的同步机制，用来确保将变量的更新操作通知到其他线程。当把变量声明为volatile类型后，编译器与运行时都会注意到这个变量是共享的，因此不会将该变量上的操作与其他内存操作一起重排序。voliate变量不会被缓存在寄存器或者对其他处理器不可见的地方，因此在读取voliate类型的变量时总会返回最新写入的值。
 
@@ -583,13 +501,13 @@ while(!asleep) {
 }
 ```
 
-#### wait和notify
+### wait和notify
 
-#### 局部变量（ThreadLocal）
+### 局部变量（ThreadLocal）
 
 
 
-#### 原子变量
+### 原子变量
 
 ```java
 import java.util.concurrent.atomic
@@ -638,21 +556,21 @@ public class HelloServlet implements Servlet {
 
 
 
-#### 阻塞队列
+### 阻塞队列
 
-### 线程封闭
+## 线程封闭
 
 避免使用同步的方式就是不共享数据。如果仅在单线程内访问数据，就不需要同步。这种技术被称为线程封闭（Thread Confinement），是实现线程安全性的最简单方式之一。当某个对象封闭在一个线程中时，这种用法将自动实现线程安全性，即使被封闭的对象本身不是线程安全的。
 
-#### Ad-hoc 线程封闭
+### Ad-hoc 线程封闭
 
 维护线程封闭性的职责完全由程序实现来承担。非常脆弱。因此应当尽量少使用它，应该使用更强的线程封闭技术（栈封闭或ThreadLocal类）。
 
-#### 栈封闭
+### 栈封闭
 
 只有局部变量才能访问对象。局部变量的固有属性之一就是封闭在执行线程中。它们位于执行线程的栈中，其他线程无法访问这个栈。栈封闭（也被成为线程内部使用或者线程局部使用，不要与核心类库中的ThreadLocal混淆）比Ad-hoc线程封闭更容易维护，也更加健壮。
 
-#### ThreadLocal
+### ThreadLocal
 
 更规范的方法。能使线程中的某个值与保存值的对象关联起来。ThreadLocal提供了get与set等访问接口或方法，这些方法为每个使用该变量的线程都存有一份独立的副本，因此get总是返回由当前执行线程在调用set时设置的最新值。
 
@@ -1635,7 +1553,7 @@ AIO适用于连接数目多且连接比较长（重操作）的架构，比如�
 
     - `Comparator<Integer> com = (x, y) -> Integer.compare(x, y)`;
 
-# 函数式（Functional）接口
+## 函数式（Functional）接口
 
 # Java Stream
 
@@ -2014,7 +1932,30 @@ Optional类的Javadoc描述：这是一个可以为null的容器对象。如果�
     }
 ```
 
+# 反射
 
+## 简介
+
+动态语言的关键，允许程序在执行期借助Reflection API取得任何类的内部信息，并能直接操作任意对象的内部属性及方法。
+
+类加载完后，在堆内存的方法区就产生了一个Class类型的对象（一个类只有一个），这个Class对象就包含了完整的类的结构信息。这个Class对象就像一面镜子，透过镜子可以看到类的结构，即反射。
+
+### 提供的功能
+
+- 在运行时判断任意一个对象所属的类
+- 在运行时构造任意一个类的对象
+- 在运行时判断任意一类所具有的成员变量和方法
+- 在运行时获取泛型信息
+- 在运行时调用任意一个对象的成员变量和方法
+- 在运行时处理注解
+- 生成动态代理
+
+### 主要API
+
+- java.lang.Class
+- java.lang.reflect.Method：代表类的方法
+- java.lang.reflect.Field：代表类的成员变量
+- java.lang.reflect.Constructor：代表类的构造器
 
 
 # 生产力
