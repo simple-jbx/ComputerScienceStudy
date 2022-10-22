@@ -1553,7 +1553,55 @@ AIO适用于连接数目多且连接比较长（重操作）的架构，比如�
 
     - `Comparator<Integer> com = (x, y) -> Integer.compare(x, y)`;
 
-## 函数式（Functional）接口
+# 函数式（Functional）接口
+
+## 简介
+
+- 只包含一个抽象方法的接口，称为函数式接口。
+- 可以通过Lambada表达式创建该接口的对象。（如果Lambada表达式抛出一个受检异常，即非运行时异常，那么该异常需要在目标接口的抽象方法上进行声明）
+- 可以在一个接口上使用`@FunctionalInterface`注解，这样可以检查它是否是一个函数式接口。
+- 在`java.util.function`包下定义了Java8丰富的函数式接口。
+
+## 如何理解
+
+- java不仅支持OOP（面向对象）还支持OOF（面向函数编程）。
+- 在java中，Lambada是对象，必须依附于一类特别的对象类型--函数式接口。
+- Lambada表达式就是一个函数式接口的实例。
+- 以前用匿名实现类表示的均可以用Lambada表达式替换。
+
+## Java内置四大核心函数式接口
+
+| 函数式接口                 | 参数类型 | 返回类型  | 用途                                                         |
+| -------------------------- | -------- | --------- | ------------------------------------------------------------ |
+| `Consumer<T>`  消费性接口  | `T`      | `void`    | 操作`T`类型对象，无返回值，`void accept(T t)`                |
+| `Supplier<T>`  供给型接口  | 无       | `T`       | 返回 `T`类型对象，`T get()`                                  |
+| `Function<T,R>` 函数型接口 | `T`      | `R`       | 操作`T`类型对象，有返回值，`R apply(T t)`                    |
+| `Predicate<T>` 断定型接口  | `T`      | `boolean` | 确定`T`类型对象是否满足约束，并返回boolean值，`boolean test(T t)` |
+
+## 其他接口
+
+| 函数式接口                                                 | 参数类型 | 返回类型            | 用途                                                         |
+| ---------------------------------------------------------- | -------- | ------------------- | ------------------------------------------------------------ |
+| `BiFunction<T,U,R>`                                        | `T,U`    | `R`                 | 对类型为`T,U`参数应用操作，返回`R`类型的结果，`R apply(T t, U u)` |
+| `UnaryOperator<T>`(`Function`子接口)                       | `T`      | `T`                 | 对`T`类型对象进行一元运算，返回T类型结果，`T apply(T t)`     |
+| `BinaryOperator<T>`(`BiFunction`子接口)                    | `T,T`    | `T`                 | 对`T`类型对象进行二元运算，并返回`T`类型结果，`T apply(T t1， T t2)` |
+| `BiConsumer<T,U>`                                          | `T,U`    | `void`              | 操作`T,U`对象，无返回值，`void accept(T t, U u)`             |
+| `BiPredicata<T, U>`                                        | `T,U`    | `boolean`           | `boolean test(T t, U u)`                                     |
+| `ToIntFunction<T>、ToLongFunction<T>、ToDoubleFunction<T>` | `T`      | `int、long、double` | 分别计算`int、long、double`值的函数                          |
+| `IntFunction<T>`                                           | `int `   | `R`                 | 参数为int类型                                                |
+| `LongFunction<T>`                                          | `long`   | `R`                 | 参数为long类型                                               |
+| `DoubleFunction<R>`                                        | `double` | `R`                 | 参数为double类型                                             |
+
+# 方法引用与构造器引用
+
+- 当要传递给Lambada体的操作，已经有实现的方法了，可以使用方法引用。
+- 方法引用可以看做是Lambada表达式深层次的表达。
+- 要求：实现接口的抽象方法的参数列表和返回值类型，必须与方法引用的方法的参数列表和返回值类型保持一致。
+- 格式：使用操作符`::`将类（或对象）与方法名分隔开。
+- 例如：
+    - 对象`::`实例方法名
+    - 类`::`静态方法名
+    - 类`::`实例方法名
 
 # Java Stream
 
@@ -1932,7 +1980,7 @@ Optional类的Javadoc描述：这是一个可以为null的容器对象。如果�
     }
 ```
 
-# 反射
+# [反射](https://github.com/simple-jbx/Java8Study/tree/main/src/test/java/reflection)
 
 ## 简介
 
