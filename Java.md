@@ -363,343 +363,6 @@ public final class StringBuilder
     <img src='./imgs/JAVAThrowable.svg' width='1200px'>
     </br></br>JAVA异常
 </div>
-# 线程与线程池
-
-[JDK1.8 Thread.java](https://github.com/simple-jbx/SourceCode/tree/main/JAVA/JDK8Src/java/lang/Thread.java)
-
-## 线程状态
-
-- New（新创建）
-
-	Thread thread = new Thread(task)
-
-- Runnable（可运行）
-
-	thread.start()
-
-- Blocked（被阻塞）
-
-- Waiting（等待）
-
-- Timed waiting（计时等待）
-
-- Terminated（被终止）
-
-	run()方法正常退出
-
-	没有捕获异常而异常终止
-
-可调用getState方法获取线程当前状态
-
-<div align='center'>
-    <img src='./imgs/ThreadState.jpg' width='800px'>
-    </br></br>线程状态
-</div>
-## 线程同步
-
-### synchronized(内置锁/互斥锁、可重入)
-
-```java
-package simple.jbx.java.com.singleton;
-
-import java.lang.reflect.Constructor;
-
-/**
- * @author simple.jbx
- * @description synchronized 实现懒汉式单例
- * @date 16:16 2021/10/15
- * @return
- **/
-public class Lazy {
-    private Lazy(){
-        //System.out.println(Thread.currentThread().getName() + "start");
-        synchronized (Lazy.class){
-            if(lazy == null){
-                throw new RuntimeException("不要试图使用反射破坏异常");
-            }
-        }
-    }
-
-    private volatile static Lazy lazy;
-
-    //双重检测锁模式的懒汉式单例 DCL懒汉式
-    public static Lazy getInstance() {
-        if(lazy == null)
-        {
-            synchronized(Lazy.class){
-                if(lazy == null)
-                {
-                    lazy = new Lazy();
-                    //不是一个原子操作
-                    /**
-                     *1. 分配内存空间
-                     *2. 执行构造方法，初始化对象
-                     *3. 把这个对象指向这个空间
-                     *
-                     * 123 Thread A
-                     * 132
-                     *     Thread B //此时还没有完成构造
-                     */
-                }
-            }
-        }
-        return lazy;
-    }
-
-    public static void main(String[] args) throws Exception {
-        /*
-        for(int i = 0; i < 10; i++)
-        {
-            new Thread(()->{
-                Layz.getInstance();
-            }).start();
-        }*/
-
-        //Lazy instance = Lazy.getInstance();
-        Constructor<Lazy> declearedConstructor = Lazy.class.getDeclaredConstructor(null);
-        declearedConstructor.setAccessible(true);
-
-        //java10 这里两个对象用反射还是不能破坏单例  视频里的java8可以
-        Lazy instance2 = declearedConstructor.newInstance();
-        Lazy instance3 = declearedConstructor.newInstance();
-
-        //System.out.println(instance);
-        System.out.println(instance2);
-        System.out.println(instance3);
-    }
-}
-
-```
-
-<div align='center'>
-    <img src='./imgs/synchronized001.png' width='800px'>
-    </br></br>synchronized同步
-</div>
-
-synchronized同步语句块的实现使用的是monitorenter和monitorexit指令。
-
-synchronized修饰的方法实现使用的是ACC_SYNCHRONIZED表示，该标识指明了该方法是一个同步方法。
-
-两者的本质都是对对象监视器monitor的获取。
-
-### voliate
-
-稍弱的同步机制，用来确保将变量的更新操作通知到其他线程。当把变量声明为volatile类型后，编译器与运行时都会注意到这个变量是共享的，因此不会将该变量上的操作与其他内存操作一起重排序。voliate变量不会被缓存在寄存器或者对其他处理器不可见的地方，因此在读取voliate类型的变量时总会返回最新写入的值。
-
-加锁机制既可以确保可见性又可以确保原子性，而volatile变量只能确保可见性，通常用作某个操作完成、发生中断或者状态的标志。
-
-当且仅当满足一下所有条件时，才应该使用volatile变量：
-
-- 对变量的写入操作不依赖变量的当前值，或者能确保只有单个线程更新变量的值。
-- 该变量不会与其他状态变量一起纳入不变性条件中。
-- 在访问变量时不需要加锁。
-
-```java
-volatile boolean sleep;
-while(!asleep) {
-	countSomeSheep();
-}
-```
-
-### wait和notify
-
-### 局部变量（ThreadLocal）
-
-
-
-### 原子变量
-
-```java
-import java.util.concurrent.atomic
-public class HelloServlet implements Servlet {
- 	
-    private final AtomicLong count = new AtomicLong(0);
-    private final AtomicBoolean atomicBoolean = new AtomicBoolean(false);
-    private final AtomicInteger atomicInteger = new AtomicInteger();
-    private final AtomicIntegerArray atomicIntegerArray = new AtomicIntegerArray(0);
-    private final AtomicLongArray atomicLongArray = new AtomicLongArray(0);
-	
-    public long getCount() {
-        return count.get();
-    }
-
-    public void increCount() {
-        count.incrementAndGet();
-    }
-
-    @Override
-    public void init(ServletConfig servletConfig) throws ServletException {
-
-    }
-
-    @Override
-    public ServletConfig getServletConfig() {
-        return null;
-    }
-
-    @Override
-    public void service(ServletRequest servletRequest, ServletResponse servletResponse) throws ServletException, IOException {
-
-    }
-
-    @Override
-    public String getServletInfo() {
-        return null;
-    }
-
-    @Override
-    public void destroy() {
-
-    }
-}
-```
-
-
-
-### 阻塞队列
-
-## 线程封闭
-
-避免使用同步的方式就是不共享数据。如果仅在单线程内访问数据，就不需要同步。这种技术被称为线程封闭（Thread Confinement），是实现线程安全性的最简单方式之一。当某个对象封闭在一个线程中时，这种用法将自动实现线程安全性，即使被封闭的对象本身不是线程安全的。
-
-### Ad-hoc 线程封闭
-
-维护线程封闭性的职责完全由程序实现来承担。非常脆弱。因此应当尽量少使用它，应该使用更强的线程封闭技术（栈封闭或ThreadLocal类）。
-
-### 栈封闭
-
-只有局部变量才能访问对象。局部变量的固有属性之一就是封闭在执行线程中。它们位于执行线程的栈中，其他线程无法访问这个栈。栈封闭（也被成为线程内部使用或者线程局部使用，不要与核心类库中的ThreadLocal混淆）比Ad-hoc线程封闭更容易维护，也更加健壮。
-
-### ThreadLocal
-
-更规范的方法。能使线程中的某个值与保存值的对象关联起来。ThreadLocal提供了get与set等访问接口或方法，这些方法为每个使用该变量的线程都存有一份独立的副本，因此get总是返回由当前执行线程在调用set时设置的最新值。
-
-ThreadLocal对象通常用于防止对可变的单实例变量（Singleton）或全局变量进行共享。
-
-当某个频繁执行的操作需要一个临时对象，例如一个缓冲区，而同时又希望避免在每次执行时都重新分配该临时对象，就可以使用这项技术。（JDK1.5之前，Integer.toString()方法使用ThreadLocal对象保存一个12B大小的缓冲区，用于对结果进行格式化，而不是使用共享的静态缓冲区），或每次调用的时候分配一个新的
-
-## 线程池
-
-Exectuors:工具类、线程池的工厂类，用于创建并返回不同类型的线程池。
-
-```java
-//1.提供指定数量的线程池
-ExecutorService executorService = Executors.newFixedThreadPool(10);
-
-//2.执行指定的线程操作。需提供实现Runnable或Callable接口实现类的对象
-executorService.execute(new NumberThread());//适合使用于Runnable
-executorService.submit();//适合使用于Callable
-//3.关闭线程池
-executorService.shutdown();
-
-//创建线程池通用构造函数
- /**
-     * Creates a new {@code ThreadPoolExecutor} with the given initial
-     * parameters.
-     *
-     * @param corePoolSize the number of threads to keep in the pool, even
-     *        if they are idle, unless {@code allowCoreThreadTimeOut} is set
-     * @param maximumPoolSize the maximum number of threads to allow in the
-     *        pool
-     * @param keepAliveTime when the number of threads is greater than
-     *        the core, this is the maximum time that excess idle threads
-     *        will wait for new tasks before terminating.
-     * @param unit the time unit for the {@code keepAliveTime} argument
-     * @param workQueue the queue to use for holding tasks before they are
-     *        executed.  This queue will hold only the {@code Runnable}
-     *        tasks submitted by the {@code execute} method.
-     * @param threadFactory the factory to use when the executor
-     *        creates a new thread
-     * @param handler the handler to use when execution is blocked
-     *        because the thread bounds and queue capacities are reached
-     * @throws IllegalArgumentException if one of the following holds:<br>
-     *         {@code corePoolSize < 0}<br>
-     *         {@code keepAliveTime < 0}<br>
-     *         {@code maximumPoolSize <= 0}<br>
-     *         {@code maximumPoolSize < corePoolSize}
-     * @throws NullPointerException if {@code workQueue}
-     *         or {@code threadFactory} or {@code handler} is null
-     */
-
-/*
-corePoolSize 核心线程数 线程池线程基本数量（即使没有任务，线程池所有线程是空闲状态，线程数也保持这个数）
-maximumPoolSize 线程池最大线程数
-keepAliveTime 当线程数大于corePoolSize时多余的线程处于空闲状态时最大存活时间
-unit keepAliveTime的单位
-workQueue 存放已提交但未执行的任务的工作队列
-threadFactory 使用哪种工厂模式创建线程池
-handler 饱和策略
-*/
-public ThreadPoolExecutor(int corePoolSize,
-                              int maximumPoolSize,
-                              long keepAliveTime,
-                              TimeUnit unit,
-                              BlockingQueue<Runnable> workQueue,
-                              ThreadFactory threadFactory,
-                              RejectedExecutionHandler handler) {···}
-```
-
-优点：
-
-- 提高响应速度（减少了创建新线程的时间）
-- 降低资源消耗（重复利用线程池中的线程，不需要每次都创建）
-- 便于线程管理
-	- corePoolSize：核心池大小
-	- maximumPoolSize：最大线程数
-	- keepAliveTime：线程没有任务时最多保持多长时间后会终止
-
-### 创建线程池
-
-使用Executor静态工厂
-
-| 方法                             | 描述                                                         |
-| -------------------------------- | ------------------------------------------------------------ |
-| newCachedThreadPool              | 返回一个带缓存的线程池，必要时创建新线程；空闲线程会被保留60秒 |
-| newFixedThreadPool               | 包含固定数量的线程；空闲线程会一直被保留；线程数由参数决定   |
-| newSingleThreadExecutor          | 只有一个线程的“池”，该线程顺序执行每一个提交的任务           |
-| newScheduledThreadPool           | 用于预定执行而构建的固定线程池，替代java.util.Timer          |
-| newSingleThreadScheduledExecutor | 用于预定执行而构建的单线程“池”                               |
-
-### 线程池常用方法
-
-- int getLargestPoolSize() 返回线程池在该执行器生命周期中的最大尺寸
-
-### 生命周期
-
-ExecutorService的声明周期有三种状态：运行、关闭、已停止。
-
-初始创建时处于运行状态。shutdown方法将执行平缓的关闭过程：不在接受新的任务，同时等待已经提交的任务执行完成--包括那些还未开始执行的任务。shutdownNow方法将执行粗暴的关闭过程：它将尝试取消所有运行中的任务，并且不在启动队列中尚未开始执行的任务。
-
-在ExecutorService关闭后提交的任务将由“拒绝执行处理器（Rejected Execution Handle）来处理”，它会抛弃任务，或者使得execute方法抛出一个未检查的Rejected-ExecutionException。等所有任务完成后，ExecutorService到达终止状态。可以调用awaitTermination来等待ExecutorService到达终止状态，或者通过调用isTerminated来轮询ExecutorService是否已经终止。通常在调用awaitTermination之后会立即调用shutdown，从而产生同步地关闭ExecutorService的效果。
-
-### 管理线程池队列任务
-
-ThreadPoolExcutor允许提供一个BlockingQueue（阻塞队列）来保存等待执行的任务。基本的任务排队方法有3种：无解队列、有届队列和同步移交（Synchronous Handoff）。队列的选择与其他配置参数有关，例如线程池大小等。
-
-newFixedThreadPool和newSingleThreadExecutor在默认情况会使用一个无界的LinkedBlockingQueue。如果任务到达速度大于处理速度，队列将无限制增加。
-
-比较稳妥的策略是使用有界队列，例如ArrayBlockingQueue、有界的LinkedBlockingQueue、PriorityBlockingQueue。会引发新的问题，队列满了怎么办，需要用到下面的各种饱和策略。在使用有界队列的时候，队列的大小与线程池的大小必须一起调节。如果线程池较小而队列较大，那么有助于减少内存使用量，降低CPU使用率，还能减少上下文切换，但可能会限制吞吐量。
-
-对于非常大的或者无界的线程池，可以通过使用SynchronousQueue来避免任务排队，以及直接将任务从生产者转移交给工作线程。SynchronousQueue不是真正意义上的队列，而是一种移交机制。要将一个任务放到SynchronousQueue中，必须有另一个空闲线程在等待接收任务。如果没有，并且线程池当前大小小于最大值，则创建一个新的线程，否则根据饱和策略，这个任务会被拒绝。只有当线程池是无界的或者可以拒绝任务的时候，SynchronousQueue才有实际价值。newCachedTHreadPool工厂方法中就使用了SynchronousQueue。
-
-### 饱和策略
-
-#### AbortPolicy
-
-Abort（中止）策略是默认的饱和策略，该策略将抛出未检查的RejectedExecutionException。调用者可以捕获这个异常，并根据需求编写处理代码。
-
-#### CallerRunsPolicy
-
-调用者运行策略实现了一种调节机制，该策略既不会抛弃任务，也不会抛出异常，而是将某些任务回退到调用者，从而降低新任务的流量。它不会在线程池中的某个线程执行新提交的任务，而是在一个调用了execute的主线程中执行该任务。由于执行该任务需要一定时间，因此在这段时间内主线程不会调用accept，从而到达的请求被保存在TCP的缓存队列而不是在应用程序。
-
-#### DiscardPolicy
-
-当新提交的任务无法保存到队列等待执行时，抛弃（Discard）策略会抛弃该任务。
-
-#### DiscardOldestPolicy
-
-抛弃最旧的策略会抛弃下一个将被执行的任务，然后尝试重新提交新的任务。如果工作队列是一个优先队列，则该策略会抛弃优先级最高的任务，因此最好不要将该策略与优先级队列放在一起使用。
-
 # 并发、锁
 
 ## Atomic原子类型
@@ -2004,6 +1667,395 @@ Optional类的Javadoc描述：这是一个可以为null的容器对象。如果�
 - java.lang.reflect.Method：代表类的方法
 - java.lang.reflect.Field：代表类的成员变量
 - java.lang.reflect.Constructor：代表类的构造器
+
+# 线程与线程池
+
+[JDK1.8 Thread.java](https://github.com/simple-jbx/SourceCode/tree/main/JAVA/JDK8Src/java/lang/Thread.java)
+
+## 线程状态
+
+- New（新创建）
+
+    Thread thread = new Thread(task)
+
+- Runnable（可运行）
+
+    thread.start()
+
+- Blocked（被阻塞）
+
+- Waiting（等待）
+
+- Timed waiting（计时等待）
+
+- Terminated（被终止）
+
+    run()方法正常退出
+
+    没有捕获异常而异常终止
+
+可调用getState方法获取线程当前状态
+
+<div align='center'>
+    <img src='./imgs/ThreadState.jpg' width='800px'>
+    </br></br>线程状态
+</div>
+
+## 线程同步
+
+### synchronized(内置锁/互斥锁、可重入)
+
+```java
+package simple.jbx.java.com.singleton;
+
+import java.lang.reflect.Constructor;
+
+/**
+ * @author simple.jbx
+ * @description synchronized 实现懒汉式单例
+ * @date 16:16 2021/10/15
+ * @return
+ **/
+public class Lazy {
+    private Lazy(){
+        //System.out.println(Thread.currentThread().getName() + "start");
+        synchronized (Lazy.class){
+            if(lazy == null){
+                throw new RuntimeException("不要试图使用反射破坏异常");
+            }
+        }
+    }
+
+    private volatile static Lazy lazy;
+
+    //双重检测锁模式的懒汉式单例 DCL懒汉式
+    public static Lazy getInstance() {
+        if(lazy == null)
+        {
+            synchronized(Lazy.class){
+                if(lazy == null)
+                {
+                    lazy = new Lazy();
+                    //不是一个原子操作
+                    /**
+                     *1. 分配内存空间
+                     *2. 执行构造方法，初始化对象
+                     *3. 把这个对象指向这个空间
+                     *
+                     * 123 Thread A
+                     * 132
+                     *     Thread B //此时还没有完成构造
+                     */
+                }
+            }
+        }
+        return lazy;
+    }
+
+    public static void main(String[] args) throws Exception {
+        /*
+        for(int i = 0; i < 10; i++)
+        {
+            new Thread(()->{
+                Layz.getInstance();
+            }).start();
+        }*/
+
+        //Lazy instance = Lazy.getInstance();
+        Constructor<Lazy> declearedConstructor = Lazy.class.getDeclaredConstructor(null);
+        declearedConstructor.setAccessible(true);
+
+        //java10 这里两个对象用反射还是不能破坏单例  视频里的java8可以
+        Lazy instance2 = declearedConstructor.newInstance();
+        Lazy instance3 = declearedConstructor.newInstance();
+
+        //System.out.println(instance);
+        System.out.println(instance2);
+        System.out.println(instance3);
+    }
+}
+
+```
+
+<div align='center'>
+    <img src='./imgs/synchronized001.png' width='800px'>
+    </br></br>synchronized同步
+</div>
+
+
+synchronized同步语句块的实现使用的是monitorenter和monitorexit指令。
+
+synchronized修饰的方法实现使用的是ACC_SYNCHRONIZED表示，该标识指明了该方法是一个同步方法。
+
+两者的本质都是对对象监视器monitor的获取。
+
+### voliate
+
+稍弱的同步机制，用来确保将变量的更新操作通知到其他线程。当把变量声明为volatile类型后，编译器与运行时都会注意到这个变量是共享的，因此不会将该变量上的操作与其他内存操作一起重排序。voliate变量不会被缓存在寄存器或者对其他处理器不可见的地方，因此在读取voliate类型的变量时总会返回最新写入的值。
+
+加锁机制既可以确保可见性又可以确保原子性，而volatile变量只能确保可见性，通常用作某个操作完成、发生中断或者状态的标志。
+
+当且仅当满足一下所有条件时，才应该使用volatile变量：
+
+- 对变量的写入操作不依赖变量的当前值，或者能确保只有单个线程更新变量的值。
+- 该变量不会与其他状态变量一起纳入不变性条件中。
+- 在访问变量时不需要加锁。
+
+```java
+volatile boolean sleep;
+while(!asleep) {
+	countSomeSheep();
+}
+```
+
+### wait和notify
+
+### 局部变量（ThreadLocal）
+
+
+
+### 原子变量
+
+```java
+import java.util.concurrent.atomic
+public class HelloServlet implements Servlet {
+ 	
+    private final AtomicLong count = new AtomicLong(0);
+    private final AtomicBoolean atomicBoolean = new AtomicBoolean(false);
+    private final AtomicInteger atomicInteger = new AtomicInteger();
+    private final AtomicIntegerArray atomicIntegerArray = new AtomicIntegerArray(0);
+    private final AtomicLongArray atomicLongArray = new AtomicLongArray(0);
+	
+    public long getCount() {
+        return count.get();
+    }
+
+    public void increCount() {
+        count.incrementAndGet();
+    }
+
+    @Override
+    public void init(ServletConfig servletConfig) throws ServletException {
+
+    }
+
+    @Override
+    public ServletConfig getServletConfig() {
+        return null;
+    }
+
+    @Override
+    public void service(ServletRequest servletRequest, ServletResponse servletResponse) throws ServletException, IOException {
+
+    }
+
+    @Override
+    public String getServletInfo() {
+        return null;
+    }
+
+    @Override
+    public void destroy() {
+
+    }
+}
+```
+
+
+
+### 阻塞队列
+
+## 线程封闭
+
+避免使用同步的方式就是不共享数据。如果仅在单线程内访问数据，就不需要同步。这种技术被称为线程封闭（Thread Confinement），是实现线程安全性的最简单方式之一。当某个对象封闭在一个线程中时，这种用法将自动实现线程安全性，即使被封闭的对象本身不是线程安全的。
+
+### Ad-hoc 线程封闭
+
+维护线程封闭性的职责完全由程序实现来承担。非常脆弱。因此应当尽量少使用它，应该使用更强的线程封闭技术（栈封闭或ThreadLocal类）。
+
+### 栈封闭
+
+只有局部变量才能访问对象。局部变量的固有属性之一就是封闭在执行线程中。它们位于执行线程的栈中，其他线程无法访问这个栈。栈封闭（也被成为线程内部使用或者线程局部使用，不要与核心类库中的ThreadLocal混淆）比Ad-hoc线程封闭更容易维护，也更加健壮。
+
+### ThreadLocal
+
+更规范的方法。能使线程中的某个值与保存值的对象关联起来。ThreadLocal提供了get与set等访问接口或方法，这些方法为每个使用该变量的线程都存有一份独立的副本，因此get总是返回由当前执行线程在调用set时设置的最新值。
+
+ThreadLocal对象通常用于防止对可变的单实例变量（Singleton）或全局变量进行共享。
+
+当某个频繁执行的操作需要一个临时对象，例如一个缓冲区，而同时又希望避免在每次执行时都重新分配该临时对象，就可以使用这项技术。（JDK1.5之前，Integer.toString()方法使用ThreadLocal对象保存一个12B大小的缓冲区，用于对结果进行格式化，而不是使用共享的静态缓冲区），或每次调用的时候分配一个新的
+
+## 线程创建和使用
+
+### 线程创建方法
+
+- 继承Thread类并重写run()方法
+- 实现Runnable接口
+- 实现Callable接口
+- 线程池
+
+### Thread
+
+```java
+/*
+  线程让步
+  暂停当前正在执行的线程，把执行机会让给优先级相同或者更高的线程
+  若队列中没有同优先级的线程，忽略此方法
+*/
+public static native void yield();
+
+/*
+  使当前活动线程在指定时间内放弃对CPU控制，时间到后重新排队
+  有可能会抛出异常
+*/
+public static native void sleep(long millis) throws InterruptedException;
+public static native void sleep(long millis, int nanos) throws InterruptedException;
+
+public synchronized void start();
+
+/*
+  当某个程序执行流中调用其他线程的join()方法时，调用线程将被阻塞，直到join()方法加入的线程执行完为止
+*/
+public final synchronized void join(long millis)
+    throws InterruptedException
+  
+/*
+  判断线程是否还存活
+*/    
+public final native boolean isAlive();    
+```
+
+### 实现 Runnable 接口和 Callable 接口的区别
+
+**`Runnable` 接口** 不会返回结果或抛出检查异常，但是 **`Callable` 接口** 可以
+
+1. **`execute()`方法用于提交不需要返回值的任务，所以无法判断任务是否被线程池执行成功与否；**
+2. **`submit()`方法用于提交需要返回值的任务。线程池会返回一个 `Future` 类型的对象，通过这个 `Future` 对象可以判断任务是否执行成功**，并且可以通过 `Future` 的 `get()`方法来获取返回值，`get()`方法会阻塞当前线程直到任务完成，而使用 `get(long timeout，TimeUnit unit)`方法则会阻塞当前线程一段时间后立即返回，这时候有可能任务没有执行完。
+
+## 线程池
+
+Exectuors:工具类、线程池的工厂类，用于创建并返回不同类型的线程池。
+
+```java
+//1.提供指定数量的线程池
+ExecutorService executorService = Executors.newFixedThreadPool(10);
+
+//2.执行指定的线程操作。需提供实现Runnable或Callable接口实现类的对象
+executorService.execute(new NumberThread());//适合使用于Runnable
+executorService.submit();//适合使用于Callable
+//3.关闭线程池
+executorService.shutdown();
+
+//创建线程池通用构造函数
+ /**
+     * Creates a new {@code ThreadPoolExecutor} with the given initial
+     * parameters.
+     *
+     * @param corePoolSize the number of threads to keep in the pool, even
+     *        if they are idle, unless {@code allowCoreThreadTimeOut} is set
+     * @param maximumPoolSize the maximum number of threads to allow in the
+     *        pool
+     * @param keepAliveTime when the number of threads is greater than
+     *        the core, this is the maximum time that excess idle threads
+     *        will wait for new tasks before terminating.
+     * @param unit the time unit for the {@code keepAliveTime} argument
+     * @param workQueue the queue to use for holding tasks before they are
+     *        executed.  This queue will hold only the {@code Runnable}
+     *        tasks submitted by the {@code execute} method.
+     * @param threadFactory the factory to use when the executor
+     *        creates a new thread
+     * @param handler the handler to use when execution is blocked
+     *        because the thread bounds and queue capacities are reached
+     * @throws IllegalArgumentException if one of the following holds:<br>
+     *         {@code corePoolSize < 0}<br>
+     *         {@code keepAliveTime < 0}<br>
+     *         {@code maximumPoolSize <= 0}<br>
+     *         {@code maximumPoolSize < corePoolSize}
+     * @throws NullPointerException if {@code workQueue}
+     *         or {@code threadFactory} or {@code handler} is null
+     */
+
+/*
+corePoolSize 核心线程数 线程池线程基本数量（即使没有任务，线程池所有线程是空闲状态，线程数也保持这个数）
+maximumPoolSize 线程池最大线程数
+keepAliveTime 当线程数大于corePoolSize时多余的线程处于空闲状态时最大存活时间
+unit keepAliveTime的单位
+workQueue 存放已提交但未执行的任务的工作队列
+threadFactory 使用哪种工厂模式创建线程池
+handler 饱和策略
+*/
+public ThreadPoolExecutor(int corePoolSize,
+                              int maximumPoolSize,
+                              long keepAliveTime,
+                              TimeUnit unit,
+                              BlockingQueue<Runnable> workQueue,
+                              ThreadFactory threadFactory,
+                              RejectedExecutionHandler handler) {···}
+```
+
+优点：
+
+- 提高响应速度（减少了创建新线程的时间）
+- 降低资源消耗（重复利用线程池中的线程，不需要每次都创建）
+- 便于线程管理
+    - corePoolSize：核心池大小
+    - maximumPoolSize：最大线程数
+    - keepAliveTime：线程没有任务时最多保持多长时间后会终止
+
+### 创建线程池
+
+使用Executor静态工厂
+
+| 方法                             | 描述                                                         |
+| -------------------------------- | ------------------------------------------------------------ |
+| newCachedThreadPool              | 返回一个带缓存的线程池，必要时创建新线程；空闲线程会被保留60秒 |
+| newFixedThreadPool               | 包含固定数量的线程；空闲线程会一直被保留；线程数由参数决定   |
+| newSingleThreadExecutor          | 只有一个线程的“池”，该线程顺序执行每一个提交的任务           |
+| newScheduledThreadPool           | 用于预定执行而构建的固定线程池，替代java.util.Timer          |
+| newSingleThreadScheduledExecutor | 用于预定执行而构建的单线程“池”                               |
+
+### 线程池常用方法
+
+- int getLargestPoolSize() 返回线程池在该执行器生命周期中的最大尺寸
+
+### 生命周期
+
+ExecutorService的声明周期有三种状态：运行、关闭、已停止。
+
+初始创建时处于运行状态。shutdown方法将执行平缓的关闭过程：不在接受新的任务，同时等待已经提交的任务执行完成--包括那些还未开始执行的任务。shutdownNow方法将执行粗暴的关闭过程：它将尝试取消所有运行中的任务，并且不在启动队列中尚未开始执行的任务。
+
+在ExecutorService关闭后提交的任务将由“拒绝执行处理器（Rejected Execution Handle）来处理”，它会抛弃任务，或者使得execute方法抛出一个未检查的Rejected-ExecutionException。等所有任务完成后，ExecutorService到达终止状态。可以调用awaitTermination来等待ExecutorService到达终止状态，或者通过调用isTerminated来轮询ExecutorService是否已经终止。通常在调用awaitTermination之后会立即调用shutdown，从而产生同步地关闭ExecutorService的效果。
+
+### 管理线程池队列任务
+
+ThreadPoolExcutor允许提供一个BlockingQueue（阻塞队列）来保存等待执行的任务。基本的任务排队方法有3种：无解队列、有届队列和同步移交（Synchronous Handoff）。队列的选择与其他配置参数有关，例如线程池大小等。
+
+newFixedThreadPool和newSingleThreadExecutor在默认情况会使用一个无界的LinkedBlockingQueue。如果任务到达速度大于处理速度，队列将无限制增加。
+
+比较稳妥的策略是使用有界队列，例如ArrayBlockingQueue、有界的LinkedBlockingQueue、PriorityBlockingQueue。会引发新的问题，队列满了怎么办，需要用到下面的各种饱和策略。在使用有界队列的时候，队列的大小与线程池的大小必须一起调节。如果线程池较小而队列较大，那么有助于减少内存使用量，降低CPU使用率，还能减少上下文切换，但可能会限制吞吐量。
+
+对于非常大的或者无界的线程池，可以通过使用SynchronousQueue来避免任务排队，以及直接将任务从生产者转移交给工作线程。SynchronousQueue不是真正意义上的队列，而是一种移交机制。要将一个任务放到SynchronousQueue中，必须有另一个空闲线程在等待接收任务。如果没有，并且线程池当前大小小于最大值，则创建一个新的线程，否则根据饱和策略，这个任务会被拒绝。只有当线程池是无界的或者可以拒绝任务的时候，SynchronousQueue才有实际价值。newCachedTHreadPool工厂方法中就使用了SynchronousQueue。
+
+### 饱和策略
+
+#### AbortPolicy
+
+Abort（中止）策略是默认的饱和策略，该策略将抛出未检查的RejectedExecutionException。调用者可以捕获这个异常，并根据需求编写处理代码。
+
+#### CallerRunsPolicy
+
+调用者运行策略实现了一种调节机制，该策略既不会抛弃任务，也不会抛出异常，而是将某些任务回退到调用者，从而降低新任务的流量。它不会在线程池中的某个线程执行新提交的任务，而是在一个调用了execute的主线程中执行该任务。由于执行该任务需要一定时间，因此在这段时间内主线程不会调用accept，从而到达的请求被保存在TCP的缓存队列而不是在应用程序。
+
+#### DiscardPolicy
+
+当新提交的任务无法保存到队列等待执行时，抛弃（Discard）策略会抛弃该任务。
+
+#### DiscardOldestPolicy
+
+抛弃最旧的策略会抛弃下一个将被执行的任务，然后尝试重新提交新的任务。如果工作队列是一个优先队列，则该策略会抛弃优先级最高的任务，因此最好不要将该策略与优先级队列放在一起使用。
+
+# 多线程
+
 
 
 # 生产力
