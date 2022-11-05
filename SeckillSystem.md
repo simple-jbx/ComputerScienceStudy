@@ -5,9 +5,10 @@
 ## 技术点与实施方案
 
 <div align='center'>
-    <img src='./imgs/seckill.svg' width='1600px'>
+    <img src='./imgs/Project/Seckill/seckill.svg' width='1600px'>
 	</br></br>秒杀系统技术点与方案
 </div>
+
 
 
 

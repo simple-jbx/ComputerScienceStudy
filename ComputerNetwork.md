@@ -95,9 +95,10 @@ HTTPS实质上是非对称加密传输对称密钥，对称加密传输报文，
 7. 通信双方可用对称密钥来加密解密信息。
 
 <div align='center'>
-    <img src='./imgs/https.png' width='800px'>
+    <img src='./imgs/ComputerNetwork/https.png' width='800px'>
     <br/><br/>HTTPS加密过程
 </div>
+
 
 
 ## 传输层
@@ -105,17 +106,19 @@ HTTPS实质上是非对称加密传输对称密钥，对称加密传输报文，
 ### 传输控制协议（Transmission Control Protocol，TCP）
 
 <div align='center'>
-    <img src='./imgs/TCP02.png' width='1000px'>
+    <img src='./imgs/ComputerNetwork/TCP02.png' width='1000px'>
     <br/><br/>TCP包头
 </div>
+
 
 
 #### 三次握手
 
 <div align='center'>
-    <img src='./imgs/TCP01.png' width='1000px'>
+    <img src='./imgs/ComputerNetwork/TCP01.png' width='1000px'>
     <br/><br/>TCP三次握手
 </div>
+
 ##### 为什么三次握手
 
 主要有两方面的原因：
@@ -228,7 +231,7 @@ u32 secure_tcp_seq(__be32 saddr, __be32 daddr,
 #### 四次挥手
 
 <div align='center'>
-    <img src='./imgs/TCP03.png' width='1000px'>
+    <img src='./imgs/ComputerNetwork/TCP03.png' width='1000px'>
     <br/><br/>TCP四次挥手
 </div>
 
@@ -262,22 +265,19 @@ CLOSE-WAIT是被动关闭形成的，当收到主动关闭链接方的FIN报文�
 	如果校验和为0，则最终校验结果为16位全1（65535，二进制反码），如果传送的校验和为0，则说明发送端没有计算校验和。
 
 	<div align='center'>
-	    <img src='./imgs/20210921191508.png' width='1000px'>
+	    <img src='./imgs/ComputerNetwork/20210921191508.png' width='1000px'>
 	    <br/><br/>计算校验和的伪首部
 	</div>
 
 
-	<div align='center'>
-	    <img src='./imgs/20210921200313.png' width='1000px'>
-	    <img src='./imgs/20210921200329.png' width='1000px'>
-	    <br/><br/>输入TCP段的校验和检测
-	    <img src='./imgs/20210921200811.png' width='1000px'>
-	    <br/><br/>输出TCP段的校验和检测
-	</div>
 
-
-​	
-
+<div align='center'>
+    <img src='./imgs/ComputerNetwork/20210921200313.png' width='1000px'>
+    <img src='./imgs/ComputerNetwork/20210921200329.png' width='1000px'>
+    <br/><br/>输入TCP段的校验和检测
+    <img src='./imgs/ComputerNetwork/20210921200811.png' width='1000px'>
+    <br/><br/>输出TCP段的校验和检测
+</div>
 - 序列号
 
 - 超时重传

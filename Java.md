@@ -66,10 +66,9 @@
 package.png
 
 <div align='center'>
-    <img src='./imgs/package.png' width='600px'>
+    <img src='./imgs/Java/1.8/package.png' width='300px'>
 	</br></br>Integer i = 10;int n = i;字节码
 </div>
-
 
 
 ## 常量池
@@ -360,9 +359,10 @@ public final class StringBuilder
 ## 异常
 
 <div align='center'>
-    <img src='./imgs/JAVAThrowable.svg' width='1200px'>
+    <img src='./imgs/Java/1.8/JAVAThrowable.svg' width='1000px'>
     </br></br>JAVA异常
 </div>
+
 # 并发、锁
 
 ## Atomic原子类型
@@ -370,9 +370,10 @@ public final class StringBuilder
 具有原子/原子特征的类。
 
 <div align='center'>
-    <img src='./imgs/JUC.svg' width='1000px'>
+    <img src='./imgs/Java/1.8/JUC.svg' width='500px'>
     </br></br>JUC包下包含的类（JDK1.8）
 </div>
+
 
 根据操作的类型可以将JUC包中的原子类分为4类。
 
@@ -461,16 +462,17 @@ CAS的原理是拿期望的值和原本的一个值作比较，如果相同则�
 当某个线程请求一个由其他线程持有的锁时，发出请求的线程就会阻塞。然而，由于内置锁是可重入的，因此如果某个线程视图获得一个已经由它自己所持有的锁，那么这个请求就会成功。“重入”意味着获取锁的操作粒度是“线程”，而不是“调用”。重入的一种实现方法是，为每个锁关联一个获取计数值和一个所有者线程。当计数值为0时，这个锁就认为是没有被任何线程持有。当线程请求一个未被持有的锁时，JVM将记下锁的持有者，并且将获取计数值置为1.如果同一个线程再次获取这个锁，计数值将递增，而当线程退出同步代码块时，计数器会相应递减。当计数值为0时，这个锁将被释放。
 
 <div align='center'>
-    <img src='./imgs/JAVALock.svg' width='1000px'>
+    <img src='./imgs/Java/1.8/JAVALock.svg' width='800px'>
     </br></br><a href='https://zhuanlan.zhihu.com/p/56512421'>JAVA锁</a>
 </div>
+
 # 集合
 
 [JAVA集合源码](https://github.com/simple-jbx/SourceCode/tree/main/JAVA/JDK8Src/java/util/Collection.java)
 
 <div align='center'>
-    <img src='./imgs/Collection01.png' width='1200px'>
-    <img src='./imgs/Collection02.png' width='1200px'>
+    <img src='./imgs/Java/1.8/Collection01.png' width='1200px'>
+    <img src='./imgs/Java/1.8/Collection02.png' width='1200px'>
     </br></br>JAVA集合
 </div>
 
@@ -576,9 +578,10 @@ static class Node<K,V> implements Map.Entry<K,V> {
 #### HashMap扩容
 
 <div align='center'>
-    <img src='./imgs/HashMapResize.png' width='1400px'>
+    <img src='./imgs/Java/1.8/HashMapResize.png' width='1400px'>
     <br/><br/>HashMap扩容
 </div>
+
 
 
 
@@ -662,9 +665,10 @@ static class Node<K,V> implements Map.Entry<K,V> {
 #### HashMap Put
 
 <div align='center'>
-    <img src='./imgs/HashMapPut.svg' width='1800px'>
+    <img src='./imgs/Java/1.8/HashMapPut.svg' width='1800px'>
     <br/><br/>HashMap Put
 </div>
+
 
 
 
@@ -786,9 +790,9 @@ static class Node<K,V> implements Map.Entry<K,V> {
     类似HashMap，Node数组+链表/红黑树，采用CAS+synchronized来保证线程安全。synchronized只锁链表或红黑树的头结点，锁的粒度更细，竞争变小，效率提高。
 
 <div align='center'>
-    <img src='./imgs/20210921163557.png' width='1200px'>
+    <img src='./imgs/Java/1.8/20210921163557.png' width='1200px'>
     </br></br>JDK1.7 ConcurrentHashMap
-    <img src='./imgs/20210921163736.png' width='1200px'>
+    <img src='./imgs/Java/1.8/20210921163736.png' width='1200px'>
     </br></br>JDK1.8 ConcurrentHashMap
 </div>
 
@@ -797,9 +801,10 @@ static class Node<K,V> implements Map.Entry<K,V> {
 数组+链表，链表解决哈希冲突，整个数组都是synchronized修饰的，线程安全，锁的粒度太大，竞争激烈，效率低
 
 <div align='center'>
-    <img src='./imgs/20210921164630.png' width='1200px'>
+    <img src='./imgs/Java/1.8/20210921164630.png' width='1200px'>
     </br></br>HashTable
 </div>
+
 
 #### HashMap、ConcurrentHashMap、HashMap的区别
 
@@ -1102,9 +1107,10 @@ public void deleteOnExit();
 适用于连接数目比较小且相对固定的架构，对服务器的要求比较高，对并发有局限性。JDK1.4之前唯一的选择。
 
 <div align='center'>
-    <img src='./imgs/BIO.jpg' width='500px'>
+    <img src='./imgs/Java/1.8/BIO.jpg' width='500px'>
     </br></br>BIO
 </div>
+
 
 
 **缺点**：
@@ -1130,9 +1136,10 @@ NIO面向缓冲区，数据读到一个它稍后处理的缓冲区中。
 NIO可以用一个线程处理多个操作，并发能力远远大于BIO。
 
 <div align='center'>
-    <img src='./imgs/NIO.jpg' width='300px'>
+    <img src='./imgs/Java/1.8/NIO.jpg' width='300px'>
     </br></br>NIO Selector、Channel、Buffer关系图
 </div>
+
 
 
 - 每个Channel都会对应一个Buffer
@@ -1697,7 +1704,7 @@ Optional类的Javadoc描述：这是一个可以为null的容器对象。如果�
 可调用getState方法获取线程当前状态
 
 <div align='center'>
-    <img src='./imgs/ThreadState.jpg' width='800px'>
+    <img src='./imgs/Java/1.8/ThreadState.jpg' width='800px'>
     </br></br>线程状态
 </div>
 
@@ -1778,9 +1785,10 @@ public class Lazy {
 ```
 
 <div align='center'>
-    <img src='./imgs/synchronized001.png' width='800px'>
+    <img src='./imgs/Java/1.8/synchronized001.png' width='500px'>
     </br></br>synchronized同步
 </div>
+
 
 
 synchronized同步语句块的实现使用的是monitorenter和monitorexit指令。

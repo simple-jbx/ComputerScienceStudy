@@ -227,9 +227,10 @@ void HeapSort(ElemType[] A, int len) {
 ```
 
 <div align='center'>
-    <img src='./imgs/20210831120047.png' width=1000px>
-     <img src='./imgs/20210831120117.png' width=1000px>
+    <img src='./imgs/DataStruct/20210831120047.png' width=1000px>
+     <img src='./imgs/DataStruct/20210831120117.png' width=1000px>
 </div>
+
 
 
 

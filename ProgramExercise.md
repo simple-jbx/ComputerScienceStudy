@@ -942,8 +942,9 @@ public static int bitCount(int i) {
 卡特兰数
 
 <div align='center'>
-    <img src='./imgs/02.png' width=800px>
+    <img src='./imgs/ProgramExercise/02.png' width=800px>
 </div>
+
 
 
 ```java

@@ -48,9 +48,10 @@
 
 
 <div align='center'>
-    <img src='./imgs/Singleton.png' width='1000px'>
+    <img src='./imgs/DesignPattern/Singleton.png' width='1000px'>
     </br></br>单例模式
 </div>
+
 
 
 ```java
@@ -123,9 +124,10 @@ public class Lazy {
 
 
 <div align='center'>
-    <img src='./imgs/SimpleFactory.png' width='1400px'>
+    <img src='./imgs/DesignPattern/SimpleFactory.png' width='1400px'>
     </br></br>简单工厂模式
 </div>
+
 
 
 ```java
@@ -220,7 +222,6 @@ public class OperationFactory {
         System.out.println(oper.getResult());
     }
 }
-
 ```
 
 ## 代理模式

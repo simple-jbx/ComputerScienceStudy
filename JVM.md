@@ -13,7 +13,7 @@
 ### 运行时数据区
 
 <div align='center'>
-    <img src='./imgs/JVMRuntimeDataArea.svg' width='800px'>
+    <img src='./imgs/Java/JVM/JVMRuntimeDataArea.svg' width='800px'>
     </br></br>Java虚拟机运行时数据区
 </div>
 
@@ -84,9 +84,9 @@ JDK1.4中新引入了NIO（New Input/Output）类，一种基于通道和缓冲�
 句柄访问和直接指针访问。句柄稳定，对象地址改变只需更改句柄中的地址即可，直接指针效率高，速度快，HotSpot使用直接指针进行对象访问。
 
 <div align='center'>
-    <img src='./imgs/JVM002.png' width='800px'>
+    <img src='./imgs/Java/JVM/JVM002.png' width='800px'>
     </br></br>句柄访问
-	<img src='./imgs/JVM004.png' width='800px'>
+	<img src='./imgs/Java/JVM/JVM004.png' width='800px'>
 	</br></br>直接指针访问
 </div>
 
@@ -103,11 +103,12 @@ Garbage Collection：哪些内存需要回收、什么时候回收、如何回�
 #### 引用计数法
 
 <div align='center'>
-    <img src='./imgs/20210909113712.png' width='800px'>
-    <img src='./imgs/20210909113731.png' width='800px'>
-    <img src='./imgs/20210909113748.png' width='800px'>
+    <img src='./imgs/Java/JVM/20210909113712.png' width='800px'>
+    <img src='./imgs/Java/JVM/20210909113731.png' width='800px'>
+    <img src='./imgs/Java/JVM/20210909113748.png' width='800px'>
     </br></br>引用计数法
 </div>
+
 
 
 
@@ -115,9 +116,10 @@ Garbage Collection：哪些内存需要回收、什么时候回收、如何回�
 #### 可达性分析法
 
 <div align='center'>
-    <img src='./imgs/20210909113911.png' width='800px'>
+    <img src='./imgs/Java/JVM/20210909113911.png' width='800px'>
     </br></br>引用计数法
 </div>
+
 在Java技术体系里面，固定可作为GC Roots的对象包括以下几种： 
 
 - 在虚拟机栈（栈帧中的本地变量表）中引用的对象，譬如各个线程被调用的方法堆栈中使用到的 参数、局部变量、临时变量等。 
@@ -191,9 +193,10 @@ Garbage Collection：哪些内存需要回收、什么时候回收、如何回�
 缺点：产生大量不连续碎片，有可能导致后续提前触发新的垃圾回收
 
 <div align='center'>
-    <img src='./imgs/GarbageCollectionAro01.png' width='800px'>
+    <img src='./imgs/Java/JVM/GarbageCollectionAro01.png' width='800px'>
     </br></br>标记-清除算法
 </div>
+
 
 
 
@@ -205,18 +208,20 @@ Garbage Collection：哪些内存需要回收、什么时候回收、如何回�
 缺点：可用最大内存为总内存的一半，代价太大。
 
 <div align='center'>
-    <img src='./imgs/GarbageCollectionAro021.png' width='800px'>
-    <img src='./imgs/GarbageCollectionAro022.png' width='800px'>
+    <img src='./imgs/Java/JVM/GarbageCollectionAro021.png' width='800px'>
+    <img src='./imgs/Java/JVM/GarbageCollectionAro022.png' width='800px'>
     </br></br>复制算法
 </div>
+
 
 
 #### 标记-整理算法
 
 <div align='center'>
-    <img src='./imgs/GarbageCollectionAro031.png' width='800px'>
+    <img src='./imgs/Java/JVM/GarbageCollectionAro031.png' width='800px'>
     </br></br>标记-整理算法
 </div>
+
 ### Hotspot垃圾回收算法细节
 
 #### 根节点枚举
@@ -328,7 +333,7 @@ if (CARD_TABLE[this address >> 9] != 0)
 #### Serial收集器
 
 <div align='center'>
-    <img src='./imgs/20210903152828.png' width='800px'>
+    <img src='./imgs/Java/JVM/20210903152828.png' width='800px'>
     </br></br>Serial收集器
 </div>
 
@@ -337,18 +342,20 @@ if (CARD_TABLE[this address >> 9] != 0)
 #### ParNew收集器
 
 <div align='center'>
-    <img src='./imgs/ParNew.png' width='800px'>
+    <img src='./imgs/Java/JVM/ParNew.png' width='800px'>
     </br></br>ParNew收集器
 </div>
+
 
 
 
 #### Parallel Scavenge收集器
 
 <div align='center'>
-    <img src='./imgs/ParallelScavenge.png' width='800px'>
+    <img src='./imgs/Java/JVM/ParallelScavenge.png' width='800px'>
     </br></br>Parallel Scavenge收集器
 </div>
+
 
 
 
@@ -357,7 +364,7 @@ if (CARD_TABLE[this address >> 9] != 0)
 
 
 <div align='center'>
-    <img src='./imgs/SerialOld.png' width='800px'>
+    <img src='./imgs/Java/JVM/SerialOld.png' width='800px'>
     </br></br>Serial Old收集器
 </div>
 
@@ -366,31 +373,34 @@ if (CARD_TABLE[this address >> 9] != 0)
 #### Parallel Old 收集器
 
 <div align='center'>
-    <img src='./imgs/ParallelOld.png' width='800px'>
+    <img src='./imgs/Java/JVM/ParallelOld.png' width='800px'>
     </br></br>Parallel Old收集器
 </div>
+
 
 
 #### CMS 收集器
 
 <div align='center'>
-    <img src='./imgs/CMS01.png' width='800px'>
-    <img src='./imgs/CMS02.png' width='800px'>
+    <img src='./imgs/Java/JVM/CMS01.png' width='800px'>
+    <img src='./imgs/Java/JVM/CMS02.png' width='800px'>
     </br></br>CMS收集器
 </div>
+
 
 
 #### G1（Garbage-First）收集器
 
 <div align='center'>
-    <img src='./imgs/G101.png' width='800px'>
-    <img src='./imgs/G102.png' width='800px'>
-    <img src='./imgs/G103.png' width='800px'>
-    <img src='./imgs/G104.png' width='800px'>
-    <img src='./imgs/G105.png' width='800px'>
-    <img src='./imgs/G106.png' width='800px'>
+    <img src='./imgs/Java/JVM/G101.png' width='800px'>
+    <img src='./imgs/Java/JVM/G102.png' width='800px'>
+    <img src='./imgs/Java/JVM/G103.png' width='800px'>
+    <img src='./imgs/Java/JVM/G104.png' width='800px'>
+    <img src='./imgs/Java/JVM/G105.png' width='800px'>
+    <img src='./imgs/Java/JVM/G106.png' width='800px'>
     </br></br>G1收集器
 </div>
+
 
 
 #### Epsilon（JDK11.0）低开销垃圾回收器
@@ -544,11 +554,12 @@ Class文件格式采用一种类似于C语言Struct的伪结构来存储数据�
 上表中17种数据类型的结构总表如下表。
 
 <div align='center'>
-    <img src = './imgs/20211122164842.png' width='800px'>
-    <img src = './imgs/20211122165031.png' width='800px'>
-    <img src = './imgs/20211122165106.png' width='800px'>
+    <img src = './imgs/Java/JVM/20211122164842.png' width='800px'>
+    <img src = './imgs/Java/JVM/20211122165031.png' width='800px'>
+    <img src = './imgs/Java/JVM/20211122165106.png' width='800px'>
     </br></br>17种常量结构总表
 </div>
+
 
 
 
@@ -642,10 +653,11 @@ Class文件、字段表、方法表都可以 携带自己的属性表集合，�
 
 
 <div align='center'>
-    <img src='./imgs/20211123155807.png' width='800px'>
-    <img src='./imgs/20211123155807.png' width='800px'>
+    <img src='./imgs/Java/JVM/20211123155807.png' width='800px'>
+    <img src='./imgs/Java/JVM/20211123155807.png' width='800px'>
 	</br></br>《虚拟机规范》预定义的属性
 </div>
+
 
 对于每一个属性，它的名称都要从常量池中引用一个CONSTANT_Utf8_info类型的常量来表示， 而属性值的结构则是完全自定义的，只需要通过一个u4的长度属性去说明属性值所占用的位数即可。 一个符合规则的属性表应该满足下表所定义的结构。
 
@@ -710,9 +722,10 @@ Class文件、字段表、方法表都可以 携带自己的属性表集合，�
 
 
 <div align='center'>
-    <img src='./imgs/ClassLoad01.png' width='1000px'>
+    <img src='./imgs/Java/JVM/ClassLoad01.png' width='1000px'>
     </br></br>类的声明周期
 </div>
+
 ### 类加载过程
 
 #### 加载
@@ -813,9 +826,10 @@ public static final int value = 123;
 站在Java虚拟机的角度来看，只存在两种不同的类加载器：一种是启动类加载器（Bootstrap ClassLoader），这个类加载器使用C++语言实现（仅限于HotSpot），是虚拟机自身的一部分；另外一种就是其他所有 的类加载器，这些类加载器都由Java语言实现，独立存在于虚拟机外部，并且全都继承自抽象类 java.lang.ClassLoader。并且这些加载器之间并不是继承关系，而是组合关系。
 
 <div align='center'>
-    <img src = './imgs/ParentsDelegationModel.svg' width='800px'>
+    <img src = './imgs/Java/JVM/ParentsDelegationModel.svg' width='400px'>
 	</br></br>类加载器双亲委派模型
 </div>
+
 
 双亲委派模型工作过程：如果一个类加载器收到了类加载的请求，它首先不会自己去尝试加载这个类，而是把这个请求委派给自己的父类加载器去完成，每一个层次的类加载器都是如此，因此所有的加载请求最终都应该传送到最顶层的启动类加载器中，只有当父类加载器反馈自己无法完成这个加载请求（它的搜索范围中没有找到所需的类）时，子加载器才会尝试自己去完成加载。
 
@@ -902,25 +916,28 @@ JDK9引入模块系统后。
 ##### JAVA模块化系统（Java Platform Module System，JPMS）
 
 <div align='center'>
-    <img src = './imgs/ParentsDelegationModel1.9.svg' width='800px'>
+    <img src = './imgs/ParentsDelegationModel1.9.svg' width='400px'>
 	</br></br>JDK1.9后类加载器双亲委派模型
 </div>
+
 
 JDK 9中虽然仍然维持着三层类加载器和双亲委派的架构，但类加载的委派关系也发生了 变动。当平台及应用程序类加载器收到类加载请求，在委派给父加载器加载前，要先判断该类是否能 够归属到某一个系统模块中，如果可以找到这样的归属关系，就要优先委派给负责那个模块的加载器 完成加载，也许这可以算是对双亲委派的第四次破坏。
 
 <div align='center'>
-    <img src = './imgs/20211112173504.png' width='1000px'>
+    <img src = './imgs/Java/JVM/20211112173504.png' width='1000px'>
 	</br></br>JDK1.9后类加载器双亲委派模型
 </div>
+
 
 
 
 ## [内存模型](https://zhuanlan.zhihu.com/p/29881777)
 
 <div align='center'>
-    <img src='./imgs/JMM02.png' width='800px'>
+    <img src='./imgs/Java/JVM/JMM02.png' width='800px'>
     </br></br>实际硬件中处理器、高速缓存、主内存间的交互关系
 </div>
+
 
 
 JAVA Memory Model（JMM），屏蔽掉各种硬件和操作系统的内存访问差异，以实现让Java程序在各种平台下都能达到一致的内存访问效果。
@@ -928,67 +945,13 @@ JAVA Memory Model（JMM），屏蔽掉各种硬件和操作系统的内存访问
 主要目标：定义程序中各个变量的访问规则，即在虚拟机中将变量存储到内存和从内存中取出变量这样的底层细节。这里的变量包括了实例字段、静态字段和构成数组对象的元素，但不包括局部变量与方法参数，因为后者是线程私有的。
 
 <div align='center'>
-    <img src='./imgs/JMM.png' width='500px'>
-    <img src='./imgs/JMM02.jpg' width='500px'>
+    <img src='./imgs/Java/JVM/JMM.png' width='500px'>
+    <img src='./imgs/Java/JVM/JMM02.jpg' width='500px'>
     </br></br>JMM（内存模型）
 </div>
 
 ## JVM调优
 
-
-
-
-
-# 大数据与分布式
-
-## 常用的分布式协议与理论
-
-## Kubernetes
-
-### 入门
-
-
-
-<div align='center'>
-    <img src='./imgs/k8s001.png' width='800px'>
-    <img src='./imgs/k8s002.png' width='800px'>
-    <img src='./imgs/k8s003.png' width='800px'>
-    </br></br>k8s基础知识
-</div>
-
-## 分布式操作系统
-
-### 概述
-
-#### 什么是分布式操作系统
-
-是一些独立的计算机的组合，但是对于该系统的用户来说，系统就像一台计算机一样
-
-##### 分布式操作系统相对于集中式操作系统的优点
-
-| 项目         | 描述                                       |
-| ------------ | ------------------------------------------ |
-| 经济         | 微处理机提供了比大型主机更好的性价比       |
-| 速度         | 分布式系统总的计算能力比单个大型主机的更强 |
-| 固有的分布性 | 一些应用设计到空间上分散的机器             |
-| 可靠性       | 如果一台机器崩溃，整个系统还可以运转       |
-| 渐增         | 计算能力可以逐渐有所增加                   |
-
-##### 分布式系统相对于孤立的（个人）计算机的优点
-
-| 项目     | 描述                                           |
-| -------- | ---------------------------------------------- |
-| 数据共享 | 允许多个用户访问一个公共的数据库               |
-| 设备共享 | 允许多个用户共享昂贵的外围设备（如彩色打印机） |
-| 通信     | 使得人们之间的通信更加容易，如通过电子邮件     |
-| 灵活性   | 用最有效的方式将工作负荷分配到可用的机器上     |
-
-
-
-<div align='center'>
-    <img src='./imgs/20210918201800.png' width='800px'>
-    </br></br>并行及分布式计算机系统分类法
-</div>
 # 生产力
 
 ## Java命令行调试

@@ -187,9 +187,10 @@ mvn package -Pdev -Dmaven.test.skip=true
 2021.1 
 
 <div align='center'>
-    <img src='./imgs/IDEAConfig001.png' width='600px'>
+    <img src='./imgs/Maven/IDEAConfig001.png' width='600px'>
 	</br></br>IEDA配置全局Maven
 </div>
+
 
 
 
@@ -198,10 +199,10 @@ mvn package -Pdev -Dmaven.test.skip=true
 
 
 <div align='center'>
-    <img src='./imgs/IDEACreateMaven001.png' width='600px'>
-    <img src='./imgs/IDEACreateMaven002.png' width='600px'>
-    <img src='./imgs/IDEACreateMaven003.png' width='600px'>
-    <img src='./imgs/IDEACreateMaven004.png' width='600px'>
+    <img src='./imgs/Maven/IDEACreateMaven001.png' width='600px'>
+    <img src='./imgs/Maven/IDEACreateMaven002.png' width='600px'>
+    <img src='./imgs/Maven/IDEACreateMaven003.png' width='600px'>
+    <img src='./imgs/Maven/IDEACreateMaven004.png' width='600px'>
 	</br></br>IEDA创建Maven项目
 </div>
 

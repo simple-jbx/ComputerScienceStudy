@@ -712,14 +712,16 @@ spec:
 ```
 
 <div align='center'>
-    <img src='./imgs/xxl-job/image-20221023221709860.png' width='800px'>
+    <img src='./imgs/k8s/image-20221105160322038.png' width='800px'>
 </div>
+
+
 
 ### ClusterIP
 
 ```bash
 # 等同于没有--type的
-kubectl expose deployment my-dep --port=8000 --target-port=80 --type=ClusterIP
+kubectl expose deployment my-app --port=8000 --target-port=80 --type=ClusterIP
 ```
 
 ```yaml
@@ -727,8 +729,8 @@ apiVersion: v1
 kind: Service
 metadata:
   labels:
-    app: my-dep
-  name: my-dep
+    app: my-app
+  name: my-app
 spec:
   ports:
   - port: 8000

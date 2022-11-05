@@ -11,15 +11,17 @@
 
 
 <div align='center'>
-    <img src='./imgs/Database01.png' width='500px'>
+    <img src='./imgs/Database/Database01.png' width='400px'>
     </br></br>规范化过程
 </div>
 
 
+
 <div align='center'>
-    <img src='./imgs/Database02.png' width='300px'>
+    <img src='./imgs/Database/Database02.png' width='200px'>
     </br></br>各种范式之间的关系
 </div>
+
 
 
 ### 主键和外键
