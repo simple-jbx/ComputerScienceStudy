@@ -1681,7 +1681,13 @@ Optional类的Javadoc描述：这是一个可以为null的容器对象。如果�
 
 ## 线程状态
 
-- New（新创建）
+- 
+
+- ```
+    NEW
+    ```
+
+- （新创建）
 
     Thread thread = new Thread(task)
 
@@ -1902,7 +1908,7 @@ ThreadLocal对象通常用于防止对可变的单实例变量（Singleton）或
 - 实现Callable接口
 - 线程池
 
-### Thread
+### [Thread](https://github.com/simple-jbx/SourceCode/blob/main/JAVA/JDK8Src/java/lang/Thread.java)
 
 ```java
 /*
@@ -1930,7 +1936,23 @@ public final synchronized void join(long millis)
 /*
   判断线程是否还存活
 */    
-public final native boolean isAlive();    
+public final native boolean isAlive();   
+
+/*
+  设置该线程的名称
+*/
+public final synchronized void setName(String name);
+
+/*
+ 获取该线程的名称
+*/
+public final String getName();
+
+/*
+ 返回当前线程。在Thread子类中就是this，通常用于主线程和Runnable实现类
+*/
+public static native Thread currentThread();
+
 ```
 
 ### 实现 Runnable 接口和 Callable 接口的区别
@@ -1939,6 +1961,36 @@ public final native boolean isAlive();
 
 1. **`execute()`方法用于提交不需要返回值的任务，所以无法判断任务是否被线程池执行成功与否；**
 2. **`submit()`方法用于提交需要返回值的任务。线程池会返回一个 `Future` 类型的对象，通过这个 `Future` 对象可以判断任务是否执行成功**，并且可以通过 `Future` 的 `get()`方法来获取返回值，`get()`方法会阻塞当前线程直到任务完成，而使用 `get(long timeout，TimeUnit unit)`方法则会阻塞当前线程一段时间后立即返回，这时候有可能任务没有执行完。
+
+### 线程的调度
+
+- 调度策略
+    - 时间片
+    - 抢占式：高优先级的线程抢占CPU
+- Java的调度方法
+    - 同优先级的线程组成先进先出队列，使用时间片策略
+    - 对高优先级，使用优先调度的抢占式策略
+
+### 线程的优先级
+
+- 优先等级
+    - MAX_PRIORITY:10
+    - MIN_PRIORITY:1
+    - NORM_PRIORITY:5
+- 涉及的方法
+    - getPriority() 返回线程优先值
+    - setPriority(int newPriority) 改变线程的优先级
+- note
+    - 线程创建时继承父线程的优先级
+    - 低优先级知识获得调度的概率低，并非一定是在高优先级线程之后才被调用
+
+### 线程的分类
+
+- 守护线程、用户线程
+- 唯一的区别是判断JVM何时离开
+- 守护线程是用来服务用户进程的，通过在start()方法前调用`thread.setDaemon(true)`可以把一个用户线程编程一个守护进程
+- Java垃圾回收就是一个典型的守护进程
+- 若JVM中都是守护线程，当前JVM将推出
 
 ## 线程池
 
