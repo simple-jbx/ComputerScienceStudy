@@ -1681,13 +1681,7 @@ Optional类的Javadoc描述：这是一个可以为null的容器对象。如果�
 
 ## 线程状态
 
-- 
-
-- ```
-    NEW
-    ```
-
-- （新创建）
+- New（新创建）
 
     Thread thread = new Thread(task)
 
@@ -1713,10 +1707,11 @@ Optional类的Javadoc描述：这是一个可以为null的容器对象。如果�
     <img src='./imgs/Java/1.8/ThreadState.jpg' width='800px'>
     </br></br>线程状态
 </div>
-
 ## 线程同步
 
-### synchronized(内置锁/互斥锁、可重入)
+### 锁(详见并发、锁章节)
+
+#### synchronized(内置锁/互斥锁、可重入)
 
 ```java
 package simple.jbx.java.com.singleton;
@@ -1822,7 +1817,26 @@ while(!asleep) {
 }
 ```
 
-### wait和notify
+### wait、notify和notifyAll
+
+- wait()
+    - 一旦执行此方法，当前线程就进入阻塞状态，并释放同步监视器
+- notify()
+    - 一旦执行此方法，就会唤醒被wait的一个线程，如果有多个线程被wait，就唤醒优先级高的那个
+- notifyAll()
+    - 一旦执行此方法，就会唤醒所有被wait的线程
+- 三个方法必须使用在同步代码块或同步方法中。调用者必须是同步代码块或者同步方法中的同步监视器，否则会出现`IllegalMonitorStateException`异常。
+
+### sleep和wait的异同
+
+- 相同点
+    - 一旦执行方法，都可以使得当前线程进入阻塞状态
+- 不同点
+    - 声明位置不同：sleep()在Thread类中，wait()在Object类中。
+    - 调用范围不同：sleep()可以在认可需要的场景下调用。wait()必须在同步代码块或同步方法中。
+    - 是否释放同步监视器：sleep()不会释放，wait()会释放。
+
+
 
 ### 局部变量（ThreadLocal）
 
