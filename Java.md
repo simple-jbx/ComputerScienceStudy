@@ -346,15 +346,23 @@ public final class StringBuilder
 
 表示一个对象具有多种的状态。具体表现为父类的引用指向子类的实例。
 
-## JAVA反射
+### Java8中新日期时间API
 
-反射机制是在运行状态中，对于任意一个类，都能够知道这个类的所有属性和方法；对于任意一个对象，都能够调用它的任意一个方法和属性；这种动态获取的信息以及动态调用对象的方法的功能成为反射机制。
+`java.time`中包含了所有关于本地日期（LocalDate）、本地时间（LocalTime）、本地日期时间（LocalDateTime）、时区（ZonedDateTime）和持续时间（Duration）的类。
 
-优点：运行期类型的判断，动态加载类，提高代码灵活度
+- `java.time` 包含值对象的基础包
+- `java.time.chrono` 提供对不同的日历系统的访问
+- `java.time.format` 格式化和解析时间和日期
+- `java.time.temporal` 包括底层框架和扩展特性
+- `java.time.zone` 包含时区支持的类
 
-缺点：性能比直接的代码要慢
+#### LocalDate、LocalTime、LocalDateTime
 
-应用场景：Spring中的xml的配置模式、动态代理设计模式也采用了反射机制
+它们的实例是不可变对象，分别表示使用ISO-8601日历系统的日期、时间、日期和时间。
+
+- LocalDate代表IOS格式（yyyy-MM-dd）的日期。
+- LocalTime表示一个时间而不是日期。
+- LocalDateTime是用来表示日期和时间的。
 
 ## 异常
 
@@ -1975,6 +1983,13 @@ public static native Thread currentThread();
 
 1. **`execute()`方法用于提交不需要返回值的任务，所以无法判断任务是否被线程池执行成功与否；**
 2. **`submit()`方法用于提交需要返回值的任务。线程池会返回一个 `Future` 类型的对象，通过这个 `Future` 对象可以判断任务是否执行成功**，并且可以通过 `Future` 的 `get()`方法来获取返回值，`get()`方法会阻塞当前线程直到任务完成，而使用 `get(long timeout，TimeUnit unit)`方法则会阻塞当前线程一段时间后立即返回，这时候有可能任务没有执行完。
+3. 方法可以跑出异常、支持泛型返回值。
+
+#### Future接口
+
+- 可以对具体Runnable、Callable任务的执行结果进行取消、查询是否完成、获取结果等。
+- FutureTask是Future接口的唯一实现类
+- FutureTask同时实现了Runnable、Future接口。既可以作为Runnable被线程执行，又可以作为Future得到Callable的返回值。
 
 ### 线程的调度
 
@@ -2127,10 +2142,6 @@ Abort（中止）策略是默认的饱和策略，该策略将抛出未检查的
 #### DiscardOldestPolicy
 
 抛弃最旧的策略会抛弃下一个将被执行的任务，然后尝试重新提交新的任务。如果工作队列是一个优先队列，则该策略会抛弃优先级最高的任务，因此最好不要将该策略与优先级队列放在一起使用。
-
-# 多线程
-
-
 
 # 生产力
 
