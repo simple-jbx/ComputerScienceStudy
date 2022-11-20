@@ -495,11 +495,19 @@ UPDATE product SET price=price+50, `version`=`version_old` + 1 WHERE id=1 AND `v
 
 MyBatisX插件用法：https://baomidou.com/pages/ba5b24/
 
+# 其他
 
+## 操作符
 
-
-
-
+| 符号 | 替换符号 |
+| ---- | -------- |
+| <    | `&lt;`   |
+| <=   | `&lt;=`  |
+| >    | `&gt;`   |
+| >=   | `&gt;=`  |
+| &    | `&amp;`  |
+| ‘    | `&apos;` |
+| "    | `&quot;` |
 
 # Reference
 
