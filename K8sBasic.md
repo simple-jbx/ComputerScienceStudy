@@ -949,3 +949,81 @@ spec:
 ```
 
 ## 存储抽象
+
+docker可以将容器内存储目录挂载到物理机上，在使用K8s时，当该容器挂了时候，由于故障转移，在其他机器上在重新启动一个容器实例的时候，会丢失原有数据，因此将存储层抽象出来交给K8s统一管理，这样当故障转移时重新启动一个容器实例也不会丢失原来的数据。
+
+K8s并未指定固定的存储层框架，常用的有Glusterfs、NFS、CephFS。
+
+### 环境准备
+
+#### 所有节点
+
+```bash
+#所有机器安装
+yum install -y nfs-utils
+```
+
+#### 主节点
+
+```bash
+#nfs主节点
+echo "/nfs/data/ *(insecure,rw,sync,no_root_squash)" > /etc/exports
+
+mkdir -p /nfs/data
+systemctl enable rpcbind --now
+systemctl enable nfs-server --now
+#配置生效
+exportfs -r
+```
+
+#### 从节点
+
+```bash
+showmount -e 172.31.0.4 #从节点集群地址
+
+#执行以下命令挂载 nfs 服务器上的共享目录到本机路径 /root/nfsmount
+mkdir -p /nfs/data
+
+mount -t nfs 172.31.0.4:/nfs/data /nfs/data
+# 写入一个测试文件
+echo "hello nfs server" > /nfs/data/test.txt
+```
+
+#### 原生方式数据挂载
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: nginx-pv-demo
+  name: nginx-pv-demo
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: nginx-pv-demo
+  template:
+    metadata:
+      labels:
+        app: nginx-pv-demo
+    spec:
+      containers:
+      - image: nginx
+        name: nginx
+        volumeMounts:
+        - name: html
+          mountPath: /usr/share/nginx/html
+      volumes:
+        - name: html
+          nfs:
+            server: 172.31.0.4
+            path: /nfs/data/nginx-pv
+```
+
+### PV&PVC
+
+*PV：持久卷（Persistent Volume），将应用需要持久化的数据保存到指定位置*
+
+*PVC：持久卷申明（**Persistent Volume Claim**），申明需要使用的持久卷规格*
+
