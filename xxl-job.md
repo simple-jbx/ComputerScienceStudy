@@ -47,3 +47,52 @@
 
 `http://localhost:8080/xxl-job-admin/` 即可访问。
 
+## Example
+
+### 要执行的定时任务
+
+```java
+@Component
+public class MyJobHandler {
+
+    /**
+     * 需要加注解。该方法中编写定时任务的逻辑。
+     *
+     * @param: param
+     * @return: com.xxl.job.core.biz.model.ReturnT<java.lang.String>
+     * @author: simple.jbx
+     * @date: 2022/12/4 19:41
+     */
+    @XxlJob("myJobHandler")
+    public ReturnT<String> myJobHandler(String param) throws Exception {
+        XxlJobLogger.log("XXL-JOB, demoJobHandler. date:[{}]", new Date());
+
+        for (int i = 0; i < 5; i++) {
+            XxlJobLogger.log("beat at:" + i);
+            TimeUnit.SECONDS.sleep(2);
+        }
+        return ReturnT.SUCCESS;
+    }
+}
+```
+
+### 新建一个执行器
+
+机器地址可以是多个（集群）。相当于指定可以执行定时任务的机器。
+
+<div align='center'>
+    <img src='./imgs/xxl-job/001.png' width='600px'>
+	</br></br>新建执行器
+</div>
+
+### 新建任务
+
+指定执行任务参数、路由策略等。
+
+<div align='center'>
+    <img src='./imgs/xxl-job/002.png' width='600px'>
+	</br></br>新建任务</br></br>
+    <img src='./imgs/xxl-job/003.png' width='600px'>
+	</br></br>路由策略
+</div>
+

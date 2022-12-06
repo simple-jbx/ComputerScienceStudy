@@ -991,6 +991,8 @@ echo "hello nfs server" > /nfs/data/test.txt
 
 #### 原生方式数据挂载
 
+缺点：容器删除时，数据不会删除。不支持对存储空间的一些自定义操作（如限制大小等）。
+
 ```yaml
 apiVersion: apps/v1
 kind: Deployment
@@ -1026,4 +1028,118 @@ spec:
 *PV：持久卷（Persistent Volume），将应用需要持久化的数据保存到指定位置*
 
 *PVC：持久卷申明（**Persistent Volume Claim**），申明需要使用的持久卷规格*
+
+<div align='center'>
+    <img src='./imgs/k8s/012.png' width='800px'>
+</div>
+
+#### 创建PV池
+
+1. 静态供应
+
+    - ```bash
+        #nfs主节点
+        mkdir -p /nfs/data/01
+        mkdir -p /nfs/data/02
+        mkdir -p /nfs/data/03
+        ```
+
+2. 创建pv
+
+    - ```yaml
+        apiVersion: v1
+        kind: PersistentVolume
+        metadata:
+          name: pv01-10m
+        spec:
+          capacity:
+            storage: 10M
+          accessModes:
+            - ReadWriteMany
+          storageClassName: nfs
+          nfs:
+            path: /nfs/data/01
+            server: 172.31.0.4
+        ---
+        apiVersion: v1
+        kind: PersistentVolume
+        metadata:
+          name: pv02-1gi
+        spec:
+          capacity:
+            storage: 1Gi
+          accessModes:
+            - ReadWriteMany
+          storageClassName: nfs
+          nfs:
+            path: /nfs/data/02
+            server: 172.31.0.4
+        ---
+        apiVersion: v1
+        kind: PersistentVolume
+        metadata:
+          name: pv03-3gi
+        spec:
+          capacity:
+            storage: 3Gi
+          accessModes:
+            - ReadWriteMany
+          storageClassName: nfs
+          nfs:
+            path: /nfs/data/03
+            server: 172.31.0.4
+        ```
+
+#### PVC创建与绑定
+
+创建PVC
+
+```yaml
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: nginx-pvc
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 200Mi
+  storageClassName: nfs
+```
+
+创建Pod绑定PVC
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: nginx-deploy-pvc
+  name: nginx-deploy-pvc
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: nginx-deploy-pvc
+  template:
+    metadata:
+      labels:
+        app: nginx-deploy-pvc
+    spec:
+      containers:
+      - image: nginx
+        name: nginx
+        volumeMounts:
+        - name: html
+          mountPath: /usr/share/nginx/html
+      volumes:
+        - name: html
+          persistentVolumeClaim:
+            claimName: nginx-pvc
+```
+
+### ConfigMap
+
+抽取应用配置，并且可以自动更新。
 
