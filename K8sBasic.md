@@ -689,6 +689,10 @@ https://kubernetes.io/zh/docs/concepts/workloads/controllers/
 
 可以通过IP+端口访问也可以通过域名+端口访问，域名：服务名.所在名称空间.svc，例如service-name.default.scv。
 
+<div align='center'>
+    <img src='./imgs/k8s/013.png' width='800px'>
+</div>
+
 ```bash
 #暴露Deploy
 kubectl expose deployment my-dep --port=8000 --target-port=80
@@ -739,15 +743,13 @@ spec:
   type: ClusterIP
 ```
 
-<div align='center'>
-    <img src='./imgs/k8s/image-20221105160322038.png' width='800px'>
-</div>
 
 ### NodePort（集群外也可以访问）
 
 <div align='center'>
-    <img src='./imgs/k8s/image-20221105173248410.png' width='800px'>
+    <img src='./imgs/k8s/015.png' width='800px'>
 </div>
+
 
 每个机器都有一个公网IP，端口范围在30000-32767之间。
 
@@ -780,8 +782,9 @@ kubectl get pod,svc -n ingress-nginx
 ### 使用
 
 <div align='center'>
-    <img src='./imgs/k8s/image-20221105203035699.png' width='800px'>
+    <img src='./imgs/k8s/016.png' width='800px'>
 </div>
+
 
 ```yaml
 apiVersion: apps/v1
