@@ -1794,9 +1794,29 @@ public class LogAspect02 {
 <task:scheduled-tasks>
     <!--每隔2s执行一次任务 可配置多个定时任务-->
 	<task:scheduled ref="taskJob" method="job1" cron="0/2 * * * * ?" />
+    <!--每隔5s执行一次任务 可配置多个定时任务-->
+	<task:scheduled ref="taskJob" method="job2" cron="0/5 * * * * ?" />
+    <!--多个定时任务 在这里配置-->
 </task:scheduled-tasks>
 ```
 
 #### 测试定时任务
+
+```java
+public class Test
+{
+    public static void main( String[] args )
+    {
+        System.out.println( "测试定时任务！" );
+
+        //获取Spring上下文环境
+        ApplicationContext ac = new ClassPathXmlApplicationContext("spring.xml");
+        //获取指定bean对象
+        TaskJob taskJob = (TaskJob) ac.getBean("taskJob");
+    }
+}
+```
+
+
 
 ### 使用注解配置实现定时任务
