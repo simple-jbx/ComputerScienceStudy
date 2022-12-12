@@ -1146,3 +1146,94 @@ spec:
 
 抽取应用配置，并且可以自动更新。
 
+#### 创建配置，redis保存到k8s的etcd；
+
+```conf
+#redis.conf
+appendonly yes
+```
+
+
+
+```bash
+kubectl create cm redis-conf --from-file=redis.conf
+```
+
+
+
+```yaml
+#k8s创建的配置
+apiVersion: v1
+data: #配置的真正数据 key-value结构 key表示文件名 value配置文件的内容
+  redis.conf: |
+    appendonly yes
+kind: ConfigMap
+metadata:
+  creationTimestamp: "2022-12-10T06:48:56Z"
+  managedFields:
+  - apiVersion: v1
+    fieldsType: FieldsV1
+    fieldsV1:
+      f:data:
+        .: {}
+        f:redis.conf: {}
+    manager: kubectl-create
+    operation: Update
+    time: "2022-12-10T06:48:56Z"
+  name: redis.conf
+  namespace: default
+  resourceVersion: "19141206"
+  uid: 7d42a7ee-f52d-4356-ae65-8bd0c451cb5c
+```
+
+
+
+#### 创建Pod
+
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: redis
+spec:
+  containers:
+  - name: redis
+    image: redis
+    command:
+      - redis-server
+      - "/redis-master/redis.conf"  #指的是redis容器内部的位置
+    ports:
+    - containerPort: 6379
+    volumeMounts:
+    - mountPath: /data
+      name: data
+    - mountPath: /redis-master
+      name: config
+  volumes:
+    - name: data
+      emptyDir: {}
+    - name: config
+      configMap:
+        name: redis-conf
+        items:
+        - key: redis.conf
+          path: redis.conf
+```
+
+#### 修改ConfigMap
+
+```bash
+kubectl edit cm cmName
+```
+
+#### 检查配置是否更新成功
+
+```bash
+kubectl exec -it redis -- redis-cli
+
+127.0.0.1:6379> CONFIG GET appendonly
+1) "requirepass"
+2) ""
+```
+
+发现配置值未更改，由于Pod部署的中间件自己本身没有热更新的能力，需要重新启动Pod（k8s未直接提供相关命令）才能从关联的ConfigMap中获取更新后的值。
