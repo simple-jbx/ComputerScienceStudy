@@ -309,7 +309,7 @@ docker attach containerID
 #推荐使用 docker exec
 ```
 
-一般先试用-d进入后台，然后使用exec重新进入应用干活。
+一般先使用-d进入后台，然后使用exec重新进入应用干活。
 
 ### 从容器内拷贝文件到主机
 
@@ -590,6 +590,8 @@ docker run -d -p host_port:container_port redis:6.0.8
 #安装与入门版一致
 #加容器卷 将配置文件复制到容器卷目录下
 docker run -d -p 6379:6379 --name=redis6.0.8 --privileged=true -v /home/simple/docker-data/redis6.0.8/redis.conf:/etc/redis/redis.conf -v /home/simple/docker-data/redis6.0.8/data:/data redis:6.0.8 redis-server /etc/redis/redis.conf
+
+docker run -d -p 6379:6379 --name=redis6.0.8 --privileged=true -v /root/docker-data/redis-6.0.8/redis.conf:/etc/redis/redis.conf -v /root/docker-data/redis-6.0.8/data:/data redis:6.0.8 redis-server /etc/redis/redis.conf
 ```
 
 # 进阶

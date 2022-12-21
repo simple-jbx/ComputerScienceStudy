@@ -268,30 +268,32 @@ Flannel网络组件构建Pod之间的通信时需要的配置。
 
 2. 新建虚拟网卡
 
-	```shell
-	cat > /etc/sysconfig/network-scripts/ifcfg-eth0:1 <<EOF
-	BOOTPROTO=static
-	DEVICE=eth0:1
-	IPADDR=<公网IP>
-	PREFIX=32
-	TYPE=Ethernet
-	USERCTL=no
-	ONBOOT=yes
-	BROADCAST=<广播地址>
-	EOF
-	```
+  ```shell
+  #主机在公网上（不同的运营商上时需要，同一个运营商可以直接使用内网地址）
+  cat > /etc/sysconfig/network-scripts/ifcfg-eth0:1 <<EOF
+  BOOTPROTO=static
+  DEVICE=eth0:1
+  IPADDR=<公网IP>
+  PREFIX=32
+  TYPE=Ethernet
+  USERCTL=no
+  ONBOOT=yes
+  BROADCAST=<广播地址>
+  EOF
+  ```
 
 3. 初始化主节点（Master）
 
   ```bash
   #主节点初始化
   kubeadm init \
-  --apiserver-advertise-address=<公网IP> \
+  --apiserver-advertise-address=<公网IP>(或域名) \
   --control-plane-endpoint=simple-tx \
   --image-repository registry.cn-hangzhou.aliyuncs.com/lfy_k8s_images \
   --kubernetes-version v1.20.9 \
-  --service-cidr=10.96.0.0/16 \
-  --pod-network-cidr=10.244.0.0/16 \
+  --service-cidr=10.66.0.0/16 \
+  --pod-network-cidr=10.99.0.0/16 \
+  --image-repository registry.aliyuncs.com/google_containers \
   --v=5
   # service-cidr与pod-network-cidr以及各主机的网络不重叠
   ```
@@ -351,7 +353,7 @@ kubeadm token create --print-join-command
 	kind: Pod
 	metadata:
 	  annotations:
-	    kubeadm.kubernetes.io/kube-apiserver.advertise-address.endpoint: 124.221.93.66:6443
+	    kubeadm.kubernetes.io/kube-apiserver.advertise-address.endpoint: 192.168.66.100:6443
 	  creationTimestamp: null
 	  labels:
 	    component: kube-apiserver

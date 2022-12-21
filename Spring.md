@@ -1923,3 +1923,111 @@ public class Test
     - 对于“月”和“周x”字段来说合法的字符大小写不敏感。
 
 # Spring JDBC和事务控制
+
+<div align='center'>
+    <img src='./imgs/Java/Spring/SpringJDBC.svg' width='800px'>
+    <br/><br/>Spring Task
+</div>
+
+## Spring整合JDBC环境
+
+[Code](https://gitee.com/simple-jbx/SpringLearning/tree/main/Spring07)
+
+Spring框架同样也提供了基于JDBC的数据访问功能，使得访问持久层数据更加方便。
+
+### 添加依赖
+
+[Code](https://gitee.com/simple-jbx/SpringLearning/tree/main/Spring07/pom.xml)
+
+### 添加JDBC配置文件
+
+在src/main/resources目录下新建jdbc.properties配置文件，并设置对应的配置信息
+
+```properties
+#驱动名
+jdbc.driver=com.mysql.cj.jdbc.Driver
+#数据库连接
+jdbc.url=jdbc:mysql//192.168.66.100:3306/dbName?useUnicode=true&characterEncoding=utf8&&serverTimezone=GMT%2B8&&useSSL=false
+#数据库用户名称
+jdbc.user=root
+#密码
+jdbc.password=123456
+```
+
+可选配置
+
+```properties
+#指定连接池的初始化连接数，取值应在minPoolSize和maxPoolSize之间，默认为3
+initialPoolSize=10
+#指定连接池中保留的最大连接数，默认为15
+maxPoolSize=15
+#指定连接池中保留的最小连接数
+minPoolSize=5
+#最大空闲时间，xx秒内未使用则连接被丢弃。若为0则表示永不丢弃，默认为0
+maxIdleTime=60
+#JDBC标准，用以控制数据源内加载的PreparedStatements数量
+maxStatements=5
+#每xxs检查所有连接池的空闲连接，默认为0
+idleConnectionTestPeriod=60
+```
+
+### 修改Spring配置文件
+
+```xml
+<!--加载properties配置文件，用来读取配置文件中的数据-->
+<context:property-placeholder location="jdbc.properties">
+```
+
+### 配置数据源
+
+```xml
+<!--配置c3p0数据源-->
+<bean id = "dateSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+    <property name="driverClass" value="${jdbc.driver}"></property>
+    <property name="jdbcUrl" value="${jdbc.url}"></property>
+    <property name="user" value="${jdbc.user}"></property>
+    <property name="password" value="${jdbc.password}"></property>
+</bean>
+```
+
+### 模板类配置
+
+Spring把JDBC中重复的操作建立成了一个模板类：org.springframework.jdbc.core.jdbcTemplate。
+
+```xml
+<bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+	<property name="dataSource" ref="dateSource"></property>
+</bean>
+```
+
+### JDBC测试
+
+[Code](https://gitee.com/simple-jbx/SpringLearning/tree/main/Spring07/src/test/java/tech/snnukf)
+
+## 持久层账户模块操作
+
+使用spring jdbc完成账户表crud操作
+
+### 账户接口方法定义
+
+#### 定义实体类
+
+[Account.java](https://gitee.com/simple-jbx/SpringLearning/tree/main/Spring07/src/main/java/tech/snnukf/entity/Account.java)
+
+#### 定义接口类
+
+[IAccountDao](https://gitee.com/simple-jbx/SpringLearning/tree/main/Spring07/src/main/java/tech/snnukf/dao/IAccountDao.java)
+
+#### 定义接口实现类
+
+[AccountDaoImpl.java](https://gitee.com/simple-jbx/SpringLearning/tree/main/Spring07/src/main/java/tech/snnukf/dao/impl/AccountDaoImpl.java)
+
+### 账户记录添加实现
+
+### 账户记录查询实现
+
+### 账户记录更新实现
+
+### 账户记录删除实现
+
+## Spring事务控制
