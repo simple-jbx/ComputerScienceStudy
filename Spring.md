@@ -2022,12 +2022,4 @@ Spring把JDBC中重复的操作建立成了一个模板类：org.springframework
 
 [AccountDaoImpl.java](https://gitee.com/simple-jbx/SpringLearning/tree/main/Spring07/src/main/java/tech/snnukf/dao/impl/AccountDaoImpl.java)
 
-### 账户记录添加实现
-
-### 账户记录查询实现
-
-### 账户记录更新实现
-
-### 账户记录删除实现
-
 ## Spring事务控制
