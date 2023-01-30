@@ -1555,7 +1555,7 @@ public class LogAspect {
 
     /**
      * @author simple.jbx
-     * @description 声明前置同志，并将同志应用到指定的切入点上
+     * @description 声明前置通知，并将通知应用到指定的切入点上
      *  目标类方法执行前，执行该通知
      * @date 14:38 2022/2/21
      * @param
@@ -2023,3 +2023,38 @@ Spring把JDBC中重复的操作建立成了一个模板类：org.springframework
 [AccountDaoImpl.java](https://gitee.com/simple-jbx/SpringLearning/tree/main/Spring07/src/main/java/tech/snnukf/dao/impl/AccountDaoImpl.java)
 
 ## Spring事务控制
+
+### 概念
+
+#### 事务的四大特性（ACID）
+
+- 原子性（Atomicity）
+- 一致性（Consistency）
+- 隔离性（Isolation）
+- 持久性（Durability）
+
+#### Spring事务核心接口
+
+Spring并不直接管理事务，而是提供了多种事务管理器，它们将事务管理的职责委托给Hibernate或JTA等持久化机制所提供的相关平台框架的事务来实现。
+
+Spring事务管理器的接口是`org.springframework.transaction.PlatformTransactionManager`,通过这个接口Spring为各个平台如JDBC、Hibernate等都提供了对应的事务管理器，但是具体的实现就是各个平台自己的事情了。
+
+```java
+public interface PlatformTransactionManager extends TransactionManager {
+    TransactionStatus getTransaction(@Nullable TransactionDefinition var1) throws TransactionException;
+
+    void commit(TransactionStatus var1) throws TransactionException;
+
+    void rollback(TransactionStatus var1) throws TransactionException;
+}
+```
+
+- JDBC事务
+
+    - ```xml
+        <bean id="transactionManager" class="org.springframework.transaction.DataSourceTransactionManager">
+            <property name="dataSource" ref="dataSource" />
+        </bean>
+        ```
+
+- Hibernate事务
