@@ -175,8 +175,105 @@ B+树索引
 - 在索引上使用！、=、<>进行判断
 - 索引字段上使用 is null/is not null判断时
 
-# 保证数据库和缓存一致性
+# MySQL
 
-## References
+## Explain详解
+
+### id列
+
+包含一个编号，标识select所属的行。如果语句中没有子查询或联合，则只有唯一的id(1)。
+
+### select_type列
+
+mysql会将select查询分为简单和复杂类型，复杂类型可分为三大类：简单子查询、派生表（在from子句中的子查询），以及union查询。
+
+select_type列显示了对应行是简单还是复杂select。如果查询有任何复杂的子部分，则最外层部分标记为PRIMARY，其他部分标记如下：
+
+- SUBQUERY
+    - 包含在SELECT列表中的子查询中的SELECT（不在FROM子句中）标记为SUBQUERY。
+- DERIVED
+    - 包含在FROM子句的子查询中的SELECT，MySQL会递归执行并将结果放到一个临时表中。服务器内部称其“派生表”，因为该临时表是从子查询中派生来的。
+- UNION
+    - 在UNION中的第二个和随后的SELECT被标记为UNION。如果UNION被FROM子句中的子查询包含，那么它的第一个SELECT会被标记为DERIVED。
+- UNION RESULT
+    - 用来从UNION的匿名临时表检索结果的SELECT被标记为UNION RESULT。
+
+除了这些值，SUBQUERY和UNION还可以被标记为DEPENDENT和UNCACHEABLE。DEPENDENT意味着SELECT依赖于外层查询中发现的数据；UNCACHEABLE意味着SELECT中的某些特性阻止结果被缓存于一个Item_cache中。
+
+### table列
+
+显示了对应查询id访问的表（或者表的别名）。MySQL选择的关联顺序不同于语句中所指定的顺序，MySQL的查询执行计划总是左侧深度优先树。
+
+#### 派生表和联合
+
+当FROM子句中有子查询或有UNION时，table列会变得复杂得多。在这些场景下，确实没有一个“表”可以参考到，因为MySQL创建的匿名临时表仅在查询执行过程中存在。
+
+当在FROM子句中有子查询时，table列是`derivedN`的形式，其中N是子查询的id。这总是“向前引用”——换言之，N指向EXPLAIN输出中后面的一行。
+
+当有UNION时，UNION RESULT的table列包含一个参与UNION的id列表。这总是“向后引用”，因为UNION RESULT出现在UNION中所有参与行之后。
+
+### type列
+
+访问类型（关联类型）。从上到下性能从最差到最优。
+
+- ALL
+    - 全表扫描（例外：查询里使用了LIMIT，或者在Extra列中显示“Using distinct/not exists”）。
+- index
+    - 与全表扫描一样，只是扫描的是索引。优点是避免了排序，缺点是要承担按索引次序读取整个表的开销（若是随机访问则开销会很大）。
+    - Extra列using index表示覆盖索引，需要与index区别。
+- range
+    - 范围扫描，有限制的索引扫描。不用遍历全部索引。
+- ref
+    - 索引访问（索引查找），返回所有匹配某个单个值的行。
+    - 它可能会找到多个符合条件的行，因此，它是查找和扫描的混合体。
+    - 此类索引访问只有当使用非唯一性索引或者唯一性索引的非唯一性前缀时才会发生。把它叫做ref是因为索引要跟某个参考值相比较。这个参考值或者是一个常数，或者是来自多表查询前一个表里的结果值。
+    - ref_or_null是ref之上的一个变体，它意味着MySQL必须在初次查找的结果里进行第二次查找以找出NULL条目。
+- eq_ref
+    - 最多只返回一条符合条件的记录。
+    - 在MySQL使用主键或者唯一性索引查找时看到，它会将它们与某个参考值做比较。
+- const, system
+    - 对查询的某部分进行优化并将其转换成一个常量时，它就会使用这些访问类型。
+- NULL
+    - MySQL能在优化阶段分解查询语句，在执行阶段甚至用不着再访问表或者索引。
+
+### possibIe_keys列
+
+表示查询可以使用哪些索引。这个列表是在优化过程的早期创建的，因此有些罗列出来的索引可能对于后续优化过程是没用的。
+
+### key列
+
+MySQL 决定采用哪个索引来优化对该表的访问。如果该索引没有出现在possible_keys列中，那么MySQL选用它是出于另外的原因——例如，它可能选择了一个覆盖索引，哪怕没有WHERE子句。
+
+### key_len列
+
+MySQL在索引里使用的字节数（估计值，最大的可能长度，不是实际使用的值）。
+
+### ref列
+
+key列记录的索引中查找值所用的列或常量。
+
+### rows列
+
+为了找到所需的行而要读取的行数（估计值）。是MySQL为了找到符合查询的每一点上标准的那些行而必须读取的行的平均数。如果有内嵌语句的话，将每个内嵌语句所需检查的估计值相乘可粗略估算出整个查询会检查的行数。
+
+### fiItered列
+
+MySQL 5.1里新加进去的，在使用EXPLAIN EXTENDED时出现。它显示的是针对表里符合某个条件（WHERE子句或联接条件）的记录数的百分比所做的一个悲观估算。优化器只有在使用ALL、index、range和index_merge访问方法时才会用这一估算（在第3版书里写作的时候）。
+
+### Extra列
+
+- Using index
+    - 覆盖索引，以避免访问表。
+- Using where
+    - 意味着MySQL服务器将在存储引擎检索行后再进行过滤。
+- Using temporary
+    - MySQL在对查询结果排序时会使用一个临时表。
+- Using filesort
+    - MySQL会对结果使用一个外部索引排序，而不是按索引次序从表里读取行。MySQL有两种文件排序算法，两种方式都可以在内存或磁盘上完成。
+- Range checked for each record (index map: N)
+    - 没有好用的索引，新的索引将在联接的每一行上重新估算。N是显示在possible_keys列中素引的位图，并且是冗余的。
+
+# References
 
 1. https://mp.weixin.qq.com/s/olmqhogDIW1dE3_RwQ78Bg
+1. [高性能MySQL：第3版]()
