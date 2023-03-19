@@ -277,3 +277,5 @@ MySQL 5.1里新加进去的，在使用EXPLAIN EXTENDED时出现。它显示的�
 
 1. https://mp.weixin.qq.com/s/olmqhogDIW1dE3_RwQ78Bg
 1. [高性能MySQL：第3版]()
+1. [什么是DDL与DML](https://blog.csdn.net/qq877507054/article/details/122311887)
+1. [DDL和DML的含义与区别](https://blog.csdn.net/delightK/article/details/120948590)

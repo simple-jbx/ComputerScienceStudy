@@ -140,6 +140,45 @@ $ git log --pretty='%aN' | sort | uniq -c | sort -k1 -n -r | head -n N
        --committer 仅显示指定提交者相关的提交。
 ```
 
+## 修改commit信息
+
+### 修改最近一次commit
+
+刚刚commit还没push或者刚刚push都适用。
+
+```bash
+#1.查看提交日志
+git log
+#2.修改最后一次commit信息
+git commit --amend
+#3.查看log，commit信息已经修改好了
+git log
+#4.如果该commit已经提交到了远程库
+git push --force origin master
+```
+
+### 修改历史commit信息
+
+```bash
+#1.使用 git rebase -i HEAD~n，进入编辑界面。其中的n为记录数
+git rebase -i HEAD~10
+#2.找到你要修改的那条记录，然后将行开头的‘pick’替换成‘edit’，输入:wq保存并退出。
+#3.查看git log，要修改的那条记录，已经变成最新的提交记录了。
+git log
+#4.修改最后一次提交的commit信息。
+git commit --amend
+#5.查看git log，commit信息已经改好了。
+git log
+#6.结束rebase
+git rebase --continue
+#7.查看git log，commit信息的顺序也恢复了。
+git log
+#8.提交到远程库。
+```
+
+
+
 # Reference
 
 1. [Git代码统计](https://blog.csdn.net/cherish1112365/article/details/122749576)
+1. [git修改commit信息](https://blog.csdn.net/qq_29518275/article/details/119787728)
