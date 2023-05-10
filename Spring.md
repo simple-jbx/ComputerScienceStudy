@@ -2058,3 +2058,128 @@ public interface PlatformTransactionManager extends TransactionManager {
         ```
 
 - Hibernate事务
+
+    - ```xml
+        <bean id="transactionManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+            <property name="sessionFactory" ref="sessionFactory" />
+        </bean>
+        ```
+
+- Java持久化Api事务（JPA）
+
+    - ```xml
+        <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+            <property name="sessionFactory" ref="sessionFactory" />
+        </bean>
+        ```
+
+- Java原生API事务
+
+    - 如果应用程序没有适用以上所述的事务管理，或者是跨越了多个事务管理源（比如两个或多个不同的数据源），此时需要使用JtaTransactionManager：
+
+    - ```xml
+        <bean id="transactionManager" class="org.springframework.orm.jpa.JtaTransactionManager">
+            <property name="sessionFactory" ref="java:/TransactionManager" />
+        </bean>
+        ```
+
+    - JtaTransactionManager将事务管理的责任委托给`javax.transaction.UserTransaction`和`javax.transaction.TransactionManager`对象，其中事务成功完成通过`UserTransaction.commit()`方法提交，事务失败通过`UserTransaction.rollback()`方法回滚。
+
+### Spring事务控制配置
+
+通过jdbc持久化事务，对于事务配置实现有两种方式：xml配置和注解配置。
+
+#### xml配置
+
+- ```xml
+    <!--在spring.xml配置文件中添加事务和aop命名空间-->
+    <!--事务-->
+    xmlns:tx="http://www.springframework.org/schema/tx
+    
+    http://www.springframework.org/schema/tx
+    http://www.springframework.org/schema/tx/spring-tx.xsd
+    ```
+
+- ```xml
+    <!--AOP-->
+    xmlns:aop="http://www.springframework.org/schema/aop
+    
+    http://www.springframework.org/schema/aop
+    http://www.springframework.org/schema/aop/spring-aop.xsd
+    ```
+
+- ```xml
+    <!--设置aop代理-->
+    <aop:aspectj-autoproxy />
+    ```
+
+- ```xml
+    <bean id="txManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+            <!--数据源-->
+            <property name="dataSource" ref="dataSource" />
+        </bean>
+    ```
+
+- ```xml
+    <!--配置事务相关通知-->
+    <!--一般来说增删改方法 propagation=Required,对于查询方法使用read-only="true"-->
+    <tx:advice id="txAdvice" transaction-manager="txManager">
+        <!--对以add update delete query开头的所有方法进行事务处理-->
+        <tx:attributes>
+            <!--定义什么方法需要使用事务 name代表的是方法名（或方法匹配）-->
+            <!--匹配以 add 开头的所有方法均加入事务-->
+            <tx:method name="add*" propagation="REQUIRED">
+            <!--匹配以 update 开头的所有方法均加入事务-->
+            <tx:method name="update*" propagation="REQUIRED">
+            <!--匹配以 delete 开头的所有方法均加入事务-->
+            <tx:method name="delete*" propagation="REQUIRED">
+            <!--匹配以 query 开头的所有方法均加入事务-->
+            <tx:method name="query*" read-only="true">
+        </tx:attributes>
+    </tx:advice>
+    ```
+
+- 事务传播行为介绍
+
+    - ```java
+        //如果有事务，那么加入事务，没有的话新建一个
+        @Transactional(propagation=Propagation.REQUIRED) 
+        
+        //容器不为这个方法开启事务
+        @Transactional(propagation=Propagation.NOT_SUPPORTED)
+        
+        //不管是否存在事务，都创建一个新的事务，原来的挂起，新的执行完毕，继续执行老的事务
+        @Transactional(propagation=Propagation.REQUIRES_NEW)
+        
+        //必须在一个已有的事务中执行，否则抛出异常
+        @Transactional(propagation=Propagation.MANDATORY)
+        
+        //必须在一个没有的事务中执行，否则抛出异常
+        @Transactional(propagation=Propagation.NEVER)
+        
+        //如果其他bean调用这个方法，在其他bean中声明事务，那就用事务，如果其他bean没有声明事务，那就不用事务
+        @Transactional(propagation=Propagation.SUPPORTS)
+        
+        //支持当前事务，如果当前事务存在，则执行一个嵌套事务，如果当前没有事务，那就新建一个事务
+        @Transactional(propagation=Propagation.NESTED)
+        ```
+
+- ```xml
+    <!--配置aop-->
+    <!--aop切面定义（切入点和通知）-->
+    <aop:config>
+        <!--设置切入点 设置需要被拦截的方法-->
+        <aop:pointcut expression="execution(* com.xxx.service..*.*(..) )" id="cut" />
+        <!--设置通知，事务通知-->
+    	<aop:advisor advice-ref="txAdvice" pointcut-ref="cut" />
+    </aop:config>
+    ```
+
+#### 注解配置
+
+```xml
+<tx:annotation-driven transaction-manager="txManager" />
+```
+
+### Java Mail邮件发送封装
+
